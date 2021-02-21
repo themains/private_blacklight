@@ -1,0 +1,8 @@
+.*
+!.gitignore
+html/
+*.pyc
+*.jpg
+*.html
+__pycache__/
+
