@@ -15,7 +15,6 @@ def write_json_to_file(json_data, file_path):
         json.dump(json_data, json_file)
 
 
-
 test_websites = [
     'google.com',
     'facebook.com',
@@ -24,10 +23,8 @@ test_websites = [
     'foxnews.com'
 ]
 
-
-
 for tw in test_websites:
-    test_file_path = "data/{}".format(tw)
+    test_file_path = "blacklight_data/{}.json".format(tw)
     url = "http://" + tw
     blacklight_json_data = get_blacklight_privacy_data(url)
     write_json_to_file(blacklight_json_data, test_file_path)
