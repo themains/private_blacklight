@@ -6,4 +6,4 @@ html/
 *.html
 __pycache__/
 env/
-
+*.db

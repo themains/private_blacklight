@@ -1,5 +1,6 @@
 import json
 import requests
+import pandas as pd
 
 # note: url must be in form http://{example.com}
 def get_blacklight_privacy_data(url):
@@ -15,16 +16,16 @@ def write_json_to_file(json_data, file_path):
         json.dump(json_data, json_file)
 
 
-test_websites = [
-    'google.com',
-    'facebook.com',
-    'twitter.com',
-    'nytimes.com',
-    'foxnews.com'
-]
 
-for tw in test_websites:
-    test_file_path = "blacklight_data/{}.json".format(tw)
+top_1k_test_df = pd.read_csv("data/alexa_top_1m/top_1k_alexa_sites.csv", header=None)
+
+test_websites = top_1k_test_df[0].to_list()
+
+for index, tw in enumerate(test_websites):
+
+    print(index)
+    print(tw)
+    test_file_path = "data/blacklight_data/top_1k_test.json"
     url = "http://" + tw
     blacklight_json_data = get_blacklight_privacy_data(url)
     write_json_to_file(blacklight_json_data, test_file_path)
