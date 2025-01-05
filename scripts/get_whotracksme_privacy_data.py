@@ -1,71 +1,89 @@
+import os
 import json
+import pandas as pd
 import requests
-import lxml.html
-import pdb
+from bs4 import BeautifulSoup
 
-# note: url must be in form {example.com}.html
-def get_whotracksme_privacy_data(url):
-    whotracksme_endpoint = 'https://whotracks.me/websites/{}'.format(url)
+# Output folder for JSON files
+output_folder = "./website_trackers"
+os.makedirs(output_folder, exist_ok=True)
 
-    response = requests.get(url=whotracksme_endpoint)
-    whotracksme_data = parse_whotracksme_data(response)
-    whotracksme_json_data = json.dumps(whotracksme_data)
-    return whotracksme_json_data
+# Base URL for WhoTracksMe
+base_url = "https://www.ghostery.com/whotracksme/websites/"
 
-def parse_whotracksme_data(response):
-    whotracksme_data = {}
-    trackers_list = []
-    doc = lxml.html.fromstring(response.text)
+# Function to scrape tracker data and statistics for a given website
+def scrape_website_data(website):
+    try:
+        # Fetch the webpage
+        url = f"{base_url}{website}"
+        response = requests.get(url)
+        response.raise_for_status()
 
-    site = doc.xpath("//h1/a/text()")[0]
-    size_of_user_data_from_trackers_per_page = doc.xpath("//p[@class='subtitle']/span/text()")[0].strip()
-    avg_num_trackers_per_page = doc.xpath("//span[@class='header red-color']/text()")[0].strip()
-    prop_page_loads_with_tracking = doc.xpath("//h3[contains(.,'PROPORTION OF TRAFFIC')]/following-sibling::div/text()")[0].strip()
-    num_requests_to_trackers_per_page_load = doc.xpath("//h3[contains(.,'REQUESTS TO TRACKERS')]/following-sibling::div/text()")[0].strip()
-    tracking_methods = doc.xpath("//p[@class='tracking-method']/span/text()")
-    trackers = doc.xpath("//h3[contains(.,'Trackers Seen')]/following-sibling::div/descendant::div[@id='frequency']/ul/li")
+        # Parse the HTML
+        soup = BeautifulSoup(response.text, "html.parser")
 
-    for tracker in trackers:
-        tracker_name = tracker.xpath("a[@class='entity-name']/text()")[0].strip()
-        tracker_percentage = tracker.xpath("span[@class='percentage']/text()")[0].strip()
-        tracker_company = tracker.xpath("span[@class='percentage']/following-sibling::span/text()")[0].strip()
-        tracker_desc_link = tracker.xpath("a[@class='entity-name']/@href")[0].strip()
-        tracker_company = tracker.xpath("span[@class='percentage']/following-sibling::span/text()")[0].strip()
+        # Initialize the result dictionary
+        result = {
+            "website": website,
+            "trackers": [],
+            "statistics": {}
+        }
 
-        trackers_list.append({
-            'tracker_name': tracker_name,
-            'tracker_percentage': tracker_percentage,
-            'tracker_desc_link': tracker_desc_link,
-            'tracker_company': tracker_company,
-        })
+        # Extract tracker information
+        tracker_section = soup.find("div", class_="ds-wtm-entities cards")
+        if tracker_section:
+            tracker_entries = tracker_section.find_all("a", href=True)
+            for entry in tracker_entries:
+                tracker_name = entry.find("div", class_="ds-body-m ds-color-white ds-text-ellipsis")
+                tracker_meta = entry.find("div", class_="ds-color-gray-400 ds-uppercase ds-label-xs ds-text-ellipsis")
 
-    whotracksme_data["site"] = site
-    whotracksme_data["size_of_user_data_from_trackers_per_page"] = size_of_user_data_from_trackers_per_page
-    whotracksme_data["avg_num_trackers_per_page"] = avg_num_trackers_per_page
-    whotracksme_data["prop_page_loads_with_tracking"] = prop_page_loads_with_tracking
-    whotracksme_data["num_requests_to_trackers_per_page_load"] = num_requests_to_trackers_per_page_load
-    whotracksme_data["tracking_methods"] = tracking_methods
-    whotracksme_data["trackers"] = trackers_list
+                if tracker_name and tracker_meta:
+                    tracker_name = tracker_name.text.strip()
+                    meta_parts = [part.strip() for part in tracker_meta.text.split("•")]
+                    percentage = meta_parts[0] if len(meta_parts) > 0 else "N/A"
+                    company = meta_parts[1] if len(meta_parts) > 1 else "N/A"
+                    category = meta_parts[2] if len(meta_parts) > 2 else "N/A"
 
-    return whotracksme_data
+                    result["trackers"].append({
+                        "tracker": tracker_name,
+                        "percentage": percentage,
+                        "company": company,
+                        "category": category
+                    })
 
+        # Extract additional statistics
+        stats_section = soup.find_all("div", class_="ds-column ds-wtm-section-card medium")
+        if stats_section:
+            for stat in stats_section:
+                stat_title = stat.find("p", class_="ds-display-2xs ds-color-gray-300")
+                stat_value = stat.find("p", class_="ds-display-2xl")
 
+                if stat_title and stat_value:
+                    title = stat_title.text.strip()
+                    value = stat_value.text.strip()
+                    result["statistics"][title] = value
 
-def write_json_to_file(json_data, file_path):
-    with open(file_path, 'a+') as json_file:
-        json.dump(json_data, json_file)
+        return result
 
+    except requests.exceptions.RequestException as e:
+        print(f"Error fetching data for {website}: {e}")
+        return None
 
-test_websites = [
-    'google.com',
-    'facebook.com',
-    'twitter.com',
-    'nytimes.com',
-    'foxnews.com'
-]
+# List of websites to scrape
+websites = pd.read_csv("yg_ind_domain.csv")["private_domain"]
 
-for tw in test_websites:
-    test_file_path = "whotracksme_data/{}.json".format(tw)
-    url = tw + ".html"
-    whotracksme_json_data = get_whotracksme_privacy_data(url)
-    write_json_to_file(whotracksme_json_data, test_file_path)
+# Iterate over websites and save JSON files
+for website in websites:
+    print(f"Scraping data for {website}...")
+    data = scrape_website_data(website)
+
+    if data:
+        # Save to JSON file
+        output_file = os.path.join(output_folder, f"{website.replace('.', '_')}_data.json")
+        with open(output_file, "w") as f:
+            json.dump(data, f, indent=2)
+        print(f"Saved data for {website} to {output_file}.")
+    else:
+        print(f"No data found for {website}.")
+
+print("Scraping complete!")
