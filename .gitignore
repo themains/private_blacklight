@@ -7,3 +7,4 @@ html/
 __pycache__/
 env/
 *.db
+/scripts/blacklight_json
