@@ -16,8 +16,8 @@ class BlacklightSpider(scrapy.Spider):
         blacklight_endpoint = 'https://blacklight-us-ca.api.themarkup.org'
 
         # Load the list of websites
-        test_websites = pd.read_csv("../../data/yg_ind_domain.csv")[["private_domain"]].drop_duplicates()[3000:]
-        test_websites = test_websites["private_domain"].tolist()  # Convert to a list
+        test_websites = pd.read_csv("../../data/yg_ind_domain.csv")[["private_domain"]].drop_duplicates()
+        test_websites = test_websites["private_domain"].tolist()
 
         # Ensure output folder exists
         os.makedirs(self.output_folder, exist_ok=True)
@@ -37,18 +37,14 @@ class BlacklightSpider(scrapy.Spider):
             )
 
     def parse(self, response):
-        # Extract the website from meta
         website = response.meta["website"]
 
-        # Define the output file path
         output_file = os.path.join(self.output_folder, f"{website.replace('.', '_')}.json")
 
-        # Check if the file already exists
         if os.path.exists(output_file):
             self.log(f"Skipping {website}... File already exists.")
             return
 
-        # Attempt to decode JSON response
         try:
             json_data = json.loads(response.body)
         except json.JSONDecodeError:
@@ -56,7 +52,6 @@ class BlacklightSpider(scrapy.Spider):
             self.log_error(f"Failed to decode JSON for {website}.")
             return
 
-        # Save the JSON response to a file
         try:
             with open(output_file, "w") as f:
                 json.dump(json_data, f, indent=4)
@@ -66,7 +61,6 @@ class BlacklightSpider(scrapy.Spider):
             self.log_error(f"Failed to save data for {website}: {e}")
             return
 
-        # Process cards in the response
         try:
             cards_1 = json_data["groups"][0]["cards"]
             cards_2 = json_data["groups"][1]["cards"]
