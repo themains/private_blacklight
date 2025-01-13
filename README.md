@@ -8,3 +8,8 @@ We also use data from https://whotracks.me/ to augment our analyses.
 
 * [YG data](https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/VIV4TS)
 * [Blacklight data on YG Domains](https://doi.org/10.7910/DVN/3N7TDZ)
+
+### Scripts
+
+* [Scrape Blacklight Data Using Scrapy](https://github.com/themains/private_blacklight/tree/master/scripts/privacy_scraper)
+* [Scrape Whotracksme Data](https://github.com/themains/private_blacklight/blob/master/scripts/get_whotracksme_privacy_data.py)
