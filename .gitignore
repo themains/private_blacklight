@@ -11,3 +11,6 @@ env/
 /scripts/privacy_scraper/blacklight_json
 /data/blacklight_json
 /data/blacklight_json_requests
+scripts/privacy_scraper/blacklight_json.tar.gz
+data/blacklight_json.tar.gz
+scripts/blacklight_db.ipynb
