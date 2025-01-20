@@ -14,3 +14,5 @@ env/
 scripts/privacy_scraper/blacklight_json.tar.gz
 data/blacklight_json.tar.gz
 scripts/blacklight_db.ipynb
+/data/whotracksme_jsons
+/data/website_trackers
