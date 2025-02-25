@@ -1,0 +1,11 @@
+pandas==2.0.0
+pyarrow
+pyjanitor
+matplotlib
+seaborn
+jupyter
+notebook==6.4.8
+jupyter_contrib_nbextensions
+jupyter_nbextensions_configurator
+jupyterthemes
+traitlets==5.9.0
