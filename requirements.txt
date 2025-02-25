@@ -4,7 +4,7 @@ pyjanitor
 matplotlib
 seaborn
 jupyter
-notebook==6.4.8
+notebook==6.4.12
 jupyter_contrib_nbextensions
 jupyter_nbextensions_configurator
 jupyterthemes
