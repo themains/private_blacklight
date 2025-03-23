@@ -1,0 +1,803 @@
+{
+    "status": "success",
+    "title": "Blacklight - API Request",
+    "uri_ins": "http://mhsrv.com",
+    "uri_dest": "https://mhsrv.com/",
+    "uri_redirects": [
+        "http://mhsrv.com/"
+    ],
+    "secure_connection": {},
+    "host": "mhsrv.com",
+    "config": {
+        "emulateDevice": {
+            "name": "iPhone 13 Mini",
+            "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.4 Mobile/15E148 Safari/604.1",
+            "viewport": {
+                "width": 375,
+                "height": 812,
+                "deviceScaleFactor": 3,
+                "isMobile": true,
+                "hasTouch": true,
+                "isLandscape": false
+            }
+        },
+        "cleareCache": true,
+        "captureHar": true,
+        "captureLinks": false,
+        "enableAdBlock": false,
+        "saveBrowserProfile": false,
+        "numPages": 1,
+        "defaultTimeout": 30000,
+        "defaultWaitUntil": "networkidle2",
+        "headless": true,
+        "headers": {},
+        "extraChromiumArgs": [
+            "--allow-pre-commit-input",
+            "--disable-background-networking",
+            "--disable-background-timer-throttling",
+            "--disable-backgrounding-occluded-windows",
+            "--disable-breakpad",
+            "--disable-client-side-phishing-detection",
+            "--disable-component-extensions-with-background-pages",
+            "--disable-component-update",
+            "--disable-default-apps",
+            "--disable-dev-shm-usage",
+            "--disable-extensions",
+            "--disable-hang-monitor",
+            "--disable-ipc-flooding-protection",
+            "--disable-popup-blocking",
+            "--disable-prompt-on-repost",
+            "--disable-renderer-backgrounding",
+            "--disable-sync",
+            "--enable-automation",
+            "--enable-blink-features=IdleDetection",
+            "--export-tagged-pdf",
+            "--force-color-profile=srgb",
+            "--metrics-recording-only",
+            "--no-first-run",
+            "--password-store=basic",
+            "--use-mock-keychain",
+            "--disable-domain-reliability",
+            "--disable-print-preview",
+            "--disable-speech-api",
+            "--disk-cache-size=33554432",
+            "--mute-audio",
+            "--no-default-browser-check",
+            "--no-pings",
+            "--single-process",
+            "--font-render-hinting=none",
+            "--disable-features=Translate,BackForwardCache,AcceptCHFrame,MediaRouter,OptimizationHints,AudioServiceOutOfProcess,IsolateOrigins,site-per-process",
+            "--enable-features=NetworkServiceInProcess2,SharedArrayBuffer",
+            "--hide-scrollbars",
+            "--ignore-gpu-blocklist",
+            "--in-process-gpu",
+            "--window-size=1920,1080",
+            "--use-gl=angle",
+            "--use-angle=swiftshader",
+            "--allow-running-insecure-content",
+            "--disable-setuid-sandbox",
+            "--disable-site-isolation-trials",
+            "--disable-web-security",
+            "--no-sandbox",
+            "--no-zygote",
+            "--headless='shell'"
+        ],
+        "extraPuppeteerOptions": {}
+    },
+    "browser": {
+        "name": "Chromium",
+        "version": "HeadlessChrome/126.0.6478.0",
+        "user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/126.0.6478.0 Safari/537.36",
+        "platform": {
+            "name": "Linux",
+            "version": "5.10.227-239.884.amzn2.x86_64"
+        }
+    },
+    "script": {
+        "host": "169.254.136.166",
+        "version": {
+            "npm": "3.4.0",
+            "commit": "dev"
+        },
+        "node_version": "v18.20.4"
+    },
+    "start_time": "2025-01-13T16:55:45.177Z",
+    "end_time": "2025-01-13T16:56:13.630Z",
+    "browsing_history": [
+        "https://mhsrv.com/",
+        "https://mhsrv.com/travel-trailers/?condition=1"
+    ],
+    "hosts": {
+        "requests": {
+            "first_party": [
+                "mhsrv.com",
+                "inventory.mhsrv.com"
+            ],
+            "third_party": [
+                "cdn.jsdelivr.net",
+                "ajax.cloudflare.com",
+                "mhsrv.s3.amazonaws.com",
+                "trkn.us",
+                "static.cloudflareinsights.com",
+                "fonts.googleapis.com",
+                "www.youtube.com",
+                "cdn.callrail.com",
+                "platform-api.sharethis.com",
+                "mhsrv.s3.us-east-1.amazonaws.com",
+                "www.motorhomespecialistreviews.com",
+                "fonts.gstatic.com",
+                "www.googletagmanager.com",
+                "global.ketchcdn.com",
+                "ajax.googleapis.com",
+                "crm.bluecompassrv.net",
+                "buttons-config.sharethis.com",
+                "data.stbuttons.click",
+                "cdn.ketchjs.com",
+                "l.sharethis.com",
+                "t.sharethis.com",
+                "www.google.com",
+                "www.google-analytics.com",
+                "dynamic.criteo.com",
+                "s.amazon-adsystem.com",
+                "tags.bkrtx.com",
+                "app.livemarketshoppers.com",
+                "connect.facebook.net",
+                "www.clarity.ms",
+                "live.rezync.com",
+                "plugin.tradepending.com",
+                "iframe-leads.rv007.com",
+                "bluecompassrv.thecrm.com",
+                "central.thecrm.com",
+                "cdn.tradepending.com",
+                "googleads.g.doubleclick.net",
+                "c.clarity.ms",
+                "12630657.fls.doubleclick.net",
+                "ad.doubleclick.net",
+                "c.bing.com",
+                "analytics.google.com",
+                "stats.g.doubleclick.net",
+                "www.googleadservices.com",
+                "ib.adnxs.com",
+                "match.360yield.com",
+                "rtb-csync.smartadserver.com",
+                "dsum-sec.casalemedia.com",
+                "pbs.yahoo.com",
+                "capi.connatix.com",
+                "amazon.partners.tremorhub.com",
+                "geo.ads.audio.thisisdax.com",
+                "www.imdb.com",
+                "usersync.samplicio.us",
+                "ads.samba.tv",
+                "pixel.rubiconproject.com",
+                "dpm.demdex.net",
+                "odr.mookie1.com",
+                "c1.adform.net",
+                "bs.serving-sys.com",
+                "cookie-matching.mediarithmics.com",
+                "csync.loopme.me",
+                "ssum-sec.casalemedia.com",
+                "crb.kargo.com",
+                "image2.pubmatic.com",
+                "loadus.exelator.com",
+                "lciapi.ninthdecimal.com",
+                "sync-amazon.ads.yieldmo.com",
+                "us-u.openx.net",
+                "sync.taboola.com",
+                "aa.agkn.com",
+                "x.bidswitch.net",
+                "tags.bluekai.com",
+                "public-prod-dspcookiematching.dmxleo.com",
+                "cms.analytics.yahoo.com",
+                "spl.zeotap.com",
+                "ads.stickyadstv.com",
+                "sync.rfp.fout.jp",
+                "beacon.krxd.net",
+                "match.sharethrough.com",
+                "ms-cookie-sync.presage.io",
+                "cm.g.doubleclick.net",
+                "usermatch.krxd.net",
+                "sb.scorecardresearch.com",
+                "eb2.3lift.com",
+                "uipglob.semasio.net",
+                "usersync.gumgum.com",
+                "pi.ispot.tv",
+                "image6.pubmatic.com",
+                "static.doubleclick.net",
+                "adservice.google.com",
+                "rf.revolvermaps.com",
+                "static.autoapr.com",
+                "jnn-pa.googleapis.com",
+                "i.ytimg.com",
+                "image4.pubmatic.com",
+                "www.facebook.com",
+                "ups.analytics.yahoo.com",
+                "segments.company-target.com",
+                "i.liadm.com",
+                "s.clarity.ms",
+                "sync.sharethis.com",
+                "c1.rfihub.net",
+                "secure.adnxs.com",
+                "cdn.boomtrain.com",
+                "20843879p.rfihub.com",
+                "thrtle.com",
+                "i6.liadm.com",
+                "play.google.com",
+                "people.api.boomtrain.com",
+                "match.adsrvr.org",
+                "p.rfihub.com",
+                "contextual.media.net",
+                "bpi.rtactivate.com",
+                "idsync.rlcdn.com",
+                "partners.tremorhub.com",
+                "sync-tm.everesttech.net",
+                "a.rfihub.com",
+                "ps.eyeota.net",
+                "events.api.boomtrain.com",
+                "match.prod.bidr.io",
+                "pippio.com",
+                "vipportal.bluecompassrv.net",
+                "vipportal.mhsrvs.com",
+                "vipportal.thecampingexperts.com",
+                "s3.amazonaws.com",
+                "gum.criteo.com",
+                "sslwidget.criteo.com"
+            ]
+        }
+    },
+    "groups": [
+        {
+            "title": "Blacklight Inspection Result",
+            "cards": [
+                {
+                    "cardType": "ddg_join_ads",
+                    "bigNumber": 41,
+                    "title": "Ad trackers found on this site.",
+                    "testEventsFound": true,
+                    "body": [
+                        "Websites containing advertising tracking technology load JavaScript code or small invisible images that are used to either build your advertising profile or to identify you for ad targeting on this site. These techniques are often used in addition to cookies to profile you.",
+                        "Blacklight detected trackers on this page sending data to companies involved in online advertising. Blacklight detected scripts belonging to <strong>Sharethrough, Inc.</strong>, <strong>Smartadserver S.A.S</strong>, <span class=\"blacklight-client__more\" data-list=\"0\">and thirty-three other companies</span>."
+                    ],
+                    "expandableList": [
+                        [
+                            "Salesforce.com, Inc.",
+                            "PubMatic, Inc.",
+                            "WPP plc",
+                            "Taboola, Inc.",
+                            "Amazon Technologies, Inc.",
+                            "Lucid Holdings, LLC",
+                            "Neustar, Inc.",
+                            "The Nielsen Company",
+                            "Verizon Media",
+                            "GumGum",
+                            "OpenX Technologies Inc",
+                            "ShareThis, Inc",
+                            "Alphabet, Inc.",
+                            "Facebook, Inc.",
+                            "Adform A/S",
+                            "FreeWheel",
+                            "mediarithmics SAS",
+                            "Kargo Global, Inc.",
+                            "Adobe Inc.",
+                            "Oracle Corporation",
+                            "IPONWEB GmbH",
+                            "TripleLift",
+                            "Index Exchange, Inc.",
+                            "YieldMo, Inc.",
+                            "Zeta Global",
+                            "LoopMe Ltd",
+                            "Semasio GmbH",
+                            "Improve Digital BV",
+                            "Microsoft Corporation",
+                            "Magnite, Inc.",
+                            "Criteo SA",
+                            "Telaria",
+                            "Dailymotion SA"
+                        ]
+                    ],
+                    "domainData": {
+                        "scripts": [
+                            "serving-sys.com",
+                            "bing.com",
+                            "casalemedia.com",
+                            "stickyadstv.com",
+                            "mookie1.com",
+                            "smartadserver.com",
+                            "adform.net",
+                            "facebook.net",
+                            "dmxleo.com",
+                            "rubiconproject.com",
+                            "googletagmanager.com",
+                            "gumgum.com",
+                            "adnxs.com",
+                            "bluekai.com",
+                            "sharethrough.com",
+                            "kargo.com",
+                            "tremorhub.com",
+                            "yahoo.com",
+                            "bidswitch.net",
+                            "mediarithmics.com",
+                            "rezync.com",
+                            "loopme.me",
+                            "krxd.net",
+                            "criteo.com",
+                            "samplicio.us",
+                            "agkn.com",
+                            "google.com",
+                            "semasio.net",
+                            "360yield.com",
+                            "demdex.net",
+                            "openx.net",
+                            "doubleclick.net",
+                            "taboola.com",
+                            "sharethis.com",
+                            "pubmatic.com",
+                            "exelator.com",
+                            "amazon-adsystem.com",
+                            "yieldmo.com",
+                            "3lift.com",
+                            "bkrtx.com",
+                            "googleadservices.com"
+                        ],
+                        "categories": [
+                            "Ad Motivated Tracking",
+                            "Advertising",
+                            "Analytics",
+                            "Audience Measurement",
+                            "Third-Party Analytics Marketing",
+                            "Tag Manager",
+                            "Online Payment",
+                            "CDN",
+                            "Ad Fraud",
+                            "Federated Login",
+                            "Social - Share",
+                            "Embedded Content",
+                            "Action Pixels",
+                            "Social - Comment",
+                            "Badge",
+                            "Social Network"
+                        ],
+                        "owners": [
+                            "Salesforce.com, Inc.",
+                            "PubMatic, Inc.",
+                            "WPP plc",
+                            "Taboola, Inc.",
+                            "Amazon Technologies, Inc.",
+                            "Lucid Holdings, LLC",
+                            "Neustar, Inc.",
+                            "The Nielsen Company",
+                            "Verizon Media",
+                            "GumGum",
+                            "OpenX Technologies Inc",
+                            "ShareThis, Inc",
+                            "Alphabet, Inc.",
+                            "Facebook, Inc.",
+                            "Adform A/S",
+                            "FreeWheel",
+                            "mediarithmics SAS",
+                            "Kargo Global, Inc.",
+                            "Adobe Inc.",
+                            "Oracle Corporation",
+                            "IPONWEB GmbH",
+                            "TripleLift",
+                            "Index Exchange, Inc.",
+                            "YieldMo, Inc.",
+                            "Zeta Global",
+                            "LoopMe Ltd",
+                            "Semasio GmbH",
+                            "Improve Digital BV",
+                            "Microsoft Corporation",
+                            "Magnite, Inc.",
+                            "Criteo SA",
+                            "Telaria",
+                            "Dailymotion SA"
+                        ]
+                    },
+                    "onAvgStatement": "This is <strong>more than</strong> the average of <strong>seven</strong> that we found on popular sites",
+                    "surveyLink": "https://themarkup.org/blacklight/2020/09/22/how-we-built-a-real-time-privacy-inspector#survey",
+                    "methodology": "https://themarkup.org/blacklight/2020/09/22/how-we-built-a-real-time-privacy-inspector#ad-trackers"
+                },
+                {
+                    "title": "Third-party cookies found.",
+                    "body": [
+                        "These are commonly used by advertising tracking companies to profile you based on your internet usage.",
+                        "Blacklight detected <strong>24</strong> third-party cookies on this site.  Blacklight detected cookies set for <strong>Demandbase, Inc.</strong>, <strong>The Trade Desk Inc</strong> and <span class=\"blacklight-client__more\" data-list=\"0\">and nine others</span>"
+                    ],
+                    "testEventsFound": true,
+                    "bigNumber": 24,
+                    "onAvgStatement": "This is <strong>more than</strong> the average of <strong>three</strong> that we found on popular sites",
+                    "domainData": {
+                        "scripts": [
+                            "i.liadm.com",
+                            "sharethis.com",
+                            "rezync.com",
+                            "live.rezync.com",
+                            "amazon-adsystem.com",
+                            "www.clarity.ms",
+                            "doubleclick.net",
+                            "criteo.com",
+                            "t.sharethis.com",
+                            "company-target.com",
+                            "liadm.com",
+                            "adsrvr.org",
+                            "vipportal.bluecompassrv.net",
+                            "vipportal.thecampingexperts.com",
+                            "bluecompassrv.thecrm.com",
+                            "vipportal.mhsrvs.com",
+                            "yahoo.com",
+                            "analytics.yahoo.com",
+                            "thrtle.com"
+                        ],
+                        "categories": [
+                            "Ad Motivated Tracking",
+                            "Advertising",
+                            "Audience Measurement",
+                            "Third-Party Analytics Marketing",
+                            "Social - Share",
+                            "Embedded Content",
+                            "Analytics",
+                            "Action Pixels",
+                            "Obscure Ownership",
+                            "Federated Login"
+                        ],
+                        "owners": [
+                            "LiveIntent Inc.",
+                            "ShareThis, Inc",
+                            "Zeta Global",
+                            "Amazon Technologies, Inc.",
+                            "Microsoft Corporation",
+                            "Alphabet, Inc.",
+                            "Criteo SA",
+                            "Demandbase, Inc.",
+                            "The Trade Desk Inc",
+                            "Verizon Media",
+                            "Throtle"
+                        ]
+                    },
+                    "cardType": "cookies",
+                    "expandableList": [
+                        [
+                            "LiveIntent Inc.",
+                            "ShareThis, Inc",
+                            "Zeta Global",
+                            "Amazon Technologies, Inc.",
+                            "Microsoft Corporation",
+                            "Alphabet, Inc.",
+                            "Criteo SA",
+                            "Demandbase, Inc.",
+                            "The Trade Desk Inc",
+                            "Verizon Media",
+                            "Throtle"
+                        ]
+                    ],
+                    "methodology": "https://themarkup.org/blacklight/2020/09/22/how-we-built-a-real-time-privacy-inspector#third-party-cookies",
+                    "surveyLink": "https://themarkup.org/blacklight/2020/09/22/how-we-built-a-real-time-privacy-inspector#survey"
+                },
+                {
+                    "body": [
+                        "Canvas fingerprinting was not detected on this website. This technique is designed to identify users even if they block third-party cookies. It can be used to track users across sites. It secretly draws an image on your browser when you visit websites that use it, for the purpose of identifying your device. This technique was used by six percent of popular sites when we <a href=\"https://themarkup.org/blacklight/2020/09/22/how-we-built-a-real-time-privacy-inspector#survey\"> scanned them</a> in September 2020."
+                    ],
+                    "title": "Tracking that evades cookie blockers wasn't found.",
+                    "testEventsFound": false,
+                    "caveat": "While Blacklight accurately detects the presence of canvas fingerprinting on a website, it cannot determine if the purpose is user behavior monitoring or for fraud prevention or bot detection.",
+                    "cardType": "canvas_fingerprinters",
+                    "dataUrlForImage": [],
+                    "expandableList": [],
+                    "methodology": "https://themarkup.org/blacklight/2020/09/22/how-we-built-a-real-time-privacy-inspector#canvas-fingerprinting"
+                },
+                {
+                    "body": [
+                        "Blacklight did not detect the use of a session recorder, which tracks user mouse movement, clicks, taps, scrolls, or even network activity. Websites that use the technique compile this data into videos and heat maps that website owners can watch to see how users interact with the site. Research has shown these practices are insecure and make sensitive user data such as passwords and credit card information more vulnerable to leaks. This technique was used by fifteen percent of popular websites when we <a href=\"https://themarkup.org/blacklight/2020/09/22/how-we-built-a-real-time-privacy-inspector#survey\"> scanned them</a> in September 2020."
+                    ],
+                    "title": "Session recording services not found on this website.",
+                    "testEventsFound": false,
+                    "caveat": "While Blacklight can detect whether a session recorder was loaded, it cannot determine exactly how the collected data is being used.",
+                    "cardType": "session_recorders",
+                    "dataUrlForImage": [],
+                    "expandableList": [],
+                    "methodology": "https://themarkup.org/blacklight/2020/09/22/how-we-built-a-real-time-privacy-inspector#session-recording"
+                },
+                {
+                    "body": [
+                        "Key logging is when a website captures the text that you type into a web page before you hit the submit button. This technique has been used to identify anonymous web users by matching them to postal addresses and real names. This technique was used by four percent of popular websites when we <a href=\"https://themarkup.org/blacklight/2020/09/22/how-we-built-a-real-time-privacy-inspector#survey\"> scanned them</a> in September 2020."
+                    ],
+                    "title": "We did not find this website capturing keystrokes.",
+                    "testEventsFound": false,
+                    "caveat": "There are other reasons for key logging, such as providing autocomplete functionality. Blacklight cannot determine the intent behind the inspected website\u2019s use of this technique.",
+                    "cardType": "key_logging",
+                    "dataUrlForImage": [],
+                    "expandableList": [],
+                    "methodology": "https://themarkup.org/blacklight/2020/09/22/how-we-built-a-real-time-privacy-inspector#key-logging"
+                },
+                {
+                    "title": "Facebook Pixel not found on this website.",
+                    "body": [
+                        "The Facebook pixel is a snippet of code that sends data back to Facebook about people who visit this site and allows the site operator to later target them with ads on Facebook. A Facebook spokesperson told The Markup that the company set up this system so that a user doesn\u2019t have to be \u201csimultaneously logged into Facebook and viewing a third-party website for our business tools to function.\u201d Common actions that can be tracked via pixel include viewing a page or specific content, adding payment information, or making a purchase.  The Facebook pixel appeared in thirty percent of popular websites when we <a href=\"https://themarkup.org/blacklight/2020/09/22/how-we-built-a-real-time-privacy-inspector#survey\"> scanned them</a> in September 2020."
+                    ],
+                    "testEventsFound": false,
+                    "cardType": "fb_pixel_events",
+                    "methodology": "https://themarkup.org/blacklight/2020/09/22/how-we-built-a-real-time-privacy-inspector#facebook-pixel",
+                    "expandableList": [],
+                    "domainData": null
+                },
+                {
+                    "title": "Google Analytics' \"remarketing audiences\" feature not found.",
+                    "body": [
+                        "The Google Analytics \"remarketing audiences\" feature enables user tracking for targeted advertising across the internet. This feature allows a website to build custom audiences based on how a user interacts with this particular site and then follow those users across the internet and target them with advertising on other sites using Google Ads and Display & Video 360. A Google spokesperson told The Markup that site operators are <a href=\"https://support.google.com/analytics/answer/2700409?hl=en\"> supposed to</a> inform visitors when data collected with this feature is used to connect this browsing data with someone\u2019s real-world identity. You know when those shoes you were looking at follow you around the internet? This is one of the trackers leading to that. This feature appeared in fifty percent of popular websites when we <a href=\"https://themarkup.org/blacklight/2020/09/22/how-we-built-a-real-time-privacy-inspector#survey\"> scanned them</a> in September 2020."
+                    ],
+                    "testEventsFound": false,
+                    "cardType": "ga",
+                    "methodology": "https://themarkup.org/blacklight/2020/09/22/how-we-built-a-real-time-privacy-inspector#google-analytics-remarketing-audiences"
+                }
+            ],
+            "description": [
+                "Blacklight works by visiting each website with a headless browser running custom software built by The Markup. To learn more, read our <a href=\"https://themarkup.org/blacklight/2020/09/22/how-we-built-a-real-time-privacy-inspector\">methodology</a>."
+            ]
+        },
+        {
+            "title": "Some of the ad-tech companies this website interacted with:",
+            "cards": [
+                {
+                    "title": "Adobe",
+                    "bl_data_type": "script_domain",
+                    "ddg_company_lookup": "Adobe",
+                    "body": [
+                        "Blacklight detected the inspected website sending user data to <a href=https://www.adobe.com/>Adobe.</a> While Adobe is primarily associated with creative design products, a company spokesperson told The Markup that it also offers a suite of digital marketing products. Of the Adobe trackers that appeared in our scan of popular websites in <a href=https://themarkup.org/blacklight/2020/09/22/how-we-built-a-real-time-privacy-inspector#survey>September 2020</a>, the most common were Adobe Audience Manager and Adobe Advertising Cloud. Audience Manager helps advertisers build profiles of consumers based on their web browsing history and other data to target both ads and content on their own websites. Advertising Cloud sells ads on websites, streaming video, or TV, and tracks their performance. ",
+                        " The site sent information to the following domain <strong>demdex.net</strong>."
+                    ],
+                    "domains_found": [
+                        "<strong>demdex.net</strong>"
+                    ],
+                    "cardType": "reported_adobe",
+                    "privacy_policy": "https://www.adobe.com/privacy/policy.html",
+                    "last_updated": "2020-09-03T12:00:00.000Z"
+                },
+                {
+                    "title": "Alphabet",
+                    "bl_data_type": "script_domain",
+                    "ddg_company_lookup": "Google",
+                    "body": [
+                        "Blacklight detected this website sending user data to <a href=https://abc.xyz/>Alphabet,</a> the technology conglomerate that encompasses Google and associated companies like <a href=https://nest.com/>Nest</a>. The Silicon Valley giant collects data from twice the number of websites as its closest competitor, Facebook. An Alphabet spokesperson told The Markup that internet users can <a href=https://adssettings.google.com/authenticated>go here</a> if they want to opt out of the company showing them targeted ads based on their browsing history. ",
+                        "The site sent information to the following domains <strong>doubleclick.net</strong>, <strong>google-analytics.com</strong>, <strong>google.com</strong>, <strong>googleadservices.com</strong>, <strong>googletagmanager.com</strong>, <strong>youtube.com</strong>."
+                    ],
+                    "domains_found": [
+                        "<strong>doubleclick.net</strong>",
+                        "<strong>google-analytics.com</strong>",
+                        "<strong>google.com</strong>",
+                        "<strong>googleadservices.com</strong>",
+                        "<strong>googletagmanager.com</strong>",
+                        "<strong>youtube.com</strong>"
+                    ],
+                    "cardType": "reported_alphabet",
+                    "privacy_policy": "https://policies.google.com/privacy?hl=en-US",
+                    "last_updated": "2020-09-03T12:00:00.000Z"
+                },
+                {
+                    "title": "Amazon",
+                    "bl_data_type": "script_domain",
+                    "ddg_company_lookup": "Amazon",
+                    "body": [
+                        "Blacklight detected the inspected website sending user data to <a href=https://www.amazon.com/>Amazon,</a> which has a wide variety of business units. The most commonly appearing Amazon trackers in our scan of popular sites in <a href=https://themarkup.org/blacklight/2020/09/22/how-we-built-a-real-time-privacy-inspector#survey>September 2020</a> were those for <a href=https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Introduction.html>CloudFront</a> and its marketing research arm, <a href=https://www.alexa.com/>Alexa,</a> which helps marketers improve their search engine performance and provides site operators insights about the popularity of their websites. (This Alexa is unrelated to Amazon\u2019s virtual assistant of the same name.) Representatives from Amazon did not respond to multiple requests for comment.",
+                        "The site sent information to the following domains <strong>amazon-adsystem.com</strong>, <strong>serving-sys.com</strong>."
+                    ],
+                    "domains_found": [
+                        "<strong>amazon-adsystem.com</strong>",
+                        "<strong>serving-sys.com</strong>"
+                    ],
+                    "cardType": "reported_amazon",
+                    "privacy_policy": "https://www.amazon.com/gp/help/customer/display.html?nodeId=201909010",
+                    "last_updated": "2020-09-03T12:00:00.000Z"
+                },
+                {
+                    "title": "Comscore",
+                    "bl_data_type": "script_domain",
+                    "ddg_company_lookup": "comScore",
+                    "body": [
+                        "Blacklight detected the inspected website sending user data to <a href=https://www.comscore.com/>Comscore,</a> a company that monitors traffic on millions of websites to create market research data on how people use the internet, which it sells to advertisers, <a href=https://www.theguardian.com/technology/2012/apr/23/scorecardresearch-tracking-trackers-cookies-web-monitoring>according to The Guardian</a>. The company\u2019s analytics also incorporate user data collected from its dozens of corporate partners, such as Facebook, Oracle, and Salesforce, <a href=https://www.comscore.com/About/Partners>according to its own website</a>. Representatives from Comscore did not respond to multiple requests for comment. ",
+                        " The site sent information to the following domain <strong>scorecardresearch.com</strong>."
+                    ],
+                    "domains_found": [
+                        "<strong>scorecardresearch.com</strong>"
+                    ],
+                    "cardType": "reported_comscore",
+                    "privacy_policy": "https://www.comscore.com/About/Privacy",
+                    "last_updated": "2011-10-05T14:48:00.000Z"
+                },
+                {
+                    "title": "Criteo",
+                    "bl_data_type": "script_domain",
+                    "ddg_company_lookup": "Criteo",
+                    "body": [
+                        "Blacklight detected the inspected website sending user data to the advertising technology company <a href=https://www.criteo.com/>Criteo</a>, which a company spokesperson told The Markup specializes in what are called \u201cre<a href=https://digiday.com/media/criteo-megan-clarken-interview-q4/ >targeting</a> campaigns,\u201d targeting advertisements across the internet at people who have already visited the advertiser's digital properties. Decisions about which previous site visitors to target are made with <a href=https://digital.hbs.edu/platform-digit/submission/criteo-how-much-personalized-retargeting-is-too-much/?sort=post_date-new  >profiles</a> compiled by the company about consumers\u2019 interests and previous shopping behavior. Speaking in July 2020, CEO Megan Clarken said that the company had data on \u201c2.5 billion unique users globally, of which 98 percent had persistent identifiers beyond cookies.\u201d ",
+                        " The site sent information to the following domain <strong>criteo.com</strong>."
+                    ],
+                    "domains_found": [
+                        "<strong>criteo.com</strong>"
+                    ],
+                    "cardType": "reported_criteo",
+                    "privacy_policy": "https://www.criteo.com/privacy/",
+                    "last_updated": "2011-10-05T14:48:00.000Z"
+                },
+                {
+                    "title": "IPONWEB",
+                    "bl_data_type": "script_domain",
+                    "ddg_company_lookup": "IPONWEB",
+                    "body": [
+                        "Blacklight detected the inspected website sending user data to the ad tech company IPONWEB. The company\u2019s Bidswitch subsidiary functions as an <a href=https://www.bidswitch.com/solutions/publishers/ >interchange</a> between the platforms where publishers sell advertising space and the platforms where advertisers buy ads. An IPONWEB spokesperson told The Markup that the company also builds bespoke online platforms for other companies involved in digital advertising. Digiday <a href=https://digiday.com/media/boris-ad-tech/ >called</a> IPONWEB\u2019s founder \u201cthe Godfather of Ad Tech.\u201d",
+                        " The site sent information to the following domain <strong>bidswitch.net</strong>."
+                    ],
+                    "domains_found": [
+                        "<strong>bidswitch.net</strong>"
+                    ],
+                    "cardType": "reported_iponweb",
+                    "privacy_policy": "https://www.iponweb.com/privacy-policy/#:~:text=IPONWEB%20GmbH%20respects%20your%20right,com%20(%E2%80%9CWebsite%E2%80%9D).",
+                    "last_updated": "2020-09-03T12:00:00.000Z"
+                },
+                {
+                    "title": "Microsoft",
+                    "bl_data_type": "script_domain",
+                    "ddg_company_lookup": "Microsoft",
+                    "body": [
+                        "Blacklight detected the inspected <a href=https://www.xandr.com/news/att-consolidates-its-open-programmatic-spend-on-the-appnexus-dsp/ >website</a> sending <a href=https://azure.microsoft.com/en-us/services/cognitive-services/bing-custom-search/>use</a>r data to <a href=https://www.microsoft.com/en-us/>Microsoft.</a> In addition to its well-known products and services, the tech behemoth <a href=https://about.ads.microsoft.com/en-us/h/a/microsoft-advertising>sells</a> ads on Microsoft properties and websites that use Microsoft\u2019s search engine, Bing, for internal site searches. It also runs the <a href=https://about.ads.microsoft.com/en-us/solutions/microsoft-audience-network >Microsoft Audience Network</a>, which uses data gathered about consumers to target ads. Of the many Microsoft-related trackers that appeared in our scan of the internet\u2019s top 80,000 most popular websites, those associated with Bing were the most common. Microsoft\u2019s wide variety of business units include <a href=https://www.xandr.com/>Xandr</a>, which runs platforms both for website operators to offer space for sale to advertisers and for advertisers to offer to buy advertising space. A Microsoft spokesperson declined to tell The Markup how user data being sent to its domains was being used.",
+                        " The site sent information to the following domain <strong>bing.com</strong>."
+                    ],
+                    "domains_found": [
+                        "<strong>bing.com</strong>"
+                    ],
+                    "cardType": "reported_microsoft",
+                    "privacy_policy": "https://privacy.microsoft.com/en-us/privacystatement",
+                    "last_updated": "2020-09-03T12:00:00.000Z"
+                },
+                {
+                    "title": "Neustar",
+                    "bl_data_type": "script_domain",
+                    "ddg_company_lookup": "Neustar",
+                    "body": [
+                        "Blacklight detected this website sending user data to the analytics company <a href=https://www.home.neustar/>Neustar.</a> Beginning as a <a href=https://www.home.neustar/about-us/our-history >division</a> of the defense contractor Lockheed Martin, Neustar managed the system that assigned three-digit area codes to U.S. phone numbers. Neustar now <a href=https://www.home.neustar/adadvisor>provides</a> advertisers \u201caccurate targeting based on ZIP, age, and gender, but also a wide range of attributes, including brand preferences, product affinities, and psychographic variables.\u201d Representatives from Neustar did not respond to multiple requests for comment.",
+                        " The site sent information to the following domain <strong>agkn.com</strong>."
+                    ],
+                    "domains_found": [
+                        "<strong>agkn.com</strong>"
+                    ],
+                    "cardType": "reported_neustar",
+                    "privacy_policy": "https://www.home.neustar/privacy#:~:text=Highlights%20of%20the%20Neustar%20Privacy%20Policy&text=Neustar%20uses%20personal%20information%20to,Highlights%22%20summarize%20Neustar's%20privacy%20practices.",
+                    "last_updated": "2020-09-03T12:00:00.000Z"
+                },
+                {
+                    "title": "OpenX",
+                    "bl_data_type": "script_domain",
+                    "ddg_company_lookup": "OpenX",
+                    "body": [
+                        "Blacklight detected the inspected website sending user data to <a href=https://www.openx.com/>OpenX,</a> an online advertising <a href=https://www.openx.com/demand-partners/adexchange/>exchange</a>. Ad exchanges are online marketplaces where advertisers can bid against each other to place ads on various websites. OpenX <a href=https://www.openx.com/company/press-releases/openx-ranked-1-in-inventory-quality-in-pixalates-global-seller-trust-index-for-real-time-bidding/ >specializes</a> in real-time bidding, according to its website, which is when ads are <a href=https://www.monetizemore.com/blog/real-time-bidding-rtb-explained/ >targeted</a> at individual web users based on profiles assembled about their demographics and prior behavior. It also says on its website that ads placed by the exchange reach more than 240 million U.S. consumers each month. Representatives from OpenX did not respond to multiple requests for comment.",
+                        " The site sent information to the following domain <strong>openx.net</strong>."
+                    ],
+                    "domains_found": [
+                        "<strong>openx.net</strong>"
+                    ],
+                    "cardType": "reported_openx",
+                    "privacy_policy": "https://www.openx.com/legal/privacy-policy/",
+                    "last_updated": "2020-09-03T12:00:00.000Z"
+                },
+                {
+                    "title": "Oracle",
+                    "bl_data_type": "script_domain",
+                    "ddg_company_lookup": "Oracle",
+                    "body": [
+                        "Blacklight detected the inspected website sending user data to <a href=https://oracle.com/>Oracle</a>. Among Oracle's many different products and services is AddThis, a set of buttons that float on top of a website and allow for quick sharing on social media of the page being viewed. These buttons collect data from users and can introduce other third-party tracking technologies to a website. Oracle DMP, previously called <a href=https://www.oracle.com/data-cloud/products/data-management-platform/ >BlueKai</a>, helps advertisers manage the data they already have on consumers and enhance it with information acquired either from data brokers or Oracle itself\u2014for example, linking a person to all the different devices he or she uses. An Oracle spokesperson told The Markup that the company has \u201cactionable information\u201d on <a href=https://docs.oracle.com/en/cloud/saas/data-cloud/data-cloud-help-center/AudienceDataMarketplace/AudienceDataMarketplace.html>more than a billion</a> people.",
+                        "The site sent information to the following domains <strong>bkrtx.com</strong>, <strong>bluekai.com</strong>."
+                    ],
+                    "domains_found": [
+                        "<strong>bkrtx.com</strong>",
+                        "<strong>bluekai.com</strong>"
+                    ],
+                    "cardType": "reported_oracle",
+                    "privacy_policy": "https://www.oracle.com/legal/privacy/privacy-policy.html",
+                    "last_updated": "2020-09-03T12:00:00.000Z"
+                },
+                {
+                    "title": "PubMatic",
+                    "bl_data_type": "script_domain",
+                    "ddg_company_lookup": "PubMatic",
+                    "body": [
+                        "Blacklight detected the inspected website sending user data to the online advertising company <a href=https://pubmatic.com/>Pubmatic.</a> Pubmatic is a <a href=https://pubmatic.com/blog/pubmatic-top-ssp-outside-walled-gardens/>portal for site operators</a> to offer space on their website for sale to advertisers. The company also runs an \u201c<a href=https://pubmatic.com/news/pubmatic-launches-identity-hub-boost-publisher-ad-revenue/>identity hub</a>\u201d that, a PubMatic spokesperson told The Markup, helps advertisers use the data they\u2019ve acquired from a third party\u2014 a data broker, for example\u2014to target ads to the specific interests of someone visiting a website. ",
+                        " The site sent information to the following domain <strong>pubmatic.com</strong>."
+                    ],
+                    "domains_found": [
+                        "<strong>pubmatic.com</strong>"
+                    ],
+                    "cardType": "reported_pubmatic",
+                    "privacy_policy": "https://pubmatic.com/legal/privacy-policy/",
+                    "last_updated": "2020-09-03T12:00:00.000Z"
+                },
+                {
+                    "title": "Magnite",
+                    "bl_data_type": "script_domain",
+                    "ddg_company_lookup": "Rubicon Project",
+                    "body": [
+                        "Blacklight detected the inspected website sending user data to <a href=https://www.magnite.com/>Magnite.</a> Created by the 2020 <a href=https://www.mediapost.com/publications/article/353140/ad-tech-platforms-rubicon-telaria-rebrand-as-magn.html#:~:text=Ad%2DTech%20Platforms%20Rubicon%2C%20Telaria%20Rebrand%20As%20Magnite%20Post%2DMerger,-by%20Wayne%20Friedman&text=Sell%2Dside%20ad%2Dtech%20platforms,stock%2Dfor%2Dstock%20agreement>merger</a> of ad tech companies Rubicon Project and Telaria, Magnite places advertisements on more than million <a href=https://rubiconproject.com/prebid-solutions/>websites</a> and apps. The company claims to have reached <a href=https://rubiconproject.com/about-rubicon-project/>more than a billion consumers</a> with ads placed on websites, <a href=https://rubiconproject.com/mobile/>mobile apps</a>, and <a href=https://rubiconproject.com/premium-video-solutions/>streaming videos</a>. Representatives from Magnite did not respond to multiple requests for comment.",
+                        " The site sent information to the following domain <strong>rubiconproject.com</strong>."
+                    ],
+                    "domains_found": [
+                        "<strong>rubiconproject.com</strong>"
+                    ],
+                    "cardType": "reported_magnite",
+                    "privacy_policy": "https://rubiconproject.com/rubicon-project-advertising-technology-privacy-policy/",
+                    "last_updated": "2020-09-03T12:00:00.000Z"
+                },
+                {
+                    "title": "Salesforce",
+                    "bl_data_type": "script_domain",
+                    "ddg_company_lookup": "Salesforce",
+                    "body": [
+                        "Blacklight detected the inspected website sending user data to <a href=https://salesforce.com/>Salesforce.</a> Salesforce offers services that utilize user tracking, ranging from a platform for site operators to <a href=https://www.salesforce.com/products/service-cloud/features/live-agent/>chat</a> with website visitors to marketing <a href=https://www.salesforce.com/products/marketing-cloud/data-management/>databases</a> filled with user information that can be <a href=https://www.wearemarketing.com/blog/what-is-salesforce-dmp-and-what-are-its-main-characteristics.html >purchased</a> from Salesforce\u2019s corporate partners and combined with an advertiser's preexisting data about a given user. A Salesforce spokesperson declined to answer specific questions about how the company uses the data it collects from websites.",
+                        " The site sent information to the following domain <strong>krxd.net</strong>."
+                    ],
+                    "domains_found": [
+                        "<strong>krxd.net</strong>"
+                    ],
+                    "cardType": "reported_salesforce",
+                    "privacy_policy": "https://www.salesforce.com/company/privacy/",
+                    "last_updated": "2020-09-03T12:00:00.000Z"
+                },
+                {
+                    "title": "Taboola",
+                    "bl_data_type": "script_domain",
+                    "ddg_company_lookup": "Taboola",
+                    "body": [
+                        "Blacklight detected the inspected website sending user data to <a href=https://www.taboola.com/>Taboola,</a> a company that places collections of suggested article links, along with some <a href=https://www.taboola.com/native-advertising>advertisements</a>, on publishers\u2019 pages in exchange for a direct payment, according to its website. Taboola\u2019s \u201c<a href=https://knowyourmeme.com/memes/one-weird-trick-doctors-hate-him>one weird trick</a>\u201d became derisively labeled as a \u201c<a href=https://www.theawl.com/2015/06/a-complete-taxonomy-of-internet-chum/ >chumbox</a>\u201d for the low- and clickbait-quality of many of its links. Representatives from Taboola did not respond to multiple requests for comment.",
+                        " The site sent information to the following domain <strong>taboola.com</strong>."
+                    ],
+                    "domains_found": [
+                        "<strong>taboola.com</strong>"
+                    ],
+                    "cardType": "reported_taboola",
+                    "privacy_policy": "https://www.taboola.com/privacy-policy#:~:text=Taboola%20collects%20only%20pseudonymized%20data,address%2C%20or%20other%20identifiable%20data.&text=We%20ask%20our%20Customers%20to,to%20collect%20this%20User%20Information.",
+                    "last_updated": "2020-09-03T12:00:00.000Z"
+                },
+                {
+                    "title": "Verizon",
+                    "bl_data_type": "script_domain",
+                    "ddg_company_lookup": "Verizon",
+                    "body": [
+                        "Blacklight detected the inspected website sending user data to <a href=https://www.verizonwireless.com/>Verizon.</a> While best known for providing cellphone and broadband service, Verizon has gained a significant presence in online advertising through acquisitions of ad-focused companies like <a href=https://money.cnn.com/2015/05/12/investing/verizon-buys-aol/index.html>AOL</a> and <a href=https://www.washingtonpost.com/news/the-switch/wp/2017/06/13/its-official-verizon-finally-buys-yahoo/>Yahoo!</a>, which offer advertising services in addition to content. Domains associated with Yahoo! and AOL (specifically, advertising.com, which was part of AOL before Verizon\u2019s purchase of the company) appeared the most frequently among the many Verizon-controlled trackers appearing in our scan of popular websites in <a href=https://themarkup.org/blacklight/2020/09/22/how-we-built-a-real-time-privacy-inspector#survey>September 2020</a>. Representatives from Verizon did not respond to multiple requests for comment.",
+                        " The site sent information to the following domain <strong>yahoo.com</strong>."
+                    ],
+                    "domains_found": [
+                        "<strong>yahoo.com</strong>"
+                    ],
+                    "cardType": "reported_verizon",
+                    "privacy_policy": "https://www.verizon.com/about/privacy/",
+                    "last_updated": "2020-09-03T12:00:00.000Z"
+                },
+                {
+                    "title": "Zeta Global",
+                    "bl_data_type": "script_domain",
+                    "ddg_company_lookup": "Zeta Global",
+                    "body": [
+                        "Blacklight detected this website sending user data to the digital marketing company <a href=https://zetaglobal.com/>Zeta Global</a>. Zeta\u2019s products include <a href=https://techcrunch.com/2017/12/05/zeta-global-acquires-commenting-service-disqus/>Disqus</a>, a platform for hosting and moderating user comments that <a href=https://themarkup.org/blacklight/2020/09/22/blacklight-tracking-advertisers-digital-privacy-sensitive-websites>frequently introduces a bevy of third-party trackers on websites</a>. The company also <a href=https://www.adexchanger.com/online-advertising/zeta-global-buys-sizmek-dsp-and-rocket-fuel-dmp-assets-for-36-million/>runs</a> a service allowing advertisers to combine their data about potential customers with information purchased from data brokers or other ad tech companies to target ads. It also runs a platform on which advertisers can buy advertising space on websites. ",
+                        " The site sent information to the following domain <strong>rezync.com</strong>."
+                    ],
+                    "domains_found": [
+                        "<strong>rezync.com</strong>"
+                    ],
+                    "cardType": "reported_zeta global",
+                    "privacy_policy": "https://zetaglobal.com/privacy-policy/",
+                    "last_updated": "2020-09-03T12:00:00.000Z"
+                }
+            ],
+            "description": [
+                "The inspected website contacted some well known actors in the ad-tech industry. Not all of these loaded trackers, so they may be different from those listed in the tests section above. For more information on each company, what it does, and which of its domains Blacklight found during the inspection, click the arrow. Reading this can give you a better idea of how the ad-tech industry works."
+            ],
+            "thirdPartyTrackersFound": true
+        }
+    ],
+    "tracker_radar_last_updated": "2024-03-20T12:00:00.000Z",
+    "display_time": "Jan. 13, 2025, 11:55 ET",
+    "s3": {
+        "archive": "https://mrkp-static-production.themarkup.org/blacklight-us-ca/7bb1e1f48c10bf8febae71d77a96715ab2a14d35/blacklight-inspection-mhsrv.com.zip",
+        "report": "https://mrkp-static-production.themarkup.org/blacklight-us-ca/7bb1e1f48c10bf8febae71d77a96715ab2a14d35/report.html",
+        "screenshots": [
+            "https://mrkp-static-production.themarkup.org/blacklight-us-ca/7bb1e1f48c10bf8febae71d77a96715ab2a14d35/1.jpeg",
+            "https://mrkp-static-production.themarkup.org/blacklight-us-ca/7bb1e1f48c10bf8febae71d77a96715ab2a14d35/2.jpeg"
+        ]
+    }
+}
