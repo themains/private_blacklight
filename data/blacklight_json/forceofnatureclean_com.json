@@ -1,0 +1,451 @@
+{
+    "status": "success",
+    "title": "Blacklight - API Request",
+    "uri_ins": "http://forceofnatureclean.com",
+    "uri_dest": "https://www.forceofnatureclean.com/",
+    "uri_redirects": [
+        "http://forceofnatureclean.com/",
+        "https://forceofnatureclean.com/"
+    ],
+    "secure_connection": {},
+    "host": "forceofnatureclean.com",
+    "config": {
+        "emulateDevice": {
+            "name": "iPhone 13 Mini",
+            "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.4 Mobile/15E148 Safari/604.1",
+            "viewport": {
+                "width": 375,
+                "height": 812,
+                "deviceScaleFactor": 3,
+                "isMobile": true,
+                "hasTouch": true,
+                "isLandscape": false
+            }
+        },
+        "cleareCache": true,
+        "captureHar": true,
+        "captureLinks": false,
+        "enableAdBlock": false,
+        "saveBrowserProfile": false,
+        "numPages": 1,
+        "defaultTimeout": 30000,
+        "defaultWaitUntil": "networkidle2",
+        "headless": true,
+        "headers": {},
+        "extraChromiumArgs": [
+            "--allow-pre-commit-input",
+            "--disable-background-networking",
+            "--disable-background-timer-throttling",
+            "--disable-backgrounding-occluded-windows",
+            "--disable-breakpad",
+            "--disable-client-side-phishing-detection",
+            "--disable-component-extensions-with-background-pages",
+            "--disable-component-update",
+            "--disable-default-apps",
+            "--disable-dev-shm-usage",
+            "--disable-extensions",
+            "--disable-hang-monitor",
+            "--disable-ipc-flooding-protection",
+            "--disable-popup-blocking",
+            "--disable-prompt-on-repost",
+            "--disable-renderer-backgrounding",
+            "--disable-sync",
+            "--enable-automation",
+            "--enable-blink-features=IdleDetection",
+            "--export-tagged-pdf",
+            "--force-color-profile=srgb",
+            "--metrics-recording-only",
+            "--no-first-run",
+            "--password-store=basic",
+            "--use-mock-keychain",
+            "--disable-domain-reliability",
+            "--disable-print-preview",
+            "--disable-speech-api",
+            "--disk-cache-size=33554432",
+            "--mute-audio",
+            "--no-default-browser-check",
+            "--no-pings",
+            "--single-process",
+            "--font-render-hinting=none",
+            "--disable-features=Translate,BackForwardCache,AcceptCHFrame,MediaRouter,OptimizationHints,AudioServiceOutOfProcess,IsolateOrigins,site-per-process",
+            "--enable-features=NetworkServiceInProcess2,SharedArrayBuffer",
+            "--hide-scrollbars",
+            "--ignore-gpu-blocklist",
+            "--in-process-gpu",
+            "--window-size=1920,1080",
+            "--use-gl=angle",
+            "--use-angle=swiftshader",
+            "--allow-running-insecure-content",
+            "--disable-setuid-sandbox",
+            "--disable-site-isolation-trials",
+            "--disable-web-security",
+            "--no-sandbox",
+            "--no-zygote",
+            "--headless='shell'"
+        ],
+        "extraPuppeteerOptions": {}
+    },
+    "browser": {
+        "name": "Chromium",
+        "version": "HeadlessChrome/126.0.6478.0",
+        "user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/126.0.6478.0 Safari/537.36",
+        "platform": {
+            "name": "Linux",
+            "version": "5.10.227-239.884.amzn2.x86_64"
+        }
+    },
+    "script": {
+        "host": "169.254.196.186",
+        "version": {
+            "npm": "3.4.0",
+            "commit": "dev"
+        },
+        "node_version": "v18.20.4"
+    },
+    "start_time": "2025-01-08T23:48:48.250Z",
+    "end_time": "2025-01-08T23:49:24.081Z",
+    "browsing_history": [
+        "https://www.forceofnatureclean.com/",
+        "https://www.forceofnatureclean.com/terms-conditions-page/"
+    ],
+    "hosts": {
+        "requests": {
+            "first_party": [
+                "forceofnatureclean.com",
+                "www.forceofnatureclean.com"
+            ],
+            "third_party": [
+                "www.dwin1.com",
+                "ajax.cloudflare.com",
+                "embed.cloudflarestream.com",
+                "static.klaviyo.com",
+                "www.klaviyo.com",
+                "static.cloudflareinsights.com",
+                "static.zdassets.com",
+                "production-beam-widgets.beamimpact.com",
+                "d10lpsik1i8c69.cloudfront.net",
+                "www.googletagmanager.com",
+                "settings.luckyorange.net",
+                "static-tracking.klaviyo.com",
+                "www.google.com",
+                "bat.bing.com",
+                "www.paypal.com",
+                "ltm.linkby.com",
+                "s3-us-west-2.amazonaws.com",
+                "pvdpix.com",
+                "cdn.trackjs.com",
+                "pixel.blokid.com",
+                "fast.a.klaviyo.com",
+                "static-forms.klaviyo.com",
+                "www.googleadservices.com",
+                "analytics.google.com",
+                "stats.g.doubleclick.net",
+                "fonts.googleapis.com",
+                "use.typekit.net",
+                "p.typekit.net",
+                "b-code.liadm.com",
+                "googleads.g.doubleclick.net",
+                "www.paypalobjects.com",
+                "cdn-widgetsrepository.yotpo.com",
+                "ekr.zdassets.com",
+                "customer-zlvai03z4eaa6zgu.cloudflarestream.com",
+                "rp.liadm.com",
+                "a.klaviyo.com",
+                "capture.trackjs.com",
+                "t.paypal.com",
+                "platform.dash.cloudflare.com",
+                "d3k81ch9hvuctc.cloudfront.net",
+                "pub-6e7b6a31b040424ba12fc3e530af3686.r2.dev",
+                "forceofnatureclean.zendesk.com",
+                "idx.liadm.com",
+                "cdnjs.cloudflare.com",
+                "usage.trackjs.com",
+                "alocdn.com",
+                "p.alocdn.com",
+                "api-js.datadome.co"
+            ]
+        }
+    },
+    "groups": [
+        {
+            "title": "Blacklight Inspection Result",
+            "cards": [
+                {
+                    "cardType": "ddg_join_ads",
+                    "bigNumber": 8,
+                    "title": "Ad trackers found on this site.",
+                    "testEventsFound": true,
+                    "body": [
+                        "Websites containing advertising tracking technology load JavaScript code or small invisible images that are used to either build your advertising profile or to identify you for ad targeting on this site. These techniques are often used in addition to cookies to profile you.",
+                        "Blacklight detected trackers on this page sending data to companies involved in online advertising. Blacklight detected scripts belonging to <strong>Alphabet, Inc.</strong>, <strong>Awin AG</strong>, <span class=\"blacklight-client__more\" data-list=\"0\">and three other companies</span>."
+                    ],
+                    "expandableList": [
+                        [
+                            "Microsoft Corporation",
+                            "Klaviyo",
+                            "LiveIntent Inc."
+                        ]
+                    ],
+                    "domainData": {
+                        "scripts": [
+                            "dwin1.com",
+                            "klaviyo.com",
+                            "bing.com",
+                            "liadm.com",
+                            "googleadservices.com",
+                            "google.com",
+                            "googletagmanager.com",
+                            "doubleclick.net"
+                        ],
+                        "categories": [
+                            "Ad Motivated Tracking",
+                            "Advertising",
+                            "Audience Measurement",
+                            "Third-Party Analytics Marketing",
+                            "Online Payment",
+                            "CDN",
+                            "Ad Fraud",
+                            "Action Pixels",
+                            "Embedded Content",
+                            "Analytics",
+                            "Tag Manager"
+                        ],
+                        "owners": [
+                            "Microsoft Corporation",
+                            "Klaviyo",
+                            "LiveIntent Inc."
+                        ]
+                    },
+                    "onAvgStatement": "This is <strong>more than</strong> the average of <strong>seven</strong> that we found on popular sites",
+                    "surveyLink": "https://themarkup.org/blacklight/2020/09/22/how-we-built-a-real-time-privacy-inspector#survey",
+                    "methodology": "https://themarkup.org/blacklight/2020/09/22/how-we-built-a-real-time-privacy-inspector#ad-trackers"
+                },
+                {
+                    "title": "Third-party cookies found.",
+                    "body": [
+                        "These are commonly used by advertising tracking companies to profile you based on your internet usage.",
+                        "Blacklight detected <strong>13</strong> third-party cookies on this site.  Blacklight detected cookies set for <strong>TowerData, Inc.</strong>, <strong>LiveIntent Inc.</strong> and <span class=\"blacklight-client__more\" data-list=\"0\">and three others</span>"
+                    ],
+                    "testEventsFound": true,
+                    "bigNumber": 13,
+                    "onAvgStatement": "This is <strong>more than</strong> the average of <strong>three</strong> that we found on popular sites",
+                    "domainData": {
+                        "scripts": [
+                            "liadm.com",
+                            "pixel.blokid.com",
+                            "bing.com",
+                            "bat.bing.com",
+                            "linkby.com",
+                            "doubleclick.net",
+                            "forceofnatureclean.zendesk.com",
+                            "alocdn.com"
+                        ],
+                        "categories": [
+                            "Ad Motivated Tracking",
+                            "Advertising",
+                            "Audience Measurement",
+                            "Third-Party Analytics Marketing",
+                            "Ad Fraud",
+                            "Action Pixels",
+                            "Embedded Content",
+                            "Analytics",
+                            "Federated Login",
+                            "CDN"
+                        ],
+                        "owners": [
+                            "LiveIntent Inc.",
+                            "Microsoft Corporation",
+                            "Alphabet, Inc.",
+                            "Zendesk, Inc.",
+                            "TowerData, Inc."
+                        ]
+                    },
+                    "cardType": "cookies",
+                    "expandableList": [
+                        [
+                            "LiveIntent Inc.",
+                            "Microsoft Corporation",
+                            "Alphabet, Inc.",
+                            "Zendesk, Inc.",
+                            "TowerData, Inc."
+                        ]
+                    ],
+                    "methodology": "https://themarkup.org/blacklight/2020/09/22/how-we-built-a-real-time-privacy-inspector#third-party-cookies",
+                    "surveyLink": "https://themarkup.org/blacklight/2020/09/22/how-we-built-a-real-time-privacy-inspector#survey"
+                },
+                {
+                    "body": [
+                        "Canvas fingerprinting was detected on this website. This technique is designed to identify users even if they block third-party cookies. It can be used to track users' behavior across sites. This technique was used by six percent of popular sites when we <a href=\"https://themarkup.org/blacklight/2020/09/22/how-we-built-a-real-time-privacy-inspector#survey\"> scanned them</a> in September 2020.",
+                        " Blacklight detected a script loaded from <strong>blokid.com</strong> doing this on this site.",
+                        "It secretly draws the following image on your browser when you visit this website for the purpose of identifying your device."
+                    ],
+                    "testEventsFound": true,
+                    "caveat": "While Blacklight accurately detects the presence of canvas fingerprinting on a website, it cannot determine if the purpose is user behavior monitoring or for fraud prevention or bot detection.",
+                    "cardType": "canvas_fingerprinters",
+                    "domainData": {
+                        "scripts": [
+                            "blokid.com"
+                        ],
+                        "categories": [],
+                        "owners": []
+                    },
+                    "dataUrlForImage": [
+                        "data:image/png;base64,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"
+                    ],
+                    "methodology": "https://themarkup.org/blacklight/2020/09/22/how-we-built-a-real-time-privacy-inspector#canvas-fingerprinting",
+                    "title": "This website loads trackers on your computer that are designed to evade third-party cookie blockers."
+                },
+                {
+                    "body": [
+                        "Blacklight detected the use of a session recorder, which tracks user mouse movement, clicks, taps, scrolls, or even network activity. This data is compiled into videos and heat maps that website owners can watch to see how users interact with the site. Research has shown these practices can be insecure and make sensitive user data such as passwords and credit card information more vulnerable to leaks. This technique was used by fifteen percent of popular websites when we <a href=\"https://themarkup.org/blacklight/2020/09/22/how-we-built-a-real-time-privacy-inspector#survey\"> scanned them</a> in September 2020.",
+                        " Blacklight detected a script loaded from <strong>cloudfront.net</strong> doing this on this site."
+                    ],
+                    "testEventsFound": true,
+                    "caveat": "While Blacklight can detect whether a session recorder was loaded, it cannot determine exactly how the collected data is being used.",
+                    "cardType": "session_recorders",
+                    "domainData": {
+                        "scripts": [
+                            "cloudfront.net"
+                        ],
+                        "categories": [],
+                        "owners": []
+                    },
+                    "dataUrlForImage": [],
+                    "methodology": "https://themarkup.org/blacklight/2020/09/22/how-we-built-a-real-time-privacy-inspector#session-recording",
+                    "title": "This website could be monitoring your keystrokes and mouse clicks."
+                },
+                {
+                    "body": [
+                        "Key logging is when a website captures the text that you type into a web page before you hit the submit button. This technique has been used to identify anonymous web users by matching them to postal addresses and real names. This technique was used by four percent of popular websites when we <a href=\"https://themarkup.org/blacklight/2020/09/22/how-we-built-a-real-time-privacy-inspector#survey\"> scanned them</a> in September 2020."
+                    ],
+                    "title": "We did not find this website capturing keystrokes.",
+                    "testEventsFound": false,
+                    "caveat": "There are other reasons for key logging, such as providing autocomplete functionality. Blacklight cannot determine the intent behind the inspected website\u2019s use of this technique.",
+                    "cardType": "key_logging",
+                    "dataUrlForImage": [],
+                    "expandableList": [],
+                    "methodology": "https://themarkup.org/blacklight/2020/09/22/how-we-built-a-real-time-privacy-inspector#key-logging"
+                },
+                {
+                    "title": "Facebook Pixel not found on this website.",
+                    "body": [
+                        "The Facebook pixel is a snippet of code that sends data back to Facebook about people who visit this site and allows the site operator to later target them with ads on Facebook. A Facebook spokesperson told The Markup that the company set up this system so that a user doesn\u2019t have to be \u201csimultaneously logged into Facebook and viewing a third-party website for our business tools to function.\u201d Common actions that can be tracked via pixel include viewing a page or specific content, adding payment information, or making a purchase.  The Facebook pixel appeared in thirty percent of popular websites when we <a href=\"https://themarkup.org/blacklight/2020/09/22/how-we-built-a-real-time-privacy-inspector#survey\"> scanned them</a> in September 2020."
+                    ],
+                    "testEventsFound": false,
+                    "cardType": "fb_pixel_events",
+                    "methodology": "https://themarkup.org/blacklight/2020/09/22/how-we-built-a-real-time-privacy-inspector#facebook-pixel",
+                    "expandableList": [],
+                    "domainData": null
+                },
+                {
+                    "title": "Google Analytics' \"remarketing audiences\" feature not found.",
+                    "body": [
+                        "The Google Analytics \"remarketing audiences\" feature enables user tracking for targeted advertising across the internet. This feature allows a website to build custom audiences based on how a user interacts with this particular site and then follow those users across the internet and target them with advertising on other sites using Google Ads and Display & Video 360. A Google spokesperson told The Markup that site operators are <a href=\"https://support.google.com/analytics/answer/2700409?hl=en\"> supposed to</a> inform visitors when data collected with this feature is used to connect this browsing data with someone\u2019s real-world identity. You know when those shoes you were looking at follow you around the internet? This is one of the trackers leading to that. This feature appeared in fifty percent of popular websites when we <a href=\"https://themarkup.org/blacklight/2020/09/22/how-we-built-a-real-time-privacy-inspector#survey\"> scanned them</a> in September 2020."
+                    ],
+                    "testEventsFound": false,
+                    "cardType": "ga",
+                    "methodology": "https://themarkup.org/blacklight/2020/09/22/how-we-built-a-real-time-privacy-inspector#google-analytics-remarketing-audiences"
+                }
+            ],
+            "description": [
+                "Blacklight works by visiting each website with a headless browser running custom software built by The Markup. To learn more, read our <a href=\"https://themarkup.org/blacklight/2020/09/22/how-we-built-a-real-time-privacy-inspector\">methodology</a>."
+            ]
+        },
+        {
+            "title": "Some of the ad-tech companies this website interacted with:",
+            "cards": [
+                {
+                    "title": "Adobe",
+                    "bl_data_type": "script_domain",
+                    "ddg_company_lookup": "Adobe",
+                    "body": [
+                        "Blacklight detected the inspected website sending user data to <a href=https://www.adobe.com/>Adobe.</a> While Adobe is primarily associated with creative design products, a company spokesperson told The Markup that it also offers a suite of digital marketing products. Of the Adobe trackers that appeared in our scan of popular websites in <a href=https://themarkup.org/blacklight/2020/09/22/how-we-built-a-real-time-privacy-inspector#survey>September 2020</a>, the most common were Adobe Audience Manager and Adobe Advertising Cloud. Audience Manager helps advertisers build profiles of consumers based on their web browsing history and other data to target both ads and content on their own websites. Advertising Cloud sells ads on websites, streaming video, or TV, and tracks their performance. ",
+                        " The site sent information to the following domain <strong>typekit.net</strong>."
+                    ],
+                    "domains_found": [
+                        "<strong>typekit.net</strong>"
+                    ],
+                    "cardType": "reported_adobe",
+                    "privacy_policy": "https://www.adobe.com/privacy/policy.html",
+                    "last_updated": "2020-09-03T12:00:00.000Z"
+                },
+                {
+                    "title": "Alphabet",
+                    "bl_data_type": "script_domain",
+                    "ddg_company_lookup": "Google",
+                    "body": [
+                        "Blacklight detected this website sending user data to <a href=https://abc.xyz/>Alphabet,</a> the technology conglomerate that encompasses Google and associated companies like <a href=https://nest.com/>Nest</a>. The Silicon Valley giant collects data from twice the number of websites as its closest competitor, Facebook. An Alphabet spokesperson told The Markup that internet users can <a href=https://adssettings.google.com/authenticated>go here</a> if they want to opt out of the company showing them targeted ads based on their browsing history. ",
+                        "The site sent information to the following domains <strong>doubleclick.net</strong>, <strong>google.com</strong>, <strong>googleadservices.com</strong>, <strong>googletagmanager.com</strong>."
+                    ],
+                    "domains_found": [
+                        "<strong>doubleclick.net</strong>",
+                        "<strong>google.com</strong>",
+                        "<strong>googleadservices.com</strong>",
+                        "<strong>googletagmanager.com</strong>"
+                    ],
+                    "cardType": "reported_alphabet",
+                    "privacy_policy": "https://policies.google.com/privacy?hl=en-US",
+                    "last_updated": "2020-09-03T12:00:00.000Z"
+                },
+                {
+                    "title": "Amazon",
+                    "bl_data_type": "script_domain",
+                    "ddg_company_lookup": "Amazon",
+                    "body": [
+                        "Blacklight detected the inspected website sending user data to <a href=https://www.amazon.com/>Amazon,</a> which has a wide variety of business units. The most commonly appearing Amazon trackers in our scan of popular sites in <a href=https://themarkup.org/blacklight/2020/09/22/how-we-built-a-real-time-privacy-inspector#survey>September 2020</a> were those for <a href=https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Introduction.html>CloudFront</a> and its marketing research arm, <a href=https://www.alexa.com/>Alexa,</a> which helps marketers improve their search engine performance and provides site operators insights about the popularity of their websites. (This Alexa is unrelated to Amazon\u2019s virtual assistant of the same name.) Representatives from Amazon did not respond to multiple requests for comment.",
+                        " The site sent information to the following domain <strong>cloudfront.net</strong>."
+                    ],
+                    "domains_found": [
+                        "<strong>cloudfront.net</strong>"
+                    ],
+                    "cardType": "reported_amazon",
+                    "privacy_policy": "https://www.amazon.com/gp/help/customer/display.html?nodeId=201909010",
+                    "last_updated": "2020-09-03T12:00:00.000Z"
+                },
+                {
+                    "title": "Microsoft",
+                    "bl_data_type": "script_domain",
+                    "ddg_company_lookup": "Microsoft",
+                    "body": [
+                        "Blacklight detected the inspected <a href=https://www.xandr.com/news/att-consolidates-its-open-programmatic-spend-on-the-appnexus-dsp/ >website</a> sending <a href=https://azure.microsoft.com/en-us/services/cognitive-services/bing-custom-search/>use</a>r data to <a href=https://www.microsoft.com/en-us/>Microsoft.</a> In addition to its well-known products and services, the tech behemoth <a href=https://about.ads.microsoft.com/en-us/h/a/microsoft-advertising>sells</a> ads on Microsoft properties and websites that use Microsoft\u2019s search engine, Bing, for internal site searches. It also runs the <a href=https://about.ads.microsoft.com/en-us/solutions/microsoft-audience-network >Microsoft Audience Network</a>, which uses data gathered about consumers to target ads. Of the many Microsoft-related trackers that appeared in our scan of the internet\u2019s top 80,000 most popular websites, those associated with Bing were the most common. Microsoft\u2019s wide variety of business units include <a href=https://www.xandr.com/>Xandr</a>, which runs platforms both for website operators to offer space for sale to advertisers and for advertisers to offer to buy advertising space. A Microsoft spokesperson declined to tell The Markup how user data being sent to its domains was being used.",
+                        " The site sent information to the following domain <strong>bing.com</strong>."
+                    ],
+                    "domains_found": [
+                        "<strong>bing.com</strong>"
+                    ],
+                    "cardType": "reported_microsoft",
+                    "privacy_policy": "https://privacy.microsoft.com/en-us/privacystatement",
+                    "last_updated": "2020-09-03T12:00:00.000Z"
+                },
+                {
+                    "title": "TowerData",
+                    "bl_data_type": "script_domain",
+                    "ddg_company_lookup": "TowerData",
+                    "body": [
+                        "Blacklight detected the inspected website sending user data to <a href=https://www.towerdata.com/>Tower Data,</a> an ad tech company that <a href= https://www.towerdata.com/about>creates profiles</a> of web users <a href=https://www.towerdata.com/hs-fs/hub/68599/file-310644519-pdf/docs/TD_EmailIntelligence.pdf?t=1468437282479>anchored</a> to their email address, according to its website. It also <a href=https://info.towerdata.com/advocacy-data-case-study-lp>sells</a> data about voters to political campaigns. Representatives from Tower Data did not respond to multiple requests for comment.",
+                        " The site sent information to the following domain <strong>alocdn.com</strong>."
+                    ],
+                    "domains_found": [
+                        "<strong>alocdn.com</strong>"
+                    ],
+                    "cardType": "reported_towerdata",
+                    "privacy_policy": "https://www.towerdata.com/privacy-policy",
+                    "last_updated": "2020-09-03T12:00:00.000Z"
+                }
+            ],
+            "description": [
+                "The inspected website contacted some well known actors in the ad-tech industry. Not all of these loaded trackers, so they may be different from those listed in the tests section above. For more information on each company, what it does, and which of its domains Blacklight found during the inspection, click the arrow. Reading this can give you a better idea of how the ad-tech industry works."
+            ],
+            "thirdPartyTrackersFound": true
+        }
+    ],
+    "tracker_radar_last_updated": "2024-03-20T12:00:00.000Z",
+    "display_time": "Jan. 8, 2025, 18:48 ET",
+    "s3": {
+        "archive": "https://mrkp-static-production.themarkup.org/blacklight-us-ca/976ea59625cb4b680bc0940437db93babb0bc1b5/blacklight-inspection-forceofnatureclean.com.zip",
+        "report": "https://mrkp-static-production.themarkup.org/blacklight-us-ca/976ea59625cb4b680bc0940437db93babb0bc1b5/report.html",
+        "screenshots": [
+            "https://mrkp-static-production.themarkup.org/blacklight-us-ca/976ea59625cb4b680bc0940437db93babb0bc1b5/2.jpeg"
+        ]
+    }
+}

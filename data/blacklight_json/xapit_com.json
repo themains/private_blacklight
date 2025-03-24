@@ -1,0 +1,305 @@
+{
+    "status": "success",
+    "title": "Blacklight - API Request",
+    "uri_ins": "http://xapit.com",
+    "uri_dest": "https://xapit.com/",
+    "uri_redirects": [],
+    "secure_connection": {},
+    "host": "xapit.com",
+    "config": {
+        "emulateDevice": {
+            "name": "iPhone 13 Mini",
+            "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.4 Mobile/15E148 Safari/604.1",
+            "viewport": {
+                "width": 375,
+                "height": 812,
+                "deviceScaleFactor": 3,
+                "isMobile": true,
+                "hasTouch": true,
+                "isLandscape": false
+            }
+        },
+        "cleareCache": true,
+        "captureHar": true,
+        "captureLinks": false,
+        "enableAdBlock": false,
+        "saveBrowserProfile": false,
+        "numPages": 1,
+        "defaultTimeout": 30000,
+        "defaultWaitUntil": "networkidle2",
+        "headless": true,
+        "headers": {},
+        "extraChromiumArgs": [
+            "--allow-pre-commit-input",
+            "--disable-background-networking",
+            "--disable-background-timer-throttling",
+            "--disable-backgrounding-occluded-windows",
+            "--disable-breakpad",
+            "--disable-client-side-phishing-detection",
+            "--disable-component-extensions-with-background-pages",
+            "--disable-component-update",
+            "--disable-default-apps",
+            "--disable-dev-shm-usage",
+            "--disable-extensions",
+            "--disable-hang-monitor",
+            "--disable-ipc-flooding-protection",
+            "--disable-popup-blocking",
+            "--disable-prompt-on-repost",
+            "--disable-renderer-backgrounding",
+            "--disable-sync",
+            "--enable-automation",
+            "--enable-blink-features=IdleDetection",
+            "--export-tagged-pdf",
+            "--force-color-profile=srgb",
+            "--metrics-recording-only",
+            "--no-first-run",
+            "--password-store=basic",
+            "--use-mock-keychain",
+            "--disable-domain-reliability",
+            "--disable-print-preview",
+            "--disable-speech-api",
+            "--disk-cache-size=33554432",
+            "--mute-audio",
+            "--no-default-browser-check",
+            "--no-pings",
+            "--single-process",
+            "--font-render-hinting=none",
+            "--disable-features=Translate,BackForwardCache,AcceptCHFrame,MediaRouter,OptimizationHints,AudioServiceOutOfProcess,IsolateOrigins,site-per-process",
+            "--enable-features=NetworkServiceInProcess2,SharedArrayBuffer",
+            "--hide-scrollbars",
+            "--ignore-gpu-blocklist",
+            "--in-process-gpu",
+            "--window-size=1920,1080",
+            "--use-gl=angle",
+            "--use-angle=swiftshader",
+            "--allow-running-insecure-content",
+            "--disable-setuid-sandbox",
+            "--disable-site-isolation-trials",
+            "--disable-web-security",
+            "--no-sandbox",
+            "--no-zygote",
+            "--headless='shell'"
+        ],
+        "extraPuppeteerOptions": {}
+    },
+    "browser": {
+        "name": "Chromium",
+        "version": "HeadlessChrome/126.0.6478.0",
+        "user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/126.0.6478.0 Safari/537.36",
+        "platform": {
+            "name": "Linux",
+            "version": "5.10.227-239.884.amzn2.x86_64"
+        }
+    },
+    "script": {
+        "host": "169.254.89.46",
+        "version": {
+            "npm": "3.4.0",
+            "commit": "dev"
+        },
+        "node_version": "v18.20.4"
+    },
+    "start_time": "2025-01-08T03:36:14.996Z",
+    "end_time": "2025-01-08T03:36:35.277Z",
+    "browsing_history": [
+        "https://xapit.com/",
+        "https://xapit.com/faqs"
+    ],
+    "hosts": {
+        "requests": {
+            "first_party": [
+                "xapit.com"
+            ],
+            "third_party": [
+                "fonts.googleapis.com",
+                "maps.googleapis.com",
+                "use.fontawesome.com",
+                "www.google.com",
+                "xapit.s3.amazonaws.com",
+                "ssl.google-analytics.com",
+                "fonts.gstatic.com",
+                "www.gstatic.com",
+                "www.youtube.com",
+                "service-discovery.shield.com",
+                "googleads.g.doubleclick.net",
+                "static.doubleclick.net",
+                "jnn-pa.googleapis.com",
+                "i.ytimg.com",
+                "play.google.com",
+                "ap-device.csftr.com"
+            ]
+        }
+    },
+    "groups": [
+        {
+            "title": "Blacklight Inspection Result",
+            "cards": [
+                {
+                    "cardType": "ddg_join_ads",
+                    "bigNumber": 3,
+                    "title": "Ad trackers found on this site.",
+                    "testEventsFound": true,
+                    "body": [
+                        "Websites containing advertising tracking technology load JavaScript code or small invisible images that are used to either build your advertising profile or to identify you for ad targeting on this site. These techniques are often used in addition to cookies to profile you.",
+                        "Blacklight detected trackers on this page sending data to companies involved in online advertising. Blacklight detected a script belonging to the company <strong>Alphabet, Inc.</strong>."
+                    ],
+                    "expandableList": [
+                        [
+                            "Alphabet, Inc."
+                        ]
+                    ],
+                    "domainData": {
+                        "scripts": [
+                            "youtube.com",
+                            "google.com",
+                            "doubleclick.net"
+                        ],
+                        "categories": [
+                            "Ad Motivated Tracking",
+                            "CDN",
+                            "Embedded Content",
+                            "Advertising",
+                            "Online Payment"
+                        ],
+                        "owners": [
+                            "Alphabet, Inc."
+                        ]
+                    },
+                    "onAvgStatement": "This is <strong>less than half</strong> the average of <strong>seven</strong> that we found on popular sites",
+                    "surveyLink": "https://themarkup.org/blacklight/2020/09/22/how-we-built-a-real-time-privacy-inspector#survey",
+                    "methodology": "https://themarkup.org/blacklight/2020/09/22/how-we-built-a-real-time-privacy-inspector#ad-trackers"
+                },
+                {
+                    "title": "Third-party cookie found.",
+                    "body": [
+                        "These are commonly used by advertising tracking companies to profile you based on your internet usage.",
+                        "Blacklight detected <strong>1</strong> third-party cookie on this site.  Blacklight detected a cookie set for <strong>Cashshield Pte Ltd</strong>"
+                    ],
+                    "testEventsFound": true,
+                    "bigNumber": 1,
+                    "onAvgStatement": "This is <strong>less than half</strong> the average of <strong>three</strong> that we found on popular sites",
+                    "domainData": {
+                        "scripts": [
+                            "ap-device.csftr.com"
+                        ],
+                        "categories": [],
+                        "owners": [
+                            "Cashshield Pte Ltd"
+                        ]
+                    },
+                    "cardType": "cookies",
+                    "methodology": "https://themarkup.org/blacklight/2020/09/22/how-we-built-a-real-time-privacy-inspector#third-party-cookies",
+                    "surveyLink": "https://themarkup.org/blacklight/2020/09/22/how-we-built-a-real-time-privacy-inspector#survey"
+                },
+                {
+                    "body": [
+                        "Canvas fingerprinting was detected on this website. This technique is designed to identify users even if they block third-party cookies. It can be used to track users' behavior across sites. This technique was used by six percent of popular sites when we <a href=\"https://themarkup.org/blacklight/2020/09/22/how-we-built-a-real-time-privacy-inspector#survey\"> scanned them</a> in September 2020.",
+                        " Blacklight detected a script loaded from <strong>xapit.com</strong> doing this on this site.",
+                        "It secretly draws the following image on your browser when you visit this website for the purpose of identifying your device."
+                    ],
+                    "testEventsFound": true,
+                    "caveat": "While Blacklight accurately detects the presence of canvas fingerprinting on a website, it cannot determine if the purpose is user behavior monitoring or for fraud prevention or bot detection.",
+                    "cardType": "canvas_fingerprinters",
+                    "domainData": {
+                        "scripts": [
+                            "xapit.com"
+                        ],
+                        "categories": [],
+                        "owners": []
+                    },
+                    "dataUrlForImage": [
+                        "data:image/png;base64,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",
+                        "data:image/png;base64,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"
+                    ],
+                    "methodology": "https://themarkup.org/blacklight/2020/09/22/how-we-built-a-real-time-privacy-inspector#canvas-fingerprinting",
+                    "title": "This website loads trackers on your computer that are designed to evade third-party cookie blockers."
+                },
+                {
+                    "body": [
+                        "Blacklight did not detect the use of a session recorder, which tracks user mouse movement, clicks, taps, scrolls, or even network activity. Websites that use the technique compile this data into videos and heat maps that website owners can watch to see how users interact with the site. Research has shown these practices are insecure and make sensitive user data such as passwords and credit card information more vulnerable to leaks. This technique was used by fifteen percent of popular websites when we <a href=\"https://themarkup.org/blacklight/2020/09/22/how-we-built-a-real-time-privacy-inspector#survey\"> scanned them</a> in September 2020."
+                    ],
+                    "title": "Session recording services not found on this website.",
+                    "testEventsFound": false,
+                    "caveat": "While Blacklight can detect whether a session recorder was loaded, it cannot determine exactly how the collected data is being used.",
+                    "cardType": "session_recorders",
+                    "dataUrlForImage": [],
+                    "expandableList": [],
+                    "methodology": "https://themarkup.org/blacklight/2020/09/22/how-we-built-a-real-time-privacy-inspector#session-recording"
+                },
+                {
+                    "body": [
+                        "Key logging is when a website captures the text that you type into a web page before you hit the submit button. This technique has been used to identify anonymous web users by matching them to postal addresses and real names. This technique was used by four percent of popular websites when we <a href=\"https://themarkup.org/blacklight/2020/09/22/how-we-built-a-real-time-privacy-inspector#survey\"> scanned them</a> in September 2020."
+                    ],
+                    "title": "We did not find this website capturing keystrokes.",
+                    "testEventsFound": false,
+                    "caveat": "There are other reasons for key logging, such as providing autocomplete functionality. Blacklight cannot determine the intent behind the inspected website\u2019s use of this technique.",
+                    "cardType": "key_logging",
+                    "dataUrlForImage": [],
+                    "expandableList": [],
+                    "methodology": "https://themarkup.org/blacklight/2020/09/22/how-we-built-a-real-time-privacy-inspector#key-logging"
+                },
+                {
+                    "title": "Facebook Pixel not found on this website.",
+                    "body": [
+                        "The Facebook pixel is a snippet of code that sends data back to Facebook about people who visit this site and allows the site operator to later target them with ads on Facebook. A Facebook spokesperson told The Markup that the company set up this system so that a user doesn\u2019t have to be \u201csimultaneously logged into Facebook and viewing a third-party website for our business tools to function.\u201d Common actions that can be tracked via pixel include viewing a page or specific content, adding payment information, or making a purchase.  The Facebook pixel appeared in thirty percent of popular websites when we <a href=\"https://themarkup.org/blacklight/2020/09/22/how-we-built-a-real-time-privacy-inspector#survey\"> scanned them</a> in September 2020."
+                    ],
+                    "testEventsFound": false,
+                    "cardType": "fb_pixel_events",
+                    "methodology": "https://themarkup.org/blacklight/2020/09/22/how-we-built-a-real-time-privacy-inspector#facebook-pixel",
+                    "expandableList": [],
+                    "domainData": null
+                },
+                {
+                    "title": "Google Analytics' \"remarketing audiences\" feature not found.",
+                    "body": [
+                        "The Google Analytics \"remarketing audiences\" feature enables user tracking for targeted advertising across the internet. This feature allows a website to build custom audiences based on how a user interacts with this particular site and then follow those users across the internet and target them with advertising on other sites using Google Ads and Display & Video 360. A Google spokesperson told The Markup that site operators are <a href=\"https://support.google.com/analytics/answer/2700409?hl=en\"> supposed to</a> inform visitors when data collected with this feature is used to connect this browsing data with someone\u2019s real-world identity. You know when those shoes you were looking at follow you around the internet? This is one of the trackers leading to that. This feature appeared in fifty percent of popular websites when we <a href=\"https://themarkup.org/blacklight/2020/09/22/how-we-built-a-real-time-privacy-inspector#survey\"> scanned them</a> in September 2020."
+                    ],
+                    "testEventsFound": false,
+                    "cardType": "ga",
+                    "methodology": "https://themarkup.org/blacklight/2020/09/22/how-we-built-a-real-time-privacy-inspector#google-analytics-remarketing-audiences"
+                }
+            ],
+            "description": [
+                "Blacklight works by visiting each website with a headless browser running custom software built by The Markup. To learn more, read our <a href=\"https://themarkup.org/blacklight/2020/09/22/how-we-built-a-real-time-privacy-inspector\">methodology</a>."
+            ]
+        },
+        {
+            "title": "Some of the ad-tech companies this website interacted with:",
+            "cards": [
+                {
+                    "title": "Alphabet",
+                    "bl_data_type": "script_domain",
+                    "ddg_company_lookup": "Google",
+                    "body": [
+                        "Blacklight detected this website sending user data to <a href=https://abc.xyz/>Alphabet,</a> the technology conglomerate that encompasses Google and associated companies like <a href=https://nest.com/>Nest</a>. The Silicon Valley giant collects data from twice the number of websites as its closest competitor, Facebook. An Alphabet spokesperson told The Markup that internet users can <a href=https://adssettings.google.com/authenticated>go here</a> if they want to opt out of the company showing them targeted ads based on their browsing history. ",
+                        "The site sent information to the following domains <strong>doubleclick.net</strong>, <strong>google-analytics.com</strong>, <strong>google.com</strong>, <strong>googleapis.com</strong>, <strong>youtube.com</strong>."
+                    ],
+                    "domains_found": [
+                        "<strong>doubleclick.net</strong>",
+                        "<strong>google-analytics.com</strong>",
+                        "<strong>google.com</strong>",
+                        "<strong>googleapis.com</strong>",
+                        "<strong>youtube.com</strong>"
+                    ],
+                    "cardType": "reported_alphabet",
+                    "privacy_policy": "https://policies.google.com/privacy?hl=en-US",
+                    "last_updated": "2020-09-03T12:00:00.000Z"
+                }
+            ],
+            "description": [
+                "The inspected website contacted some well known actors in the ad-tech industry. Not all of these loaded trackers, so they may be different from those listed in the tests section above. For more information on each company, what it does, and which of its domains Blacklight found during the inspection, click the arrow. Reading this can give you a better idea of how the ad-tech industry works."
+            ],
+            "thirdPartyTrackersFound": true
+        }
+    ],
+    "tracker_radar_last_updated": "2024-03-20T12:00:00.000Z",
+    "display_time": "Jan. 7, 2025, 22:36 ET",
+    "s3": {
+        "archive": "https://mrkp-static-production.themarkup.org/blacklight-us-ca/fed32b460aeafc71bf94901240ebc16b29e846d3/blacklight-inspection-xapit.com.zip",
+        "report": "https://mrkp-static-production.themarkup.org/blacklight-us-ca/fed32b460aeafc71bf94901240ebc16b29e846d3/report.html",
+        "screenshots": [
+            "https://mrkp-static-production.themarkup.org/blacklight-us-ca/fed32b460aeafc71bf94901240ebc16b29e846d3/1.jpeg",
+            "https://mrkp-static-production.themarkup.org/blacklight-us-ca/fed32b460aeafc71bf94901240ebc16b29e846d3/2.jpeg"
+        ]
+    }
+}
