@@ -30,7 +30,7 @@ from typing import Any, Iterable, List, Optional
 
 import matplotlib.pyplot as plt
 import pandas as pd
-
+import numpy as np
 
 def extract_emails(text: Optional[str]) -> List[str]:
     """
@@ -226,3 +226,106 @@ def process_json_files_to_matrix(json_folder):
 
     return df
 
+
+def calculate_summary_statistics(
+    data_df,
+    groupby_column,
+    value_column,
+    percentiles=None,
+    sort_order="count",
+    custom_order=None,
+    category_names=None,
+):
+    """
+    Calculate summary statistics for a given DataFrame, including percentage of the total sample size.
+
+    Parameters:
+        data_df (DataFrame): The DataFrame containing the data.
+        groupby_column (str): The column to group by.
+        value_column (str): The column for which to calculate statistics.
+        percentiles (list, optional): List of percentiles to calculate. Default is None.
+        sort_order (str, optional): "count" to sort by count (highest first), "custom" for a user-defined order. Default is "count".
+        custom_order (list, optional): Custom order of categories if sort_order is "custom". Default is None.
+        category_names (dict, optional): Dictionary to map original category names to new display names. Default is None.
+
+    Returns:
+        DataFrame: A DataFrame with the summary statistics, including count and percentage of total.
+    """
+    if percentiles is None:
+        percentiles = [25, 50, 75]
+
+    # Calculate summary statistics
+    summary_stats = data_df.groupby(groupby_column)[value_column].agg(
+        count="size", mean="mean", std="std", min="min", max="max"
+    )
+
+    # Ensure count is an integer
+    summary_stats["count"] = summary_stats["count"].astype(int)
+
+    # Round mean and std to one decimal place
+    summary_stats["mean"] = summary_stats["mean"].round(1)
+    summary_stats["std"] = summary_stats["std"].round(1)
+    summary_stats["min"] = summary_stats["min"].round(1)
+    summary_stats["max"] = summary_stats["max"].round(1)
+
+    # Calculate the percentage of the total sample size for each group
+    total_count = len(data_df)
+    summary_stats["percent"] = (summary_stats["count"] / total_count * 100).round(1)
+
+    # Format the count and percentage together in the desired format
+    summary_stats["count"] = summary_stats.apply(
+        lambda row: f"{int(row['count'])} ({row['percent']}\%)", axis=1
+    )
+    summary_stats = summary_stats.drop(
+        columns="percent"
+    )  # Drop the intermediate percent column
+
+    # Calculate percentile values
+    percentile_values = (
+        data_df.groupby(groupby_column)[value_column]
+        .apply(lambda x: pd.Series(np.nanpercentile(x, percentiles), index=percentiles))
+        .unstack()
+        .round(1)
+    )
+
+    # Merge summary statistics and percentile values
+    summary_with_percentiles = pd.merge(
+        summary_stats, percentile_values, left_index=True, right_index=True
+    )
+
+    # Reorder columns
+    desired_columns = ["count", "mean", "std", "min"] + percentiles + ["max"]
+    summary_with_percentiles = summary_with_percentiles.reindex(
+        columns=desired_columns
+    ).reset_index()
+
+    # Sort the DataFrame based on the selected sort_order
+    if sort_order == "count":
+        # Extract numeric part from count, convert to int, and sort by it
+        summary_with_percentiles["count_value"] = summary_with_percentiles[
+            "count"
+        ].apply(lambda x: int(x.split()[0]))
+        summary_with_percentiles = summary_with_percentiles.sort_values(
+            by="count_value", ascending=False
+        ).reset_index(drop=True)
+        summary_with_percentiles = summary_with_percentiles.drop(
+            columns="count_value"
+        )  # Drop the helper column after sorting
+    elif sort_order == "custom" and custom_order is not None:
+        # Sort by the custom order provided by the user
+        summary_with_percentiles[groupby_column] = pd.Categorical(
+            summary_with_percentiles[groupby_column],
+            categories=custom_order,
+            ordered=True,
+        )
+        summary_with_percentiles = summary_with_percentiles.sort_values(
+            by=groupby_column
+        ).reset_index(drop=True)
+
+    # Apply custom category names if provided
+    if category_names:
+        summary_with_percentiles[groupby_column] = summary_with_percentiles[
+            groupby_column
+        ].replace(category_names)
+
+    return summary_with_percentiles        
