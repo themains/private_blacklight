@@ -57,21 +57,19 @@ runreg <- function(
   
 }
 
-shell("cls")
-runreg(yvar="bl_ddg_join_ads_rate", data=data)
-
-bl_measures <- c(
+yvars <- c(
   "bl_ddg_join_ads_rate",
   "bl_third_party_cookies_rate",
   "bl_key_logging_rate",
   "bl_session_recording_rate",
   "bl_canvas_fingerprinting_rate",
   "bl_fb_pixel_rate",
-  "bl_google_analytics_rate"
+  "bl_google_analytics_rate",
+  "who_trackers_per_page_load_rate"
 )
 
 models <- lapply(
-  bl_measures, 
+  yvars, 
   function(y) {runreg(yvar = y, data = data)}
 )
 
@@ -116,8 +114,8 @@ COEF_ORDER = c(
 
 etable(
   models,
-  digits = 3,
-  digits.stats = 3,
+  digits = 2,
+  digits.stats = 2,
   dict = COEF_LABELS,
   order = COEF_ORDER,
   signif.code = c("***"=0.01, "**"=0.05, "*"=0.10),
@@ -131,13 +129,14 @@ etable(
     "Session recording",
     "Canvas FP",
     "FB Pixel",
-    "Google Analytics"
+    "Google Analytics",
+    "Trackers/page"
   ),
   tex = TRUE,
   adjustbox=TRUE,
-  file = "../tables/bl_demo_differences.tex",
+  file = "../tables/demo_differences.tex",
   replace=TRUE,  
   style.tex = style.tex("aer")
 )
-cat(readLines("../tables/bl_demo_differences.tex"), sep = "\n")
+cat(readLines("../tables/demo_differences.tex"), sep = "\n")
 
