@@ -151,7 +151,7 @@ def pandas_to_tex(
         texfile += ".tex"
 
     tex_table = df.to_latex(index=index, header=False, escape=escape, **kwargs)
-    tex_table_fragment = "\n".join(tex_table.split("\n")[2:-3])
+    tex_table_fragment = "\n".join(tex_table.split("\n")[3:-3])
     # Remove the last \\ in the tex fragment to prevent the annoying
     # "Misplaced \noalign" LaTeX error when I use \bottomrule
     # tex_table_fragment = tex_table_fragment[:-2]
