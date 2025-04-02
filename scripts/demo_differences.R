@@ -57,22 +57,6 @@ runreg <- function(
   
 }
 
-yvars <- c(
-  "bl_ddg_join_ads_rate",
-  "bl_third_party_cookies_rate",
-  "bl_key_logging_rate",
-  "bl_session_recording_rate",
-  "bl_canvas_fingerprinting_rate",
-  "bl_fb_pixel_rate",
-  "bl_google_analytics_rate",
-  "who_trackers_per_page_load_rate"
-)
-
-models <- lapply(
-  yvars, 
-  function(y) {runreg(yvar = y, data = data)}
-)
-
 # coef labels -------------------------------------------------------------
 COEF_LABELS = c(
   "gender_lab::Female" = "Woman",
@@ -112,6 +96,23 @@ COEF_ORDER = c(
   "Constant"
 )
 
+
+yvars <- c(
+  "bl_ddg_join_ads_rate",
+  "bl_third_party_cookies_rate",
+  "bl_fb_pixel_rate",
+  "bl_google_analytics_rate",
+  "bl_key_logging_rate",
+  "bl_session_recording_rate",
+  "bl_canvas_fingerprinting_rate",
+  "who_trackers_per_page_load_rate"
+)
+
+models <- lapply(
+  yvars, 
+  function(y) {runreg(yvar = y, data = data)}
+)
+
 etable(
   models,
   digits = 2,
@@ -123,14 +124,14 @@ etable(
   se.row = FALSE,
   depvar=FALSE,
   headers = c(
-    "Ad trackers",
-    "3rd Party Cookies",
-    "Key logging",
-    "Session recording",
-    "Canvas FP",
+    "Ad",
+    "Cookies",
     "FB Pixel",
-    "Google Analytics",
-    "Trackers/page"
+    "GA",
+    "Keylogger",
+    "Session rec",
+    "Canvas FP",
+    "Trackers/page"    
   ),
   tex = TRUE,
   adjustbox=TRUE,
@@ -139,4 +140,3 @@ etable(
   style.tex = style.tex("aer")
 )
 cat(readLines("../tables/demo_differences.tex"), sep = "\n")
-
