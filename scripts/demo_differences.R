@@ -138,11 +138,11 @@ etable(
   headers = col_headers,
   tex = TRUE,
   adjustbox=TRUE,
-  file = "../tables/cum_exposure_demo_differences.tex",
+  file = "../tables/demo_differences_cum_exposure.tex",
   replace=TRUE,  
   style.tex = style.tex("aer")
 )
-cat(readLines("../tables/cum_exposure_demo_differences.tex"), sep = "\n")
+cat(readLines("../tables/demo_differences_cum_exposure.tex"), sep = "\n")
 
 
 yvars <- c(
@@ -175,8 +175,8 @@ etable(
   headers = col_headers,
   tex = TRUE,
   adjustbox=TRUE,
-  file = "../tables/exposure_rate_demo_differences.tex",
+  file = "../tables/demo_differences_exposure_rate.tex",
   replace=TRUE,  
   style.tex = style.tex("aer")
 )
-cat(readLines("../tables/exposure_rate_demo_differences.tex"), sep = "\n")
+cat(readLines("../tables/demo_differences_exposure_rate.tex"), sep = "\n")
