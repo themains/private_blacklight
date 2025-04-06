@@ -97,6 +97,54 @@ COEF_ORDER = c(
 )
 
 
+col_headers <- c(
+  "Ad",
+  "Cookies",
+  "FB Pixel",
+  "GA",
+  "Keylogger",
+  "Session rec",
+  "Canvas FP",
+  "Trackers"      
+)
+
+
+yvars_cum <- c(
+  "bl_ddg_join_ads",
+  "bl_third_party_cookies",
+  "bl_fb_pixel",
+  "bl_google_analytics",
+  "bl_key_logging",
+  "bl_session_recording",
+  "bl_canvas_fingerprinting",
+  "who_trackers_per_page_load"
+)
+
+models_cum <- lapply(
+  yvars_cum, 
+  function(y) {runreg(yvar = y, data = data)}
+)
+
+etable(
+  models_cum,
+  digits = 2,
+  digits.stats = 2,
+  dict = COEF_LABELS,
+  order = COEF_ORDER,
+  signif.code = c("***"=0.01, "**"=0.05, "*"=0.10),
+  fitstat = c("my", "r2", "n"),
+  se.row = FALSE,
+  depvar=FALSE,
+  headers = col_headers,
+  tex = TRUE,
+  adjustbox=TRUE,
+  file = "../tables/cum_exposure_demo_differences.tex",
+  replace=TRUE,  
+  style.tex = style.tex("aer")
+)
+cat(readLines("../tables/cum_exposure_demo_differences.tex"), sep = "\n")
+
+
 yvars <- c(
   "bl_ddg_join_ads_rate",
   "bl_third_party_cookies_rate",
@@ -107,6 +155,7 @@ yvars <- c(
   "bl_canvas_fingerprinting_rate",
   "who_trackers_per_page_load_rate"
 )
+
 
 models <- lapply(
   yvars, 
@@ -123,20 +172,11 @@ etable(
   fitstat = c("my", "r2", "n"),
   se.row = FALSE,
   depvar=FALSE,
-  headers = c(
-    "Ad",
-    "Cookies",
-    "FB Pixel",
-    "GA",
-    "Keylogger",
-    "Session rec",
-    "Canvas FP",
-    "Trackers/page"    
-  ),
+  headers = col_headers,
   tex = TRUE,
   adjustbox=TRUE,
-  file = "../tables/demo_differences.tex",
+  file = "../tables/exposure_rate_demo_differences.tex",
   replace=TRUE,  
   style.tex = style.tex("aer")
 )
-cat(readLines("../tables/demo_differences.tex"), sep = "\n")
+cat(readLines("../tables/exposure_rate_demo_differences.tex"), sep = "\n")
