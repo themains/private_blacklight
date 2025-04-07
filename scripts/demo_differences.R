@@ -180,3 +180,37 @@ etable(
   style.tex = style.tex("aer")
 )
 cat(readLines("../tables/demo_differences_exposure_rate.tex"), sep = "\n")
+
+
+
+# Bonferroni --------------------------------------------------------------
+print_pvals_thresholds <- function(models, threshold, digits = 8) {
+  for (i in seq_along(models)) {
+    model <- models[[i]]
+    depvar <- as.character(model$fml[[2]])
+    
+    cat("\n\n======================================\n")
+    cat("Outcome:", depvar)
+    cat("\nAdjusted threshold:", threshold, "\n")
+    cat("======================================\n")
+    
+    coefs <- summary(model)$coeftable
+    pvals <- coefs[, "Pr(>|t|)"]
+    
+    formatted_p <- formatC(pvals, format = "f", digits = digits)
+    below_thresh <- pvals < threshold
+    
+    print(data.frame(
+      term = rownames(coefs),
+      p_value = formatted_p,
+      bonf_sig = ifelse(below_thresh, "✔️", "")
+    ), row.names = FALSE)
+  }
+}
+
+threshold <- 0.05/ 12
+# threshold <- 1 - (1 - 0.05)^(1 / (12))
+threshold
+
+print_pvals_thresholds(models_cum, threshold)
+print_pvals_thresholds(models, threshold)
