@@ -26,11 +26,13 @@
 import json
 import os
 import re
-from typing import Any, Iterable, List, Optional
-
+from typing import Any, Iterable, List, Optional, Tuple
+from matplotlib.figure import Figure
+from matplotlib.axes import Axes
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
+
 
 def extract_emails(text: Optional[str]) -> List[str]:
     """
@@ -78,6 +80,27 @@ def clean_contact_column(
     df_long = df.explode("email").reset_index(drop=True)
 
     return df_long
+
+
+def init_mpl_fig(aspect_ratio: Tuple[float, float] = (12, 8), scale: float = 1.0) -> Tuple[Figure, Axes]:
+    """
+    Create a matplotlib figure and axes with a scaled aspect ratio.
+
+    Args:
+        aspect_ratio (tuple of float): Desired width-to-height ratio (default is (12, 8)).
+        scale (float): Scaling factor to apply to the aspect ratio (default is 0.8).
+
+    Returns:
+        tuple: A tuple (fig, ax) where fig is the Figure object and ax is the Axes.
+
+    Example:
+        >>> fig, ax = make_fig(aspect_ratio=(16, 9), scale=1.0)
+        >>> ax.plot([0, 1], [0, 1])
+        >>> plt.show()
+    """
+    figsize = tuple(k * scale for k in aspect_ratio)
+    fig, ax = plt.subplots(figsize=figsize)
+    return fig, ax
 
 
 def save_mpl_fig(
@@ -328,4 +351,65 @@ def calculate_summary_statistics(
             groupby_column
         ].replace(category_names)
 
-    return summary_with_percentiles        
+    return summary_with_percentiles
+
+
+from constants import filepaths
+
+
+def load_visit_data(filepaths=filepaths):
+    usecols_webmobile_webdesktop = [
+        "caseid",
+        "category",
+        "private_domain",
+        "visit_duration",
+        "visit_time_local",
+        "page_views",
+    ]
+    usecols_web = [
+        "caseid",
+        "category",
+        "private_domain",
+        "page_duration",
+        "session_start_time",
+    ]
+
+    df_visits = pd.concat(
+        [
+            # ===============================================
+            # Get web_mobile
+            pd.read_csv(
+                filepaths["web_mobile"],
+                usecols=usecols_webmobile_webdesktop,
+                low_memory=False,
+            ).assign(source="mobile_web"),
+            # ===============================================
+            # Get web_desktop
+            pd.read_csv(
+                filepaths["web_desktop"],
+                usecols=usecols_webmobile_webdesktop,
+                low_memory=False,
+            ).assign(source="desktop_web"),
+            # ===============================================
+            # Get web
+            (
+                pd.read_csv(
+                    filepaths["web"],
+                    usecols=usecols_web,
+                    low_memory=False,
+                )
+                # Renaming columns to be consistent w/ web_mobile & web_desktop
+                .rename(
+                    columns={
+                        "session_start_time": "visit_time_local",
+                        "page_duration": "visit_duration",
+                    }
+                ).assign(source="web")
+                # Adding page_view to be consistent w/ web_mobile & web_desktop
+                .assign(page_views=1)
+            ),
+        ]
+    ).reset_index(drop=True)
+
+    print(f"{len(df_visits)=:,}")
+    return df_visits
