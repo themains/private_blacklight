@@ -20,6 +20,7 @@ data/yg/realityMine_media_play_2022-06-01_2022-06-31.csv
 data/yg/realityMine_web_2022-06-01_2022-06-30.csv
 data/yg/realityMine_web_desktop_2022-06-01_2022-06-30.csv
 data/yg/realityMine_web_mobile_2022-06-01_2022-06-30.csv
+data/tracker-radar/
 
 # Created by https://www.toptal.com/developers/gitignore/api/python
 # Edit at https://www.toptal.com/developers/gitignore?templates=python
