@@ -1,7 +1,7 @@
 library(dplyr)
 library(fixest)
 
-data = read.csv("../data/combined_yg_bl_who.csv") %>% 
+data = read.csv("../data/combined_yg_bl_who_derived_hist_tracking.csv") %>% 
   mutate(
     women = ifelse(gender_lab == "Female", 1, 0),
     tt_visits_scaled = scales::rescale(tt_visits, to = c(0, 1)),
@@ -145,7 +145,7 @@ etable(
 cat(readLines("../tables/demo_differences_cum_exposure.tex"), sep = "\n")
 
 
-yvars <- c(
+yvars_rate <- c(
   "bl_ddg_join_ads_rate",
   "bl_third_party_cookies_rate",
   "bl_fb_pixel_rate",
@@ -158,7 +158,7 @@ yvars <- c(
 
 
 models <- lapply(
-  yvars, 
+  yvars_rate, 
   function(y) {runreg(yvar = y, data = data)}
 )
 
@@ -180,7 +180,6 @@ etable(
   style.tex = style.tex("aer")
 )
 cat(readLines("../tables/demo_differences_exposure_rate.tex"), sep = "\n")
-
 
 
 # Bonferroni --------------------------------------------------------------
