@@ -194,22 +194,24 @@ print_pvals_thresholds <- function(models, threshold, digits = 8) {
     cat("======================================\n")
     
     coefs <- summary(model)$coeftable
+    coefs <- coefs[rownames(coefs) != "(Intercept)", , drop = FALSE]
     pvals <- coefs[, "Pr(>|t|)"]
     
     formatted_p <- formatC(pvals, format = "f", digits = digits)
-    below_thresh <- pvals < threshold
+    
+    unadj_sig <- ifelse(pvals < 0.05, "✔️", "")
+    bonf_sig <- ifelse(pvals < threshold, "✔️", "")
     
     print(data.frame(
       term = rownames(coefs),
       p_value = formatted_p,
-      bonf_sig = ifelse(below_thresh, "✔️", "")
+      unadj_sig = unadj_sig,
+      bonf_sig = bonf_sig
     ), row.names = FALSE)
   }
 }
 
 threshold <- 0.05/ 12
-# threshold <- 1 - (1 - 0.05)^(1 / (12))
-threshold
 
 print_pvals_thresholds(models_cum, threshold)
 print_pvals_thresholds(models, threshold)
