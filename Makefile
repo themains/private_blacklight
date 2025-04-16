@@ -46,6 +46,7 @@ setup: $(REQUIREMENTS)
 		echo "==> Installing requirements" && \
 		pip install -r $< && \
 		jupyter contrib nbextensions install --sys-prefix --skip-running-check && \
+		python -m ipykernel install --user --name=$(VENVPATH) --display-name "Python ($(VENVPATH))" && \
 		echo "==> Packages available:" && \
 		which pip && \
 		pip list && \
