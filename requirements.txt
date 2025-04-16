@@ -1,6 +1,7 @@
-pandas==2.0.0
+pandas
 pyarrow
 pyjanitor
+numpy
 matplotlib
 seaborn
 jupyter
