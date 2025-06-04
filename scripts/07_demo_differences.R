@@ -4,8 +4,12 @@ library(fixest)
 data = read.csv("../data/combined_yg_bl_who_derived_hist_tracking.csv") %>% 
   mutate(
     women = ifelse(gender_lab == "Female", 1, 0),
+    # Rescaling
     tt_visits_scaled = scales::rescale(tt_visits, to = c(0, 1)),
     tt_domains_scaled = scales::rescale(tt_domains, to = c(0, 1)),
+    bl_ddg_join_ads = bl_ddg_join_ads / 100,
+    bl_third_party_cookies = bl_third_party_cookies / 100,
+    top_org_visits = top_org_visits / 100    
   )
 
 head(data)
@@ -105,7 +109,7 @@ col_headers <- c(
   "Keylogger",
   "Session rec",
   "Canvas FP",
-  "Trackers"      
+  "Top share"      
 )
 
 
@@ -117,7 +121,7 @@ yvars_cum <- c(
   "bl_key_logging",
   "bl_session_recording",
   "bl_canvas_fingerprinting",
-  "who_trackers_per_page_load"
+  "top_org_visits"
 )
 
 models_cum <- lapply(
@@ -153,17 +157,18 @@ yvars_rate <- c(
   "bl_key_logging_rate",
   "bl_session_recording_rate",
   "bl_canvas_fingerprinting_rate",
-  "who_trackers_per_page_load_rate"
+  "top_org_share"
 )
 
 
-models <- lapply(
+models_rate <- lapply(
   yvars_rate, 
   function(y) {runreg(yvar = y, data = data)}
 )
 
+
 etable(
-  models,
+  models_rate,
   digits = 2,
   digits.stats = 2,
   dict = COEF_LABELS,
@@ -179,6 +184,11 @@ etable(
   replace=TRUE,  
   style.tex = style.tex("aer")
 )
+cat(readLines("../tables/demo_differences_exposure_rate.tex"), sep = "\n")
+# Replace the \times 10^{...} with just 0
+table_ <- gsub("\\$-?\\d+\\.\\d+\\\\times 10\\^\\{-\\d+\\}\\$", "0.000", table_tex)
+# Write back cleaned version
+writeLines(table_, "../tables/demo_differences_exposure_rate.tex")
 cat(readLines("../tables/demo_differences_exposure_rate.tex"), sep = "\n")
 
 
@@ -214,4 +224,4 @@ print_pvals_thresholds <- function(models, threshold, digits = 8) {
 threshold <- 0.05/ 12
 
 print_pvals_thresholds(models_cum, threshold)
-print_pvals_thresholds(models, threshold)
+print_pvals_thresholds(models_rate, threshold)
