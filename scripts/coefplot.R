@@ -1,6 +1,7 @@
 library(ggplot2)
 
 outcome_coefplot_labels <- c(
+  # Rates
   "bl_ddg_join_ads_rate" = "Ad trackers",
   "bl_third_party_cookies_rate" = "3rd Party Cookies",
   "bl_key_logging_rate" = "Keylogging",
@@ -8,7 +9,8 @@ outcome_coefplot_labels <- c(
   "bl_canvas_fingerprinting_rate" = "Canvas FP",
   "bl_fb_pixel_rate" = "FB Pixel",
   "bl_google_analytics_rate" = "Google Analytics",
-  "who_trackers_per_page_load_rate" = "Trackers",
+  "top_org_share" = "Max share",
+  # Cumulative
   "bl_ddg_join_ads" = "Ad trackers",
   "bl_third_party_cookies" = "3rd Party Cookies",
   "bl_key_logging" = "Keylogging",
@@ -16,7 +18,8 @@ outcome_coefplot_labels <- c(
   "bl_canvas_fingerprinting" = "Canvas FP",
   "bl_fb_pixel" = "FB Pixel",
   "bl_google_analytics" = "Google Analytics",
-  "who_trackers_per_page_load" = "Trackers"
+  "who_trackers_per_page_load" = "Trackers",
+  "top_org_visits" = "Max share"
 )
 
 process_model_list <- function(model_list, yvars) {

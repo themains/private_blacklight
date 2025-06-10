@@ -185,8 +185,9 @@ etable(
   style.tex = style.tex("aer")
 )
 cat(readLines("../tables/demo_differences_exposure_rate.tex"), sep = "\n")
+table_ = cat(readLines("../tables/demo_differences_exposure_rate.tex"), sep = "\n")
 # Replace the \times 10^{...} with just 0
-table_ <- gsub("\\$-?\\d+\\.\\d+\\\\times 10\\^\\{-\\d+\\}\\$", "0.000", table_tex)
+table_ <- gsub("\\$-?\\d+\\.\\d+\\\\times 10\\^\\{-\\d+\\}\\$", "0.000", table_)
 # Write back cleaned version
 writeLines(table_, "../tables/demo_differences_exposure_rate.tex")
 cat(readLines("../tables/demo_differences_exposure_rate.tex"), sep = "\n")
@@ -225,3 +226,6 @@ threshold <- 0.05/ 12
 
 print_pvals_thresholds(models_cum, threshold)
 print_pvals_thresholds(models_rate, threshold)
+
+
+source("coefplot.R")
