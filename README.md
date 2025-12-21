@@ -20,4 +20,4 @@ We also use data from https://whotracks.me/ to augment our analyses.
 - [themains/pwned_pols](https://github.com/themains/pwned_pols) — A third of the politicians have had their data breached at least once. More alarmingly, over one in five have had their sensitive data, such as bank account numbers, biometric data, browsing history, chat logs, credit card CVV, etc., breached.
 - [themains/pwned](https://github.com/themains/pwned) — How Often Are Americans' Accounts Breached?
 - [themains/private_gov](https://github.com/themains/private_gov) — How common are third-party cookies, trackers, key loggers, etc. on government websites?
-- [themains/know_your_ip](https://github.com/themains/know_your_ip) — Know Your IP: Get location, blacklist status, shodan and censys results, and more.
+- [themains/know-your-ip](https://github.com/themains/know-your-ip) — Know Your IP: Get location, blacklist status, shodan and censys results, and more.
