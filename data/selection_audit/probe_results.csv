@@ -1,0 +1,201 @@
+private_domain,dns_resolves,probe_status,http_status,final_url,page_title,probe_error,bl_scan_success,bl_final_url,bl_ddg_join_ads,bl_third_party_cookies,bl_canvas_fingerprinting,bl_session_recording,bl_key_logging,bl_fb_pixel,bl_google_analytics
+aaxads.com,False,dead,,,,"dns: [Errno 8] nodename nor servname provided, or not known",False,,,,,,,,
+academy.com,True,live,200.0,https://www.academy.com/,"Academy Sports + Outdoors | Quality Sporting Goods | Top Hunting, Fishing & Outdoor Gear",,True,https://www.academy.com/,9.0,2.0,0.0,1.0,0.0,1.0,0.0
+adoptapet.com,True,live,200.0,https://www.adoptapet.com/,"Adopt a Pet: Search Dogs, Cats & Pets for Adoption Near You",,True,https://www.adoptapet.com/,8.0,3.0,0.0,0.0,0.0,0.0,1.0
+allthingsstone.com,True,live,200.0,https://www.allthingsstone.com/,CSI - All Things Stone | Your Home for All Things Stone & More!,,True,https://www.allthingsstone.com/,5.0,7.0,0.0,0.0,0.0,0.0,0.0
+angelsdateone.ru,False,dead,,,,"dns: [Errno 8] nodename nor servname provided, or not known",False,,,,,,,,
+antitpd.com,True,http_error,404.0,https://antitpd.com/,,,True,https://antitpd.com/,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+apartments.com,True,http_error,403.0,https://apartments.com/,Access Denied,,True,https://www.apartments.com/,0.0,0.0,1.0,0.0,0.0,0.0,0.0
+authoritytrcker.com,False,dead,,,,"dns: [Errno 8] nodename nor servname provided, or not known",False,,,,,,,,
+b4k.co,True,live,200.0,https://b4k.co/,b4k.co,,True,https://b4k.co/,1.0,0.0,0.0,0.0,0.0,0.0,1.0
+bathandbodyworks.com,True,live,307.0,https://bathandbodyworks.com/,Access to this page has been denied,,True,https://www.bathandbodyworks.com/,11.0,10.0,0.0,0.0,0.0,0.0,0.0
+billybeezus.co,False,dead,,,,"dns: [Errno 8] nodename nor servname provided, or not known",False,,,,,,,,
+blidz.com,True,live,200.0,https://blidz.com/,Blidz,,True,https://blidz.com/,4.0,0.0,0.0,0.0,0.0,1.0,1.0
+booksrelease.com,True,dead,,,,http: ReadTimeout,False,,,,,,,,
+box.net,True,redirect,200.0,https://www.box.com/,,,True,https://www.box.com/,18.0,3.0,0.0,0.0,0.0,1.0,0.0
+camscape.com,True,live,200.0,https://www.camscape.com/,Live Webcams on Camscape – Free Streaming Cams Worldwide,,True,https://www.camscape.com/,20.0,17.0,0.0,0.0,0.0,0.0,1.0
+cartermario.com,True,live,200.0,https://www.cartermario.com/,CT Car Accident & Injury Lawyers | 30+ Years Experience,,True,https://www.cartermario.com/,4.0,1.0,0.0,0.0,0.0,1.0,1.0
+cdnwidget.com,True,dead,,,,http: ConnectionError,True,https://cdnwidget.com/,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+chess.com,True,live,200.0,https://www.chess.com/,Chess.com - Play Chess Online - Free Games,,True,https://www.chess.com/,0.0,1.0,0.0,0.0,0.0,0.0,0.0
+chipotle.com,True,live,200.0,https://www.chipotle.com/,Mexican Food - Restaurant & Catering - Chipotle Mexican Grill,,True,https://www.chipotle.com/,10.0,10.0,0.0,1.0,0.0,0.0,0.0
+clearvoicesurveysmail.com,False,dead,,,,"dns: [Errno 8] nodename nor servname provided, or not known",False,,,,,,,,
+codementor.io,True,live,200.0,https://www.codementor.io/,"Codementor | Get live 1:1 coding help, hire a developer, & more",,True,https://www.codementor.io/,1.0,0.0,1.0,0.0,0.0,0.0,0.0
+connectebt.com,True,live,200.0,https://www.ConnectEBT.com/,,,True,https://www.connectebt.com/,0.0,0.0,1.0,0.0,0.0,0.0,0.0
+contactscart.com,True,live,200.0,https://www.contactscart.com/,ContactsCart | Your Favorite Contact Lenses at Amazingly Low Prices,,True,https://www.contactscart.com/,9.0,8.0,1.0,1.0,0.0,1.0,1.0
+cricketwireless.com,True,live,200.0,https://www.cricketwireless.com/,Cricket Wireless | Unlimited Phone Plans | Affordable Cell Phones | No Contract,,True,https://www.cricketwireless.com/,17.0,11.0,1.0,0.0,0.0,1.0,1.0
+dakine.com,True,live,200.0,https://www.dakine.com/,"Dakine | Backpacks, Luggage, Surf, Snow, & Bike Gear Since 1979",,False,,,,,,,,
+dealer.com,True,live,200.0,https://www.dealer.com/,Automotive Digital Marketing Solutions | Dealer.com,,True,https://www.dealer.com/,11.0,17.0,0.0,0.0,0.0,0.0,1.0
+decipherinc.com,False,dead,,,,"dns: [Errno 8] nodename nor servname provided, or not known",False,,,,,,,,
+defense.gov,True,http_error,403.0,https://defense.gov/,Access Denied,,True,https://www.war.gov/,2.0,5.0,0.0,0.0,0.0,0.0,1.0
+developmentencyclopaedia.com,False,dead,,,,"dns: [Errno 8] nodename nor servname provided, or not known",False,,,,,,,,
+digitach.net,True,live,200.0,https://digitach.net/,球队海报 - 2026 赛季赛事数据与前瞻,,True,https://digitach.net/,0.0,1.0,0.0,0.0,0.0,0.0,0.0
+dinosaurized.com,True,live,200.0,https://dinosaurized.com/,Top Tactical Gears - Survival Tools | Dinosaurized: An Army Store,,True,https://dinosaurized.com/,8.0,12.0,1.0,0.0,0.0,0.0,1.0
+diply.com,True,live,200.0,https://diply.com/,Diply – Get Lost Somewhere Good…,,True,https://diply.com/,27.0,21.0,0.0,0.0,0.0,0.0,1.0
+discordapp.com,True,redirect,200.0,https://discord.com/,Discord - Group Chat That’s All Fun & Games,,True,https://discord.com/,1.0,1.0,0.0,0.0,0.0,0.0,0.0
+discoveryplus.com,True,live,200.0,https://www.discoveryplus.com/,discovery+ | Stream Real-Life TV Episodes,,True,https://www.discoveryplus.com/,3.0,2.0,0.0,0.0,0.0,0.0,0.0
+doshopify.com,True,live,200.0,https://doshopify.com/,,,True,https://doshopify.com/,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+drinkiq.com,True,live,200.0,https://www.drinkiq.com/en-gb,Effects of Alcohol | Drink Awareness | DRINKiQ UK,,True,https://www.drinkiq.com/en-us,1.0,6.0,0.0,0.0,0.0,0.0,0.0
+dynoflow.net,True,http_error,404.0,https://dynoflow.net/,,,True,https://dynoflow.net/,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+eatthis.com,True,live,200.0,https://www.eatthis.com/,"Eat This, Not That: Health, Nutrition, Weight Loss & Recipes",,True,https://www.eatthis.com/,70.0,83.0,0.0,0.0,0.0,0.0,1.0
+eggbuddies.com,True,live,200.0,https://eggbuddies.com/,Egg Buddies,,True,https://eggbuddies.com/,3.0,2.0,0.0,0.0,0.0,0.0,0.0
+elfcosmetics.com,True,live,200.0,https://www.elfcosmetics.com/,e.l.f. Cosmetics: Affordable Makeup & Skincare - Cruelty Free | e.l.f. Cosmetics,,True,https://www.elfcosmetics.com/,2.0,0.0,0.0,0.0,0.0,0.0,0.0
+employedusa.com,True,live,200.0,https://employedusa.com/,Home Page - Employed USA,,True,https://employedusa.com/,2.0,0.0,0.0,0.0,0.0,0.0,1.0
+enginesurveys.com,False,dead,,,,"dns: [Errno 8] nodename nor servname provided, or not known",False,,,,,,,,
+entitlementopposition.com,False,dead,,,,"dns: [Errno 8] nodename nor servname provided, or not known",False,,,,,,,,
+equityapartments.com,True,live,200.0,https://equityapartments.com/,Home | EquityApartments.com,,True,https://equityapartments.com/,4.0,1.0,0.0,0.0,0.0,0.0,1.0
+eu-1-id5-sync.com,True,dead,,,,http: ReadTimeout,True,https://eu-1-id5-sync.com/,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+everyonesez.com,True,live,200.0,https://everyonesez.com/en,Welcome to EveryoneSez,,True,https://everyonesez.com/en,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+express.com,True,http_error,403.0,https://www.express.com/,Access Denied,,True,https://www.express.com/,3.0,2.0,1.0,0.0,0.0,0.0,0.0
+fandom.com,True,http_error,403.0,https://www.fandom.com/,Just a moment...,,True,https://www.fandom.com/,34.0,21.0,0.0,0.0,0.0,0.0,1.0
+fbcdnx14.net,True,redirect,200.0,https://www.squidapp.co/,Home - SQUID News App,,True,https://www.squidapp.co/,4.0,2.0,0.0,0.0,0.0,0.0,0.0
+findfocusgroups.com,True,live,200.0,https://www.findfocusgroups.com/,Paid Focus Groups Near You & Online | FindFocusGroups.com,,True,https://www.findfocusgroups.com/,2.0,1.0,0.0,0.0,0.0,0.0,0.0
+flxfy-host01.com,True,network_filtered,200.0,http://wired.meraki.com/,Cisco Meraki,https: ConnectionError,True,https://flxfy-host01.com/,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+fontsgeek.com,True,live,200.0,https://fontsgeek.com/,Fontsgeek : Download Thousands Of Cool Free Fonts For Windows And Mac.,,False,,,,,,,,
+foreverstampshop.com,True,live,200.0,https://foreverstampshop.com/,USPSFASTSTAMPS,,True,https://foreverstampshop.com/,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+freefilefillableforms.com,True,live,200.0,https://freefilefillableforms.com/home/default.php,Free File Fillable Forms,,True,https://freefilefillableforms.com/home/default.php,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+froghollow.com,True,http_error,409.0,http://froghollow.com/,DNS resolution error | froghollow.com | Cloudflare,https: SSLError,True,https://froghollow.com/,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+fybelle.com,True,live,200.0,https://fybelle.com/,,,True,https://fybelle.com/cgi-sys/defaultwebpage.cgi,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+ganbino.com,True,live,200.0,https://ganbino.com/,Loading...,,True,http://ww547.ganbino.com/,1.0,0.0,0.0,0.0,0.0,0.0,0.0
+gap.com,True,live,200.0,https://www.gap.com/,"Gap Individual style for Women's, Men's, Baby & Kids' Clothing",,False,,,,,,,,
+get663.com,True,dead,,,,http: ConnectionError,False,,,,,,,,
+ghostery.net,True,http_error,403.0,http://ghostery.net/,ERROR: The request could not be satisfied,https: SSLError,False,,,,,,,,
+google.com.mx,True,redirect,200.0,https://www.google.com/,Google,,True,https://www.google.com/,3.0,7.0,0.0,0.0,0.0,0.0,0.0
+gotodobbs.com,True,live,200.0,https://www.gotodobbs.com/,Dobbs Tire & Auto Centers - Car Repair and Auto Shop,,True,https://www.gotodobbs.com/,9.0,5.0,0.0,1.0,0.0,1.0,1.0
+gp.org,True,live,200.0,https://www.gp.org/,www.gp.org,,True,https://www.gp.org/,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+greatparks.org,True,live,200.0,https://www.greatparks.org/,Great Parks,,True,https://www.greatparks.org/,10.0,18.0,0.0,0.0,0.0,1.0,1.0
+gunmemorial.org,True,live,200.0,https://gunmemorial.org/,National Gun Violence Memorial,,True,https://gunmemorial.org/,1.0,0.0,0.0,0.0,0.0,0.0,0.0
+hellotds.com,True,live,200.0,https://hellotds.com/,"Home and Business Internet, TV and Phone Service | Up to 2Gig - TDS",,True,https://hellotds.com/,9.0,6.0,0.0,0.0,0.0,1.0,1.0
+hentairead.com,True,network_filtered,200.0,http://wired.meraki.com/,Cisco Meraki,https: ConnectionError,True,https://hentairead.com/,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+heraldtimesonline.com,True,live,200.0,https://www.heraldtimesonline.com/,"The Herald-Times: Local News, Politics & Sports in Bloomington, IN",,True,https://www.heraldtimesonline.com/,68.0,22.0,0.0,0.0,1.0,0.0,1.0
+highvoltagedetox.com,True,live,200.0,https://www.highvoltagedetox.com/,"High Voltage Detox Home - Offering Fast, Safe, Effective Detox Products",,True,https://www.highvoltagedetox.com/,5.0,6.0,1.0,0.0,1.0,0.0,0.0
+hitpredictor.com,True,dead,,,,http: ConnectTimeout,False,,,,,,,,
+hometalk.com,True,live,200.0,https://www.hometalk.com,DIY Projects for the Home | Hometalk,,True,https://www.hometalk.com/,59.0,151.0,0.0,0.0,0.0,0.0,1.0
+howoldamicalc.com,True,dead,,,,http: ReadTimeout,True,https://howoldamicalc.com/,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+hpinstantink.com,True,redirect,200.0,https://instantink.hpconnected.com/us/en/l/v2?jumpid=va_65bsqvipye,,,True,https://instantink.hpconnected.com/us/en/l/v2?jumpid=va_65bsqvipye,1.0,1.0,1.0,0.0,0.0,0.0,0.0
+hudsonjeans.com,True,live,200.0,https://www.hudsonjeans.com/,"Expertly crafted denim with an effortless, rebellious style - Shop Denim and Apparel for Women, Men and Kids from Hudson Jeans. Designed in Los Angeles.",,False,,,,,,,,
+ibanking-services.com,False,dead,,,,"dns: [Errno 8] nodename nor servname provided, or not known",False,,,,,,,,
+ibotta.com,True,live,200.0,https://ibotta.com/,Ibotta | Performance Marketing Leader,,True,https://ibotta.com/,1.0,0.0,0.0,0.0,0.0,0.0,0.0
+icbf-congress.com,False,dead,,,,"dns: [Errno 8] nodename nor servname provided, or not known",False,,,,,,,,
+igodigital.com,False,dead,,,,"dns: [Errno 8] nodename nor servname provided, or not known",False,,,,,,,,
+il.gov,True,http_error,401.0,http://il.gov/,401 - Unauthorized: Access is denied due to invalid credentials.,https: ConnectionError,False,,,,,,,,
+imaginepay.com,True,live,200.0,https://imaginepay.com/,Home,,True,https://imaginepay.com/,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+impactcdn.com,False,dead,,,,"dns: [Errno 8] nodename nor servname provided, or not known",False,,,,,,,,
+indy100.com,True,live,200.0,https://www.indy100.com/,Indy100 | News | Politics | YouTube and TikTok News,,True,https://www.indy100.com/,61.0,135.0,0.0,0.0,0.0,0.0,1.0
+inmoment.com,True,live,200.0,https://inmoment.com/,Integrated Customer Experience Solutions with AI | InMoment,,True,https://inmoment.com/,1.0,2.0,0.0,0.0,0.0,0.0,0.0
+insboys.com,True,live,200.0,http://insboys.com/,人生就是搏·(中国)集团,https: ConnectionError,False,,,,,,,,
+insights-today.com,False,dead,,,,"dns: [Errno 8] nodename nor servname provided, or not known",False,,,,,,,,
+instiengage.com,True,dead,,,,http: ReadTimeout,True,https://instiengage.com/,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+intuit.me,True,redirect,200.0,https://bitly.com/pages/landing/branded-short-domains-powered-by-bitly?bsd=intuit.me,Custom Domain by Bitly,,True,https://bitly.com/pages/landing/branded-short-domains-powered-by-bitly?bsd=intuit.me,3.0,1.0,0.0,0.0,0.0,0.0,0.0
+ipinfo.io,True,live,200.0,https://ipinfo.io/,IP Data Intelligence for Developers & Enterprises | IPinfo,,False,,,,,,,,
+justcreative.com,True,live,200.0,https://justcreative.com/,Brand Designer & Strategist - Branding Agency JUST™ Creative,,True,https://justcreative.com/,7.0,1.0,0.0,1.0,0.0,0.0,1.0
+key.com,True,dead,,,,http: ReadTimeout,False,,,,,,,,
+legionfarm.com,True,redirect,200.0,https://lfcarry.com/,"LFCarry | Pro Boosts & Carries — Destiny 2, WoW Midnight, COD & More",,True,https://lfcarry.com/,7.0,2.0,1.0,0.0,0.0,1.0,1.0
+lendtra.com,True,redirect,200.0,https://domains.atom.com/lpd/name/lendtra.com,Lendtra.com — Premium Domain For Sale | Atom,,True,https://domains.atom.com/lpd/name/lendtra.com,12.0,30.0,0.0,0.0,0.0,0.0,1.0
+letstravelfamily.com,True,live,200.0,https://www.letstravelfamily.com/,Family Travel Blog - Let's Travel Family,,True,https://www.letstravelfamily.com/,39.0,66.0,0.0,0.0,0.0,0.0,0.0
+lifewayequipa.com,True,live,200.0,https://www.LIFEWAYEQUIPA.COM,EQUIPA,https: SSLError,False,,,,,,,,
+linkcdn.to,False,dead,,,,"dns: [Errno 8] nodename nor servname provided, or not known",False,,,,,,,,
+loudwire.com,True,live,200.0,https://loudwire.com/,Loudwire,,True,https://loudwire.com/,72.0,145.0,0.0,0.0,0.0,0.0,1.0
+lovemesomeprizes.com,False,dead,,,,"dns: [Errno 8] nodename nor servname provided, or not known",False,,,,,,,,
+lr-in.com,False,dead,,,,"dns: [Errno 8] nodename nor servname provided, or not known",False,,,,,,,,
+macaronigrill.com,True,live,200.0,https://www.macaronigrill.com/,Romano's Macaroni Grill Italian Restaurant,,True,https://www.macaronigrill.com/,12.0,16.0,0.0,0.0,0.0,1.0,1.0
+mangahere.cc,True,network_filtered,200.0,http://wired.meraki.com/,Cisco Meraki,https: ConnectionError,True,http://m.mangahere.cc/,4.0,1.0,0.0,0.0,0.0,0.0,0.0
+marcos.com,True,live,200.0,https://www.marcos.com/,Marco's Pizza Online Ordering,,True,https://www.marcos.com/,9.0,6.0,0.0,0.0,0.0,0.0,0.0
+massagetherapy.com,True,live,200.0,https://www.massagetherapy.com/,Massage Therapy Information | Powered by Associated Bodywork & Massage Professionals,,True,https://www.massagetherapy.com/,3.0,8.0,0.0,0.0,0.0,0.0,0.0
+medscape.com,True,live,200.0,https://www.medscape.com/,"Latest Medical News, Clinical Trials, Guidelines - Today on Medscape",,True,https://www.medscape.com/,25.0,43.0,0.0,1.0,0.0,1.0,1.0
+metlife.com,True,live,200.0,https://www.metlife.com/,Insurance and Employee Benefits | MetLife,,True,https://www.metlife.com/,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+microsoftonline.com,False,dead,,,,"dns: [Errno 8] nodename nor servname provided, or not known",False,,,,,,,,
+minutemedia-prebid.com,False,dead,,,,"dns: [Errno 8] nodename nor servname provided, or not known",False,,,,,,,,
+miqcommerce.com,False,dead,,,,"dns: [Errno 8] nodename nor servname provided, or not known",False,,,,,,,,
+mobiletime.net,False,dead,,,,"dns: [Errno 8] nodename nor servname provided, or not known",False,,,,,,,,
+mountzionfinancing.com,False,dead,,,,"dns: [Errno 8] nodename nor servname provided, or not known",False,,,,,,,,
+musio.co,False,dead,,,,"dns: [Errno 8] nodename nor servname provided, or not known",False,,,,,,,,
+mycreditcard.mobi,False,dead,,,,"dns: [Errno 8] nodename nor servname provided, or not known",False,,,,,,,,
+mygiftcardsplus.com,True,live,200.0,https://www.mygiftcardsplus.com/,MyGiftCardsPlus: Get cash back on gift cards purchases. Top-rated by customers,,True,https://www.mygiftcardsplus.com/,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+mytupperware.com,True,dead,,,,http: ConnectionError,False,,,,,,,,
+neet.tv,True,http_error,404.0,https://neet.tv/,404 Not Found,,True,https://neet.tv/,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+nextmillmedia.com,False,dead,,,,"dns: [Errno 8] nodename nor servname provided, or not known",False,,,,,,,,
+ng.mil,False,dead,,,,"dns: [Errno 8] nodename nor servname provided, or not known",False,,,,,,,,
+nm.com,True,redirect,200.0,https://www.northwesternmutual.com,,,True,https://www.northwesternmutual.com/,1.0,0.0,0.0,0.0,0.0,0.0,0.0
+nordicneedle.net,True,live,200.0,https://nordicneedle.net/,PGBET : Nyalakan Rentetan Kemenangan Dengan Bet Pemicu Jackpot Gacor,,True,https://nordicneedle.net/,1.0,0.0,0.0,0.0,0.0,0.0,0.0
+numberle.org,True,live,200.0,https://numberle.org/,Numberle - Daily Math Game & Number Puzzles,,True,https://numberle.org/,44.0,27.0,1.0,0.0,0.0,0.0,1.0
+nypost.com,True,live,200.0,https://nypost.com/,"New York Post – Breaking News, Top Headlines, Photos & Videos",,False,,,,,,,,
+odycdn.com,False,dead,,,,"dns: [Errno 8] nodename nor servname provided, or not known",False,,,,,,,,
+officesepot.co,False,dead,,,,"dns: [Errno 8] nodename nor servname provided, or not known",False,,,,,,,,
+omnigba.com,True,live,200.0,https://omnigba.com/,,,True,https://omnigba.com/lander,0.0,2.0,0.0,0.0,0.0,0.0,0.0
+opendoorsusa.org,True,redirect,200.0,https://www.opendoorsus.org/en-US/,Open Doors US · Serving Persecuted Christians Worldwide,,True,https://www.opendoorsus.org/en-US/,8.0,17.0,0.0,0.0,0.0,1.0,1.0
+opinionationzone.com,False,dead,,,,"dns: [Errno 8] nodename nor servname provided, or not known",False,,,,,,,,
+outdoorelement.com,True,live,200.0,https://outdoorelement.com/,OUTDOOR ELEMENT | Outdoor Adventure & Survival Gear – Outdoor Element,,True,https://outdoorelement.com/,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+outlawkitchens.com,True,live,200.0,https://www.outlawkitchens.com/,,,True,https://www.outlawkitchens.com/,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+ozone.ai,True,live,200.0,http://ozone.ai/,Future home of ozone.ai,https: ConnectionError,False,,,,,,,,
+pcfinancial.ca,True,dead,,,,http: ReadTimeout,True,https://www.pcfinancial.ca/en/,8.0,4.0,1.0,0.0,0.0,1.0,1.0
+pch.com,True,live,200.0,https://www.pch.com/,Publishers Clearing House: Online Sweepstakes & Prizes Since 1967,,True,https://pch.com/,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+pineconeresearch.com,True,dead,,,,http: SSLError,True,https://www.pineconeresearch.com/,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+planet7casino.com,True,live,200.0,https://www.planet7casino.com/,Best Online Casino | 200% BONUS + FREE SPINS at Planet 7,,True,https://www.planet7casino.com/,2.0,2.0,0.0,0.0,0.0,0.0,0.0
+plateau.com,True,dead,,,,http: ConnectTimeout,False,,,,,,,,
+pocket-lint.com,True,live,200.0,https://www.pocket-lint.com/,"Pocket-lint | Phone, gadget, and entertainment reviews, product news, and the best of the internet",,True,https://www.pocket-lint.com/,40.0,76.0,0.0,0.0,0.0,0.0,1.0
+pomopizzeria.com,True,live,200.0,https://pomopizzeria.com/,POMO Pizzeria: Authentic Italian Pizza Experience in Arizona,,False,,,,,,,,
+poprtb.com,True,live,200.0,https://www.poprtb.com/,PopRTB - Redefining online advertising,,False,,,,,,,,
+posnet.us,True,live,200.0,https://posnet.us/,Posnet - Home,,True,https://posnet.us/,1.0,0.0,0.0,0.0,0.0,0.0,0.0
+pressidium.com,True,live,200.0,https://pressidium.com/,Pressidium® EDGE | Next-Gen Managed WordPress Hosting,,False,,,,,,,,
+pridewaves.com,False,dead,,,,"dns: [Errno 8] nodename nor servname provided, or not known",False,,,,,,,,
+prmutv.co,False,dead,,,,"dns: [Errno 8] nodename nor servname provided, or not known",False,,,,,,,,
+protonmail.com,True,redirect,200.0,https://proton.me/mail,Proton Mail: Get a free email account with privacy and encryption | Proton,,True,https://proton.me/mail,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+protonpuredirect.com,False,dead,,,,"dns: [Errno 8] nodename nor servname provided, or not known",False,,,,,,,,
+ps-di.com,True,live,200.0,https://is.ps-di.com,Paradigm,,True,https://is.ps-di.com/auth/login,0.0,1.0,1.0,0.0,0.0,0.0,0.0
+pushnetwork.com,True,dead,,,,http: ReadTimeout,True,https://pushnetwork.com/,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+pyyodebts.com,False,dead,,,,"dns: [Errno 8] nodename nor servname provided, or not known",False,,,,,,,,
+quizzclub.com,True,live,200.0,https://quizzclub.com/,"Fun Trivia Questions, Quizzes and Personality Tests | QuizzClub",,True,https://quizzclub.com/,44.0,12.0,0.0,0.0,0.0,1.0,1.0
+quordle.com,True,redirect,200.0,https://www.merriam-webster.com/games/quordle/,,,True,https://www.merriam-webster.com/games/quordle/,52.0,100.0,0.0,0.0,0.0,1.0,1.0
+realtor.com,True,http_error,429.0,https://www.realtor.com:443/,,,True,https://www.realtor.com/,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+redfin.com,True,live,200.0,https://www.redfin.com/,"Redfin | Real Estate & Homes for Sale, Rentals, Mortgages & Agents",,True,https://www.redfin.com/,23.0,17.0,1.0,0.0,0.0,1.0,1.0
+redgifs.com,True,network_filtered,200.0,http://wired.meraki.com/,Cisco Meraki,https: ConnectionError,True,https://www.redgifs.com/,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+remotasks.com,True,live,200.0,https://www.remotasks.com/en,Remotasks | Earn $USD Doing Online Tasks from Home,,True,https://www.remotasks.com/en,3.0,0.0,0.0,1.0,0.0,0.0,1.0
+researchamericainc.com,True,live,200.0,https://researchamericainc.com/,Market Research Company | Consumer Insights | Research America,,True,https://researchamericainc.com/,1.0,6.0,0.0,0.0,0.0,0.0,0.0
+riverfoodpantry.org,True,live,200.0,https://www.riverfoodpantry.org/,"The River Food Pantry – Dane County, WI",,True,https://www.riverfoodpantry.org/,6.0,0.0,0.0,0.0,0.0,1.0,1.0
+roku.com,True,live,200.0,https://www.roku.com/,Roku,,True,https://www.roku.com/,4.0,1.0,0.0,0.0,0.0,0.0,1.0
+rpggeek.com,True,live,200.0,https://rpggeek.com/,RPGGeek,,True,https://rpggeek.com/,5.0,1.0,0.0,0.0,0.0,0.0,1.0
+saksoff5th.com,True,live,200.0,https://www.saksoff5th.com/,Site Offline,,True,https://www.saksoff5th.com/,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+salsalabs.org,True,dead,,,,http: ConnectTimeout,False,,,,,,,,
+samsung.com,True,live,200.0,https://www.samsung.com/us/,Samsung US | Mobile | TV | Home Electronics | Home Appliances | Samsung US,,True,https://www.samsung.com/us/,1.0,0.0,0.0,0.0,0.0,0.0,0.0
+sawtoothsoftware.com,True,live,200.0,https://sawtoothsoftware.com/,Market Research Software | Find Survey Software & Market Research Solutions - Sawtooth Software,,True,https://sawtoothsoftware.com/,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+schnellresearch.com,True,live,200.0,https://schnellresearch.com/,"Schnell Research | Schnell Research B2B Audience | Schnell Research Programming | Data Processing | Data Collection, CATI | Schnell Research B2B Audience",,True,https://schnellresearch.com/,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+seedsman.com,True,live,200.0,https://www.seedsman.com/us-en/,Seedsman Cannabis Seeds | Buy Online with Delivery Across the USA,,True,https://www.seedsman.com/us-en/,4.0,7.0,0.0,1.0,0.0,0.0,1.0
+seekingcrush.com,True,dead,,,,http: ConnectionError,False,,,,,,,,
+sendmesamples.com,False,dead,,,,"dns: [Errno 8] nodename nor servname provided, or not known",False,,,,,,,,
+sentry.io,True,live,200.0,https://sentry.io/welcome/,Application Performance Monitoring & Error Tracking Software | Sentry,,True,https://sentry.io/welcome/,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+sho.com,True,redirect,200.0,https://www.paramountplus.com/brands/showtime/,Watch Showtime Shows & Movies on Paramount+,,True,https://www.paramountplus.com/brands/showtime/,30.0,45.0,0.0,0.0,0.0,1.0,0.0
+slingoarcade.com,True,live,200.0,https://www.slingoarcade.com:443/,Slingo Arcade – A fast-moving social casino built on the simple idea that slots + bingo = seriously compelling gameplay.,,False,,,,,,,,
+solutionhealth.org,True,live,200.0,https://www.solutionhealth.org/,SolutionHealth – A HealthCare solution for New Hampshire,,True,https://www.solutionhealth.org/,2.0,2.0,0.0,0.0,0.0,0.0,0.0
+sparrow.org,True,redirect,200.0,https://www.uofmhealthsparrow.org/,,,True,https://www.uofmhealthsparrow.org/,0.0,7.0,0.0,1.0,0.0,0.0,0.0
+spreadthefaithstore.com,False,dead,,,,"dns: [Errno 8] nodename nor servname provided, or not known",False,,,,,,,,
+starmotorcars.com,True,dead,,,,http: ConnectTimeout,False,,,,,,,,
+steepandcheap.com,True,live,202.0,https://www.steepandcheap.com/,,,True,https://www.steepandcheap.com/,0.0,0.0,1.0,0.0,0.0,0.0,0.0
+stylitics.com,True,live,200.0,https://stylitics.com/,,,True,https://stylitics.com/,9.0,28.0,0.0,1.0,0.0,0.0,0.0
+surgentcpe.com,True,live,200.0,https://www.surgentcpe.com/,CPE Courses for CPAs & Tax Professionals | Surgent CPE,,True,https://www.surgentcpe.com/,13.0,22.0,0.0,1.0,1.0,0.0,1.0
+surveyjunkie.com,True,live,200.0,https://www.surveyjunkie.com/,,,True,https://www.surveyjunkie.com/,11.0,19.0,1.0,0.0,0.0,0.0,1.0
+sweepswinner.com,False,dead,,,,"dns: [Errno 8] nodename nor servname provided, or not known",False,,,,,,,,
+theblacksphere.net,True,live,200.0,https://theblacksphere.net/,The Black Sphere – Ending identity politics,,False,,,,,,,,
+theepochtimes.com,True,live,200.0,https://www.theepochtimes.com/,"The Epoch Times | Breaking News, Latest News, World News and Videos",,True,https://www.theepochtimes.com/,10.0,2.0,0.0,0.0,0.0,0.0,1.0
+thisdayinaviation.com,True,live,200.0,https://www.thisdayinaviation.com//,This Day in Aviation | Important Dates in Aviation History,,True,https://www.thisdayinaviation.com//,1.0,0.0,0.0,0.0,0.0,0.0,0.0
+tkconstructors.com,True,live,200.0,https://tkconstructors.com/,TK Constructors,,True,https://tkconstructors.com/,13.0,12.0,0.0,0.0,0.0,1.0,1.0
+tophatter.com,False,dead,,,,"dns: [Errno 8] nodename nor servname provided, or not known",False,,,,,,,,
+townhallburgerandbeer.com,True,dead,,,,http: ConnectTimeout,False,,,,,,,,
+toyhou.se,True,live,200.0,https://toyhou.se/,Toyhouse,,True,https://toyhou.se/,1.0,0.0,0.0,0.0,0.0,0.0,0.0
+tp88trk.com,True,http_error,404.0,http://tp88trk.com/,,https: SSLError,False,,,,,,,,
+transfermarkt.com,True,live,200.0,https://www.transfermarkt.com/,"Football transfers, rumours, market values and news | Transfermarkt",,True,https://www.transfermarkt.com/,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+treatstream.com,True,live,200.0,https://treatstream.com/,TreatStream,,True,https://treatstream.com/,1.0,0.0,0.0,0.0,0.0,0.0,0.0
+trysera.com,True,live,200.0,https://trysera.com/,TrySERA: Site Email Retargeting Advantage,,True,https://trysera.com/,4.0,0.0,0.0,0.0,0.0,0.0,0.0
+ttvnw.net,False,dead,,,,"dns: [Errno 8] nodename nor servname provided, or not known",False,,,,,,,,
+tyt.com,True,live,200.0,https://tyt.com/,Home - TYT.com,,False,,,,,,,,
+utrgv.edu,True,live,200.0,https://www.utrgv.edu/,The University of Texas Rio Grande Valley | UTRGV,,True,https://www.utrgv.edu/,7.0,1.0,0.0,0.0,0.0,1.0,1.0
+vertiv.com,True,live,200.0,https://www.vertiv.com/en-us/,Vertiv | A global leader in critical digital infrastructure,,True,https://www.vertiv.com/en-us/,9.0,16.0,0.0,0.0,0.0,0.0,0.0
+videochums.com,True,live,200.0,https://videochums.com/,Video Chums · Hang out and play games,,True,https://videochums.com/,23.0,45.0,0.0,0.0,0.0,0.0,0.0
+wayfair.com,True,http_error,429.0,https://www.wayfair.com/,Access to this page has been denied,,True,https://www.wayfair.com/,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+webconsultas.com,True,live,200.0,https://webconsultas.com/,Webconsultas – Sitio Cerrado,,True,https://webconsultas.com/,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+wgntv.com,True,http_error,403.0,https://wgntv.com/,Access to this page has been denied,,True,https://wgntv.com/,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+wmcdp.io,False,dead,,,,"dns: [Errno 8] nodename nor servname provided, or not known",False,,,,,,,,
+xlviiirdr.com,True,network_filtered,200.0,http://wired.meraki.com/,Cisco Meraki,https: ConnectionError,True,https://xlviiirdr.com/,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+yougov.com,True,live,200.0,https://yougov.com/,YouGov: Data Analytics & Market Research Services,,True,https://yougov.com/,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+yrrut.com,False,dead,,,,"dns: [Errno 8] nodename nor servname provided, or not known",False,,,,,,,,
+zeteo316.com,True,live,200.0,https://zeteo316.com/,Zeteo 3:16 - Serve-Inform-Support,,True,https://zeteo316.com/,4.0,1.0,0.0,0.0,0.0,0.0,0.0
+zinmanga.com,True,network_filtered,200.0,http://wired.meraki.com/,Cisco Meraki,https: ConnectionError,False,,,,,,,,

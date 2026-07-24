@@ -1,0 +1,201 @@
+private_domain,failure_reason,reach,visits,in_visits_stratum,in_uniform_stratum,is_ddg_tracker,ddg_categories,ddg_owner,ha22_measured,wb_2022_capture,wb_snapshot_ts,wb_html_cached
+decipherinc.com,site_unreachable,301,84099,True,False,False,,,True,False,,False
+microsoftonline.com,site_unreachable,348,34600,True,False,True,,Microsoft Corporation,True,False,,False
+yougov.com,empty_groups,544,32935,True,False,False,,,True,False,,False
+sentry.io,empty_groups,175,24969,True,False,True,,"Functional Software, Inc.",True,False,,False
+pch.com,empty_groups,68,24231,True,False,False,,,True,False,,False
+fbcdnx14.net,empty_groups,1,16771,True,False,False,,,False,False,,False
+surveyjunkie.com,empty_groups,96,11471,True,False,False,,,True,False,,False
+eggbuddies.com,empty_groups,1,9152,True,False,False,,,False,False,,False
+fandom.com,empty_groups,173,7840,True,False,True,,"Fandom, Inc.",True,False,,False
+google.com.mx,api_network_error,1,7820,True,False,False,,,False,False,,False
+authoritytrcker.com,empty_groups,66,7504,True,False,False,,,False,False,,False
+impactcdn.com,empty_groups,65,7459,True,False,True,,Impact,False,False,,False
+trysera.com,empty_groups,27,6068,True,False,True,,,False,True,20220705130658.0,True
+gunmemorial.org,empty_groups,1,5200,True,False,False,,,False,False,,False
+minutemedia-prebid.com,empty_groups,55,4707,True,False,True,,,False,False,,False
+nypost.com,empty_groups,120,4380,True,False,False,,,True,False,,False
+quizzclub.com,api_network_error,3,4275,True,False,False,,,True,False,,False
+aaxads.com,empty_groups,13,4110,True,False,True,,Acceptable Ads Exchange,False,False,,False
+opinionationzone.com,empty_groups,64,3910,True,False,False,,,False,False,,False
+dynoflow.net,empty_groups,60,3464,True,False,False,,,True,False,,False
+everyonesez.com,empty_groups,22,3248,True,False,False,,,False,False,,False
+sawtoothsoftware.com,empty_groups,76,3205,True,False,False,,,True,False,,False
+eu-1-id5-sync.com,site_unreachable,150,3014,True,False,True,,,False,False,,False
+musio.co,empty_groups,3,2910,True,False,False,,,True,False,,False
+realtor.com,empty_groups,95,2825,True,False,True,,Move Inc.,True,False,,False
+get663.com,empty_groups,6,2705,True,False,False,,,False,False,,False
+wayfair.com,empty_groups,106,2446,True,False,False,,,True,False,,False
+ps-di.com,empty_groups,90,2429,True,False,False,,,False,False,,False
+insights-today.com,site_unreachable,109,2388,True,False,False,,,False,False,,False
+enginesurveys.com,empty_groups,33,2326,True,False,False,,,False,False,,False
+protonmail.com,empty_groups,5,2311,True,False,False,,,True,False,,False
+chess.com,api_network_error,13,2165,True,False,False,,,True,False,,False
+ttvnw.net,empty_groups,22,2073,True,False,True,,"Amazon Technologies, Inc.",False,False,,False
+pushnetwork.com,empty_groups,19,1984,True,False,False,,,False,False,,False
+roku.com,empty_groups,54,1846,True,False,False,,,True,False,,False
+neet.tv,empty_groups,1,1827,True,False,False,,,False,False,,False
+ibanking-services.com,empty_groups,15,1743,True,False,False,,,False,False,,False
+cdnwidget.com,site_unreachable,76,1696,True,False,True,Obscure Ownership;Unknown High Risk Behavior,CDNWIDGET.COM,False,False,,False
+wmcdp.io,empty_groups,29,1569,True,False,True,,"Warner Bros. Discovery, Inc.",False,False,,False
+pineconeresearch.com,empty_groups,80,1519,True,False,False,,,True,False,,False
+discoveryplus.com,empty_groups,58,1471,True,False,False,,,True,False,,False
+instiengage.com,site_unreachable,41,1375,True,False,True,,,False,False,,False
+gap.com,empty_groups,50,1174,True,False,False,,,True,True,20220615130338.0,True
+bathandbodyworks.com,empty_groups,33,1158,True,False,False,,,True,False,,False
+ibotta.com,empty_groups,53,1143,True,False,False,,,True,False,,False
+b4k.co,empty_groups,1,1111,True,False,False,,,False,False,,False
+prmutv.co,empty_groups,119,979,True,False,True,,"Permutive, Inc.",False,False,,False
+mygiftcardsplus.com,empty_groups,38,955,True,False,False,,,True,False,,False
+tophatter.com,empty_groups,5,899,True,False,False,,,True,False,,False
+samsung.com,empty_groups,103,868,True,False,True,,Samsung Electronics Co. Ltd,True,False,,False
+ozone.ai,empty_groups,2,847,True,False,False,,,True,False,,False
+ghostery.net,api_network_error,1,822,True,False,True,,,False,False,,False
+wgntv.com,empty_groups,6,784,True,False,False,,,True,False,,False
+ipinfo.io,empty_groups,22,766,True,False,True,,"IDB, LLC",True,False,,False
+toyhou.se,empty_groups,4,748,True,False,False,,,True,False,,False
+theepochtimes.com,empty_groups,22,667,True,False,False,,,True,False,,False
+hentairead.com,empty_groups,1,539,True,False,False,,,False,False,,False
+apartments.com,empty_groups,40,530,True,False,False,,,True,False,,False
+dealer.com,empty_groups,19,486,True,False,True,,Dealer Dot Com Inc,True,False,,False
+connectebt.com,empty_groups,10,457,True,False,False,,,True,False,,False
+odycdn.com,empty_groups,3,450,True,False,False,,,False,False,,False
+diply.com,empty_groups,5,444,True,False,False,,,True,False,,False
+slingoarcade.com,empty_groups,2,439,True,False,False,,,True,False,,False
+hometalk.com,empty_groups,27,427,True,False,True,,,True,False,,False
+academy.com,empty_groups,19,419,True,False,False,,,True,False,,False
+discordapp.com,empty_groups,15,408,True,False,True,,"Discord, Inc.",True,False,,False
+key.com,site_unreachable,11,319,True,False,False,,,True,False,,False
+express.com,empty_groups,11,316,True,False,False,,,True,False,,False
+lr-in.com,empty_groups,27,312,True,False,True,,,False,False,,False
+saksoff5th.com,empty_groups,8,311,True,False,False,,,True,False,,False
+xlviiirdr.com,empty_groups,8,306,True,False,True,,,False,False,,False
+cricketwireless.com,empty_groups,17,284,True,False,False,,,True,False,,False
+igodigital.com,site_unreachable,37,283,True,False,True,Ad Motivated Tracking;Advertising;Analytics;Audience Measurement;Third-Party Analytics Marketing,"Salesforce.com, Inc.",False,False,,False
+elfcosmetics.com,empty_groups,3,276,True,False,False,,,True,False,,False
+remotasks.com,empty_groups,1,275,True,False,False,,,False,False,,False
+adoptapet.com,empty_groups,13,272,True,False,False,,,True,False,,False
+eatthis.com,empty_groups,49,256,True,False,False,,,True,False,,False
+sparrow.org,empty_groups,2,253,True,False,False,,,True,False,,False
+quordle.com,empty_groups,7,242,True,False,False,,,True,False,,False
+seekingcrush.com,empty_groups,1,235,True,False,False,,,False,False,,False
+metlife.com,empty_groups,4,215,True,False,False,,,True,True,20220614225238.0,True
+inmoment.com,empty_groups,29,195,True,False,True,,"InMoment, Inc.",True,False,,False
+nextmillmedia.com,empty_groups,62,174,True,False,True,,"Next Millennium Media, Inc.",False,False,,False
+tp88trk.com,empty_groups,21,148,True,False,True,,,False,True,20220608171620.0,True
+plateau.com,empty_groups,1,145,True,False,False,,,False,False,,False
+chipotle.com,empty_groups,13,114,True,False,False,,,True,False,,False
+lifewayequipa.com,empty_groups,1,92,True,False,False,,,False,False,,False
+medscape.com,empty_groups,13,79,True,False,True,,"WebMD, LLC",True,False,,False
+stylitics.com,empty_groups,16,75,True,False,True,,"Stylitics, Inc.",False,True,20220621145420.0,True
+blidz.com,empty_groups,1,49,True,False,False,,,False,False,,False
+miqcommerce.com,empty_groups,3,40,True,False,True,,,False,False,,False
+clearvoicesurveysmail.com,empty_groups,14,35,True,False,False,,,False,False,,False
+icbf-congress.com,empty_groups,1,33,True,False,False,,,False,False,,False
+tyt.com,empty_groups,1,23,True,False,False,,,False,False,,False
+heraldtimesonline.com,empty_groups,2,22,True,False,False,,,True,False,,False
+pocket-lint.com,empty_groups,6,17,True,False,False,,,True,False,,False
+schnellresearch.com,empty_groups,5,11,True,False,False,,,False,True,20220418233045.0,True
+theblacksphere.net,empty_groups,3,8,True,False,False,,,True,False,,False
+doshopify.com,empty_groups,3,6,True,False,False,,,False,True,20220501044829.0,True
+ng.mil,empty_groups,1,3,True,False,False,,,False,False,,False
+redfin.com,empty_groups,53,1191,False,True,False,,,True,False,,False
+redgifs.com,api_network_error,15,462,False,True,True,,,True,False,,False
+utrgv.edu,empty_groups,1,325,False,True,False,,,False,False,,False
+salsalabs.org,empty_groups,13,137,False,True,True,,"Salsa Labs, Inc.",True,False,,False
+marcos.com,empty_groups,6,111,False,True,False,,,True,False,,False
+omnigba.com,empty_groups,1,106,False,True,False,,,False,False,,False
+drinkiq.com,empty_groups,9,86,False,True,False,,,True,False,,False
+sho.com,empty_groups,5,56,False,True,False,,,True,False,,False
+mangahere.cc,empty_groups,2,43,False,True,False,,,True,False,,False
+dinosaurized.com,empty_groups,1,41,False,True,False,,,False,False,,False
+box.net,empty_groups,5,39,False,True,False,,,True,False,,False
+employedusa.com,empty_groups,6,33,False,True,False,,,True,False,,False
+freefilefillableforms.com,empty_groups,2,28,False,True,False,,,False,False,,False
+lovemesomeprizes.com,empty_groups,1,25,False,True,False,,,False,False,,False
+planet7casino.com,empty_groups,3,25,False,True,False,,,True,False,,False
+zinmanga.com,empty_groups,1,23,False,True,False,,,False,False,,False
+gp.org,empty_groups,1,22,False,True,False,,,False,False,,False
+hudsonjeans.com,empty_groups,1,22,False,True,False,,,False,False,,False
+indy100.com,empty_groups,7,21,False,True,False,,,True,False,,False
+loudwire.com,empty_groups,7,21,False,True,False,,,True,False,,False
+solutionhealth.org,empty_groups,2,20,False,True,False,,,True,False,,False
+steepandcheap.com,empty_groups,1,16,False,True,False,,,False,False,,False
+angelsdateone.ru,empty_groups,1,15,False,True,False,,,False,False,,False
+webconsultas.com,empty_groups,2,14,False,True,False,,,True,False,,False
+pcfinancial.ca,empty_groups,1,13,False,True,False,,,False,False,,False
+defense.gov,api_network_error,4,11,False,True,True,,,True,False,,False
+imaginepay.com,api_network_error,2,11,False,True,False,,,True,False,,False
+tkconstructors.com,empty_groups,1,11,False,True,False,,,False,False,,False
+booksrelease.com,empty_groups,2,10,False,True,False,,,True,False,,False
+findfocusgroups.com,empty_groups,2,9,False,True,False,,,True,False,,False
+hitpredictor.com,empty_groups,1,8,False,True,False,,,False,False,,False
+mobiletime.net,api_network_error,1,8,False,True,False,,,False,False,,False
+nm.com,empty_groups,1,8,False,True,False,,,False,False,,False
+opendoorsusa.org,empty_groups,1,8,False,True,False,,,False,False,,False
+pressidium.com,empty_groups,1,8,False,True,True,,TechIO Ltd,False,False,,False
+codementor.io,empty_groups,1,6,False,True,False,,,False,False,,False
+froghollow.com,empty_groups,1,6,False,True,False,,,False,False,,False
+il.gov,empty_groups,2,6,False,True,False,,,True,False,,False
+contactscart.com,empty_groups,2,5,False,True,False,,,True,False,,False
+massagetherapy.com,api_network_error,2,5,False,True,False,,,True,False,,False
+rpggeek.com,empty_groups,1,5,False,True,False,,,False,False,,False
+sweepswinner.com,empty_groups,3,5,False,True,False,,,True,False,,False
+allthingsstone.com,empty_groups,1,4,False,True,False,,,False,False,,False
+developmentencyclopaedia.com,empty_groups,1,4,False,True,False,,,False,False,,False
+greatparks.org,empty_groups,1,4,False,True,False,,,False,False,,False
+insboys.com,empty_groups,1,4,False,True,False,,,False,False,,False
+justcreative.com,empty_groups,2,4,False,True,False,,,True,False,,False
+linkcdn.to,empty_groups,1,4,False,True,False,,,False,False,,False
+outlawkitchens.com,empty_groups,1,4,False,True,False,,,False,False,,False
+researchamericainc.com,empty_groups,1,4,False,True,False,,,False,False,,False
+thisdayinaviation.com,empty_groups,2,4,False,True,False,,,True,False,,False
+antitpd.com,empty_groups,1,3,False,True,False,,,False,False,,False
+equityapartments.com,empty_groups,1,3,False,True,False,,,False,False,,False
+fybelle.com,empty_groups,1,3,False,True,False,,,False,False,,False
+gotodobbs.com,empty_groups,1,3,False,True,False,,,False,False,,False
+macaronigrill.com,empty_groups,1,3,False,True,False,,,False,False,,False
+nordicneedle.net,empty_groups,1,3,False,True,False,,,False,False,,False
+pomopizzeria.com,empty_groups,1,3,False,True,False,,,False,False,,False
+pridewaves.com,empty_groups,1,3,False,True,False,,,False,False,,False
+riverfoodpantry.org,empty_groups,1,3,False,True,False,,,False,False,,False
+spreadthefaithstore.com,empty_groups,1,3,False,True,False,,,False,False,,False
+surgentcpe.com,empty_groups,1,3,False,True,False,,,False,False,,False
+transfermarkt.com,empty_groups,1,3,False,True,False,,,False,False,,False
+camscape.com,empty_groups,1,2,False,True,False,,,False,False,,False
+cartermario.com,empty_groups,1,2,False,True,False,,,False,False,,False
+dakine.com,api_network_error,1,2,False,True,False,,,False,False,,False
+digitach.net,empty_groups,1,2,False,True,False,,,False,False,,False
+entitlementopposition.com,empty_groups,1,2,False,True,False,,,False,False,,False
+flxfy-host01.com,empty_groups,1,2,False,True,False,,,False,False,,False
+fontsgeek.com,empty_groups,1,2,False,True,False,,,False,False,,False
+foreverstampshop.com,empty_groups,1,2,False,True,False,,,False,False,,False
+ganbino.com,empty_groups,1,2,False,True,False,,,False,False,,False
+hellotds.com,empty_groups,1,2,False,True,False,,,False,False,,False
+highvoltagedetox.com,empty_groups,1,2,False,True,False,,,False,False,,False
+hpinstantink.com,empty_groups,1,2,False,True,False,,,False,False,,False
+intuit.me,empty_groups,1,2,False,True,False,,,False,False,,False
+legionfarm.com,empty_groups,1,2,False,True,False,,,False,False,,False
+lendtra.com,empty_groups,1,2,False,True,False,,,False,False,,False
+mountzionfinancing.com,empty_groups,1,2,False,True,False,,,False,False,,False
+mycreditcard.mobi,empty_groups,1,2,False,True,False,,,False,False,,False
+mytupperware.com,empty_groups,1,2,False,True,False,,,False,False,,False
+numberle.org,empty_groups,1,2,False,True,False,,,False,False,,False
+outdoorelement.com,empty_groups,1,2,False,True,False,,,False,False,,False
+poprtb.com,empty_groups,1,2,False,True,True,,,False,False,,False
+pyyodebts.com,empty_groups,1,2,False,True,False,,,False,False,,False
+seedsman.com,empty_groups,1,2,False,True,False,,,False,False,,False
+sendmesamples.com,empty_groups,1,2,False,True,False,,,False,False,,False
+starmotorcars.com,empty_groups,1,2,False,True,False,,,False,False,,False
+townhallburgerandbeer.com,empty_groups,1,2,False,True,False,,,False,False,,False
+treatstream.com,empty_groups,1,2,False,True,False,,,False,False,,False
+vertiv.com,empty_groups,1,2,False,True,False,,,False,False,,False
+videochums.com,empty_groups,1,2,False,True,False,,,False,False,,False
+yrrut.com,empty_groups,1,2,False,True,False,,,False,False,,False
+zeteo316.com,empty_groups,1,2,False,True,False,,,False,False,,False
+billybeezus.co,empty_groups,1,1,False,True,False,,,False,False,,False
+howoldamicalc.com,empty_groups,1,1,False,True,False,,,False,False,,False
+letstravelfamily.com,empty_groups,1,1,False,True,False,,,False,False,,False
+officesepot.co,empty_groups,1,1,False,True,False,,,False,False,,False
+posnet.us,empty_groups,1,1,False,True,False,,,False,False,,False
+protonpuredirect.com,empty_groups,1,1,False,True,False,,,False,False,,False

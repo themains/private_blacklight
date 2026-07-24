@@ -71,6 +71,54 @@ jn: ## Launch jupyter notebook in venv
 
 
 ########################################################################
+# HTTP Archive validity checks (see scripts/httparchive/README.md)
+# Runs the free steps and stops at the cost gate. BigQuery extraction is
+# billed and run manually after you review the dry-run estimate:
+#     python 03_ha_extract.py --confirm
+# Requires: gcloud auth application-default login; export BQ_BILLING_PROJECT=...
+########################################################################
+.PHONY: httparchive
+httparchive: ## Build HA targets + print BigQuery cost estimate (no billed queries)
+	@echo "==> $@"
+	cd scripts/httparchive && \
+		$(abspath $(VENVPATH))/bin/python 01_build_ha_targets.py && \
+		$(abspath $(VENVPATH))/bin/python 02_ha_dryrun.py
+	@echo "==> Review the estimate, then: cd scripts/httparchive && python 03_ha_extract.py --confirm"
+
+
+########################################################################
+# Wayback validity checks (see scripts/wayback/README.md)
+# Step 2 fetches ~3k snapshots from archive.org (~2h, resumable).
+########################################################################
+.PHONY: wayback
+wayback: ## Build WB targets, fetch June-2022 snapshots, parse static measures
+	@echo "==> $@"
+	cd scripts/wayback && \
+		$(abspath $(VENVPATH))/bin/python 01_build_wb_targets.py && \
+		$(abspath $(VENVPATH))/bin/python 02_fetch_snapshots.py --preflight && \
+		$(abspath $(VENVPATH))/bin/python 02_fetch_snapshots.py && \
+		$(abspath $(VENVPATH))/bin/python 03_parse_static_requests.py
+
+.PHONY: selection-audit
+selection-audit: ## Parse scan failures, draw audit sample, probe + rescan, validate codes
+	@echo "==> $@"
+	cd scripts/selection_audit && \
+		$(abspath $(VENVPATH))/bin/python 01_parse_scan_errors.py && \
+		$(abspath $(VENVPATH))/bin/python 02_draw_audit_sample.py && \
+		$(abspath $(VENVPATH))/bin/python 03_probe_and_rescan.py && \
+		$(abspath $(VENVPATH))/bin/python 04_code_sample.py
+
+.PHONY: implications
+implications: ## Demographic robustness to coverage/timing threats + Google reach on unscanned
+	@echo "==> $@"
+	cd scripts/implications && \
+		$(abspath $(VENVPATH))/bin/python 01_build_user_scenario_rates.py && \
+		$(abspath $(VENVPATH))/bin/python 02_demo_robustness.py && \
+		$(abspath $(VENVPATH))/bin/python 03_google_reach_audit.py && \
+		$(abspath $(VENVPATH))/bin/python 04_gap_benchmarks.py
+
+
+########################################################################
 # Other utilities
 ########################################################################
 .PHONY: clean
