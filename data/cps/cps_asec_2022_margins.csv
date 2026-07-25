@@ -1,0 +1,17 @@
+variable,cat,cps_perc
+gender,Female,51.207
+gender,Male,48.793
+race,Asian,6.249
+race,Black,12.031
+race,Hispanic,17.173
+race,Other,2.489
+race,White,62.058
+educ,HS or Below,38.754
+educ,Some college,26.439
+educ,College,22.076
+educ,Postgrad,12.731
+agegroup,<25,11.354
+agegroup,25-34,17.466
+agegroup,35-49,24.532
+agegroup,50-64,24.634
+agegroup,65+,22.014

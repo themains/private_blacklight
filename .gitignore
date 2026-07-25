@@ -201,3 +201,4 @@ pyrightconfig.json
 .DS_Store
 /data/wayback
 /data/httparchive
+/data/cps/*.zip

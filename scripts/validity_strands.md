@@ -33,6 +33,26 @@ unscanned domains vs the scanned population. →
 `tables/implications_google_reach_audit.tex`,
 `figures/implications_demo_scenarios`.
 
+**Sample representativeness.** Distinct from the measurement strands: does the
+analytic sample (n = 1,134) resemble the US adult population?
+`scripts/08_cps_benchmark.py` computes weighted CPS ASEC 2022 margins (adults
+18+, `MARSUPWT`) under the same category definitions as Table 1 and appends a
+CPS column to `tables/demo_summary.tex`; margins saved to
+`data/cps/cps_asec_2022_margins.csv`. Table 1 gets a signed difference column
+(computed from the displayed rounded shares, so the column is internally
+consistent) and `tables/demo_summary_note.tex` carries per-variable χ²
+goodness-of-fit tests plus magnitude metrics — the two conventions in the
+benchmarking literature (magnitude per Yeager & Krosnick 2011 POQ / Pew 2023;
+per-variable χ² per applied-paper sample-vs-census tables). Result: gender
+χ²(1)=0.7, p=.40; education χ²(3)=4.3, p=.24; age χ²(4)=11.7, p=.02; race
+χ²(4)=40.5, p<.001. Mean absolute deviation 1.5 pp; max 3.2 pp
+(18–24-year-olds, 8.2% vs 11.4%); all other margins within 2.6 pp. The race
+rejection is driven largely by "Other" (+2.4 pp on a 2.5% CPS base), partly a
+construct mismatch: YouGov's "Other" bundles Middle Eastern / Native American /
+multiracial differently than the CPS `PRDTRACE` recode. Caveat: Table 1's age
+groups cut `birthyr`, so its brackets are birth cohorts, while the CPS side
+uses nominal age brackets.
+
 Related, pre-existing checks (internal to Blacklight): `scripts/temporal_stability.ipynb`
 (Jan-2025 → Apr-2026 rescan of top-500 domains), `scripts/scan_success.ipynb`
 (scan failure vs domain reach), `scripts/per_user_coverage.ipynb` (per-user
