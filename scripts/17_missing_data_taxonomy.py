@@ -351,10 +351,14 @@ def main():
         fh.write("\n".join(lines))
     print(f"Saved: scripts/{os.path.basename(FP_MD)}")
 
+    # A bare % starts a LaTeX comment and would swallow the rest of the row.
+    def esc(t):
+        return t.replace("%", r"\%")
+
     tex = pd.DataFrame(
         {
             "Source of missingness": [r["where"] for r in tax],
-            "Scale": [r["scale"] for r in tax],
+            "Scale": [esc(r["scale"]) for r in tax],
             "Direction": [r["direction"] for r in tax],
             "Verdict": [r["verdict"] for r in tax],
         }

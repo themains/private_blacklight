@@ -70,9 +70,14 @@ BARE = {
         fragment="bl_top_contributors_domain.tex",
         label="tab:bl_top_contributors_domain",
         align="lrrrrrrr",
+        # Column order must follow tracker_cols in 05_top_bltracker_domain:
+        # ads, cookies, fb_pixel, google_analytics, session_recording,
+        # key_logging, canvas_fingerprinting. The previous header listed Canvas
+        # and Session before FB and GA, mislabelling four of the seven columns.
+        # The first column holds a rank, not a domain name.
         header=(
-            r"Domain & Ad trackers & Cookies & Canvas FP & Session rec. & "
-            r"Keylogging & FB pixel & GA \\"
+            r"Rank & Ad trackers & Cookies & FB Pixel & GA & "
+            r"Session rec & Keylogger & Canvas FP \\"
         ),
         caption=(
             "Domains contributing the most tracking exposure, visit-weighted "
@@ -81,28 +86,40 @@ BARE = {
     ),
 }
 
-# etable already emits a centred adjustbox tabular; these only need a float.
-WRAPPED = {
-    "tab5_formatted": dict(
-        fragment="demo_differences_exposure_rate.tex",
-        label="tab:demo_differences_exposure_rate",
-        caption=(
-            "Demographic differences in tracking exposure per visit. OLS with "
-            "Huber-White (HC1) standard errors in parentheses. Reference "
-            "categories are male, white, high school or below, and under 25."
-        ),
+# Both regression tables are bare rows since 07_demo_differences.py replaced
+# the fixest version, which used to emit its own adjustbox tabular.
+REG_HEAD = (
+    r"Ad & Cookies & FB Pixel & GA & Keylogger & Session rec & Canvas FP & Top share"
+)
+BARE["tab5_formatted"] = dict(
+    fragment="demo_differences_exposure_rate.tex",
+    label="tab:demo_differences_exposure_rate",
+    align="l" + "c" * 8,
+    header="Measure & " + REG_HEAD + r" \\",
+    caption=(
+        "Demographic differences in tracking exposure per visit. OLS with "
+        "Huber-White (HC1) standard errors in parentheses. Reference "
+        "categories are male, white, high school or below, and under 25. "
+        "$^{***}p<0.01$, $^{**}p<0.05$, $^{*}p<0.10$."
     ),
-    "tab6_formatted": dict(
-        fragment="demo_differences_cum_exposure.tex",
-        label="tab:demo_differences_cum_exposure",
-        caption=(
-            "Demographic differences in cumulative tracking exposure. OLS with "
-            "Huber-White (HC1) standard errors in parentheses. Ad trackers, "
-            "third-party cookies and top-organisation share are expressed in "
-            "hundreds; the remaining columns are raw counts."
-        ),
+)
+BARE["tab6_formatted"] = dict(
+    fragment="demo_differences_cum_exposure.tex",
+    label="tab:demo_differences_cum_exposure",
+    align="l" + "c" * 8,
+    header=(
+        r"Measure & Ad (00s) & Cookies (00s) & FB Pixel & GA & Keylogger & "
+        r"Session rec & Canvas FP & Top share (00s) \\"
     ),
-}
+    caption=(
+        "Demographic differences in cumulative tracking exposure. OLS with "
+        "Huber-White (HC1) standard errors in parentheses. Ad trackers, "
+        "third-party cookies and top-organisation visits are expressed in "
+        "hundreds. $^{***}p<0.01$, $^{**}p<0.05$, $^{*}p<0.10$."
+    ),
+)
+
+WRAPPED = {}
 
 
 def read_fragment(name):

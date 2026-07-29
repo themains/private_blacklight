@@ -217,7 +217,10 @@ def main():
     tex = pd.DataFrame(
         {
             "Measure": out["measure"],
-            "Exposure removed": out["exposure_removed"].map(lambda x: f"{x:,.1%}"),
+            # LaTeX: a bare % starts a comment and would swallow the rest of the row.
+            "Exposure removed": out["exposure_removed"].map(
+                lambda x: f"{x:,.1%}".replace("%", r"\%")
+            ),
             "Observed shift": out["observed_shift"].map(lambda x: f"{x:+,.3f}"),
             "Placebo": out.apply(
                 lambda r: f"{r['placebo_median']:+,.3f} [{r['placebo_lo']:+,.3f}, "
