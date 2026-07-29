@@ -32,6 +32,13 @@ import config
 
 KEYS = ["ddg_join_ads", "third_party_cookies", "fb_pixel", "google_analytics"]
 
+# The cookie extract is rank-capped while the request extract is not, so a
+# domain can be present in HTTP Archive and still never have been asked about
+# cookies. `cookies_queried` carries that distinction through the aggregation;
+# without it, "not asked" joins the "asked, found none" arm of the calibration
+# and inverts it.
+HA_COLS = KEYS + ["cookies_queried"]
+
 
 def wmean(vals, w):
     return np.average(vals, weights=w) if len(vals) else 0.0
@@ -45,9 +52,9 @@ def main():
 
     bl = pd.read_csv(config.FP_BLACKLIGHT)
     ha = pd.read_csv(config.FP_HA_DOMAIN_MEASURES)
-    ha22 = ha.query("crawl == 'panel'").groupby("private_domain")[KEYS].mean()
+    ha22 = ha.query("crawl == 'panel'").groupby("private_domain")[HA_COLS].mean()
     ha25 = (
-        ha.query("crawl == 'blacklight_match'").groupby("private_domain")[KEYS].mean()
+        ha.query("crawl == 'blacklight_match'").groupby("private_domain")[HA_COLS].mean()
     )
     wb = (
         pd.read_csv(config.FP_WB_DOMAIN_MEASURES)
@@ -84,6 +91,13 @@ def main():
     scanned = merged["bl_ddg_join_ads"].notna()
     ha_measured = merged["ha_ddg_join_ads"].notna()
     wb_measured = merged["wb_ddg_join_ads"].notna()
+
+    def measured_for(key):
+        """Which domains HTTP Archive actually interrogated for this measure."""
+        if key == "third_party_cookies":
+            return ha_measured & (merged["ha_cookies_queried"].fillna(0) > 0)
+        return ha_measured
+
     w_all = merged["visits"]
     tt_visits = merged.groupby("caseid")["visits"].sum()
 
@@ -105,13 +119,27 @@ def main():
         c_bl = merged[f"bl_{k}"]
         fill_mean = wmean(c_bl[scanned], w_all[scanned])
 
+        k_measured = measured_for(k)
         ha_present = merged[f"ha_{k}"] > 0
-        calib = scanned & ha_measured
-        ha_fill = np.where(
-            ha_present,
-            wmean(c_bl[calib & ha_present], w_all[calib & ha_present]),
-            wmean(c_bl[calib & ~ha_present], w_all[calib & ~ha_present]),
+        calib = scanned & k_measured
+        m_present = wmean(c_bl[calib & ha_present], w_all[calib & ha_present])
+        m_absent = wmean(c_bl[calib & ~ha_present], w_all[calib & ~ha_present])
+
+        # The whole point of the calibrated fill is that an auxiliary sighting
+        # predicts more Blacklight tracking than its absence. If it does not,
+        # the "absent" arm is contaminated with domains that were never looked
+        # at and the fill is worse than the assumption it replaces.
+        if not (m_present > m_absent):
+            raise ValueError(
+                f"{k}: calibration is inverted -- HA-present predicts {m_present:.3f} "
+                f"but HA-absent predicts {m_absent:.3f}. The absent arm is not a "
+                "measurement of absence; check which domains were actually queried."
+            )
+        print(
+            f"  {k:22s} calib: present {m_present:6.3f}  absent {m_absent:6.3f}  "
+            f"(n_calib={int(calib.sum()):,})"
         )
+        ha_fill = np.where(ha_present, m_present, m_absent)
 
         scen = {
             "zero": c_bl.fillna(0),
@@ -119,12 +147,12 @@ def main():
         }
 
         c = c_bl.copy()
-        c[~scanned & ha_measured] = ha_fill[~scanned & ha_measured]
-        c[~scanned & ~ha_measured] = fill_mean
+        c[~scanned & k_measured] = ha_fill[~scanned & k_measured]
+        c[~scanned & ~k_measured] = fill_mean
         scen["ha_mean"] = c
 
         c = c_bl.copy()
-        c[~scanned & ha_measured] = ha_fill[~scanned & ha_measured]
+        c[~scanned & k_measured] = ha_fill[~scanned & k_measured]
         if k in config.WB_KEYS:
             wb_present = merged[f"wb_{k}"] > 0
             calib_wb = scanned & wb_measured
@@ -146,18 +174,28 @@ def main():
 
     # ------------------- same-instrument drift (strand A) -------------- #
     matched = ha22.index.intersection(ha25.index)
-    dom = (
-        ha22.loc[matched].add_prefix("h22_").join(ha25.loc[matched].add_prefix("h25_"))
-    )
+    dom = ha22.loc[matched].add_prefix("h22_").join(ha25.loc[matched].add_prefix("h25_"))
     m2 = yg.merge(dom, left_on="private_domain", right_index=True, how="left")
-    tt2 = m2.groupby("caseid")["visits"].sum()
     for k in config.MEASURES:
-        r22 = (m2[f"h22_{k}"].fillna(0) * m2["visits"]).groupby(
-            m2["caseid"]
-        ).sum() / tt2
-        r25 = (m2[f"h25_{k}"].fillna(0) * m2["visits"]).groupby(
-            m2["caseid"]
-        ).sum() / tt2
+        # Matching on domain is not enough for cookies: a domain can be inside
+        # the rank cap at one date and outside it at the other, and the capped
+        # share grows over time, so filling the uncapped side with zero would
+        # read a change in what was queried as a change in what sites do.
+        if k == "third_party_cookies":
+            both = (m2["h22_cookies_queried"].fillna(0) > 0) & (
+                m2["h25_cookies_queried"].fillna(0) > 0
+            )
+        else:
+            both = m2[f"h22_{k}"].notna() & m2[f"h25_{k}"].notna()
+
+        w2 = m2["visits"].where(both, 0)
+        denom = w2.groupby(m2["caseid"]).sum().replace(0, np.nan)
+        r22 = (m2[f"h22_{k}"].fillna(0) * w2).groupby(m2["caseid"]).sum() / denom
+        r25 = (m2[f"h25_{k}"].fillna(0) * w2).groupby(m2["caseid"]).sum() / denom
+        print(
+            f"  drift {k:22s} on {int(both.sum()):,} domain-visits "
+            f"measured at both dates ({both.mean():.1%} of rows)"
+        )
         out[f"ha22_{k}"] = r22
         out[f"ha25_{k}"] = r25
         out[f"drift_{k}"] = r25 - r22

@@ -39,9 +39,7 @@ def build_ddg_categories():
         df = pd.read_csv(config.FP_DDG_CATEGORIES)
         return {
             row.domain: (
-                set(str(row.categories).split(";"))
-                if pd.notna(row.categories)
-                else set()
+                set(str(row.categories).split(";")) if pd.notna(row.categories) else set()
             )
             for row in df.itertuples()
         }
@@ -153,19 +151,38 @@ def classify(cats):
     measures = measures.reset_index()
 
     # Third-party cookies from the (already third-party) cookie extracts.
+    #
+    # The cookie query is capped at COOKIE_RANK_CAP while the request query is
+    # not, so most domains in `measures` were never asked about cookies at all.
+    # Filling those with 0 would record "we did not look" as "there were none",
+    # and because the capped share grows across crawl dates (58% in 2022, 66%
+    # by mid-2025) that manufactures a decline in cookie prevalence. Only
+    # domains the cookie extract actually covers get a number; the rest stay
+    # missing, and `cookies_queried` says which is which.
     cookies = _load_extracts(config.raw_cookies_path)
     if not cookies.empty:
+        queried = cookies[grp].drop_duplicates().assign(cookies_queried=True)
         setters = cookies[cookies["n_set_cookie_responses"] > 0]
         tpc = (
             setters.groupby(grp)["req_domain"]
             .nunique()
             .reset_index(name="third_party_cookies")
         )
-        measures = measures.merge(tpc, on=grp, how="left")
+        measures = measures.merge(queried, on=grp, how="left", validate="1:1")
+        measures = measures.merge(tpc, on=grp, how="left", validate="1:1")
+        measures["cookies_queried"] = measures["cookies_queried"].fillna(False)
+        # Queried but absent from `setters` really is zero; never queried is not.
+        measures.loc[measures["cookies_queried"], "third_party_cookies"] = measures.loc[
+            measures["cookies_queried"], "third_party_cookies"
+        ].fillna(0)
     else:
         measures["third_party_cookies"] = pd.NA
-    measures["third_party_cookies"] = (
-        measures["third_party_cookies"].fillna(0).astype(int)
+        measures["cookies_queried"] = False
+
+    n_q = int(measures["cookies_queried"].sum())
+    print(
+        f"  cookie coverage: {n_q:,} of {len(measures):,} domain-crawls queried "
+        f"({n_q / len(measures):.1%}); the rest are missing, not zero"
     )
 
     out = measures.rename(columns={"page_domain": "private_domain"})[
@@ -176,6 +193,7 @@ def classify(cats):
             "ddg_join_ads",
             "ddg_known_trackers",
             "third_party_cookies",
+            "cookies_queried",
             "fb_pixel",
             "google_analytics",
             "n_third_parties",
