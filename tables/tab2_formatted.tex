@@ -1,0 +1,20 @@
+\begin{table}[htbp]
+\centering
+\caption{Cumulative tracking exposure per panelist over the month. The final two columns give the share of panelists who encountered the technique at least once and at least ten times. Ad trackers and third-party cookies are counts of distinct third-party domains; the remaining measures are binary indicators of whether the technique was present on the domain. Visits to domains Blacklight did not scan contribute zero, so every figure is a lower bound.}
+\label{tab:cumulative-exposure}
+\begin{adjustbox}{max width=\textwidth}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+Measure & Mean & SD & Min & P25 & Median & P75 & Max & $\geq 1$ & $\geq 10$ \\
+\midrule
+Ad Trackers & 27,407 & 48,279 & 0 & 2,620 & 9,738 & 29,240 & 517,968 & 99.6\% & 99.1\% \\
+Third-Party Cookies & 32,325 & 55,184 & 0 & 3,133 & 11,757 & 35,647 & 700,142 & 99.4\% & 99.1\% \\
+Facebook Pixel & 383 & 657 & 0 & 40 & 147 & 463 & 5,808 & 94.7\% & 87.3\% \\
+Google Analytics & 35 & 104 & 0 & 0 & 8 & 29 & 1,619 & 72.4\% & 46.5\% \\
+Session Recording & 155 & 353 & 0 & 10 & 54 & 165 & 5,788 & 89.7\% & 76.0\% \\
+Keylogging & 309 & 935 & 0 & 4 & 26 & 148 & 10,315 & 84.9\% & 65.9\% \\
+Canvas Fingerprinting & 320 & 697 & 0 & 18 & 84 & 288 & 7,643 & 91.7\% & 81.0\% \\
+\bottomrule
+\end{tabular}
+\end{adjustbox}
+\end{table}

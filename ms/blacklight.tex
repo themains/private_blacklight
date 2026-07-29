@@ -1,0 +1,1170 @@
+\documentclass[12pt, letterpaper]{article}
+
+% Page layout
+\usepackage[margin=1in]{geometry}
+
+% Typography and spacing
+\usepackage{setspace}
+\setlength{\parindent}{3em}
+
+% Math
+\usepackage{amsfonts,amssymb,amsbsy,amsxtra}
+
+% Graphics
+\usepackage{graphicx}
+\usepackage{pdfpages}
+
+% Tables
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{tabularx}
+\usepackage{dcolumn}
+\usepackage{multirow}
+\usepackage{adjustbox}
+
+% Colors
+\usepackage[dvipsnames,svgnames,table]{xcolor}
+\definecolor{dark-red}{rgb}{0.75,0.10,0.10}
+\definecolor{bluish}{rgb}{0.05,0.05,0.85}
+
+% Hyperlinks
+\usepackage[unicode, naturalnames]{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    urlcolor=blue,
+    citecolor=bluish,
+    pdfstartview={XYZ null null 1.00},
+    pdfpagemode=UseNone,
+    pdftitle={blacklight}
+}
+
+% Citations
+\usepackage{natbib}
+\usepackage{units}
+\usepackage{nicefrac}
+\newcommand{\citeapos}[1]{\citeauthor{#1}'s (\citeyear{#1})}
+
+% Cross-references
+\usepackage[nameinlink, capitalize, noabbrev]{cleveref}
+
+% Floats
+\usepackage{float}
+\usepackage{placeins}
+
+% Captions
+\usepackage[
+    skip=0pt,
+    labelfont=bf,
+    font=small,
+    textfont=small,
+    figurename=Figure,
+    justification=justified,
+    singlelinecheck=false,
+    labelsep=period
+]{caption}
+\usepackage{subcaption}
+
+% Page orientation
+\usepackage{pdflscape}
+\usepackage{rotating}
+
+% Headers
+\usepackage{fancyhdr}
+
+% URLs
+\usepackage{url}
+\usepackage{xurl}
+
+% Footnotes
+\usepackage{footmisc}
+\setlength{\footnotesep}{\baselineskip}
+\renewcommand{\footnotelayout}{\footnotesize\onehalfspacing}
+\interfootnotelinepenalty=10000
+
+% Appendix
+\usepackage[titletoc,title]{appendix}
+
+% Fonts
+\renewcommand{\ttdefault}{pcr}
+
+% Author notes
+\newcommand{\note}[1]{\textcolor{orange}{#1}}
+
+% Fix for \input inside tables with booktabs
+\ExplSyntaxOn
+\cs_if_exist:NF \expandableinput
+{
+  \cs_new:Npn \expandableinput #1
+    { \use:c { @@input } { \file_full_name:n {#1} } }
+}
+\AddToHook{env/tabular/begin}
+  { \cs_set_eq:NN \input \expandableinput }
+\ExplSyntaxOff
+
+% ============================================
+\title{Exposed: Shedding \textit{Blacklight} on Online Privacy%
+\thanks{Replication materials: \url{https://github.com/themains/private_blacklight}}
+}
+
+\author{
+    Lucas Shen\thanks{Agency for Science, Technology and Research. \href{mailto:lucas@lucasshen.com}{\texttt{lucas@lucasshen.com}}}
+    \and
+    Gaurav Sood\thanks{\href{mailto:gsood07@gmail.com}{\texttt{gsood07@gmail.com}}}
+    \and
+    Daniel Weitzel\thanks{Colorado State University. \href{mailto:daniel.weitzel@colostate.edu}{\texttt{daniel.weitzel@colostate.edu}}}
+}
+% \author{
+% Anonymized Author(s)
+% }
+\date{\today}
+
+% JPC
+% WWW2026
+% TheWebConf 2026
+% SSCR
+% GOODIT - May 17
+% https://goodit2026.di.unipi.it/call_for_papers.html
+% IMC - April 22
+% https://conferences.sigcomm.org/imc/2026/
+% PoPETS - May 31
+% https://petsymposium.org/cfp26.php
+% PAM - Oct 16
+
+
+\begin{document}
+%TC:ignore
+\maketitle
+% -----------------------------------------------
+%   ABSTRACT
+% -----------------------------------------------
+\onehalfspacing
+\begin{abstract}
+Who is the most surveilled online? One account holds that risk follows vulnerability, so the least digitally literate should be the most exposed. A competing account holds that risk follows opportunity, so exposure should track how much time a person spends online and little else. We combine one month of passively observed, anonymized browsing by 1,134 US adults on a panel matched to population margins (6.2 million visits to 64,074 domains) with domain-level audits from Blacklight covering seven tracking techniques. Tracking is near universal and fast: over $99\%$ of users encounter ad trackers and third-party cookies, half of them within twelve hours, and session recording, keylogging, and canvas fingerprinting reach $42$ to $52\%$ of users within two days. One organization, Google for nine users in ten, observes a median $54\%$ of a person's browsing. Every estimate is a lower bound: visits to domains the scanner could not reach count as tracker-free, and a direct re-audit of a random sample of those domains finds more tracking on them rather than less. Gaps by gender and education close once we account for browsing volume. The age gap does not: users 65 and older encounter $74$ to $87\%$ more trackers per visit than users under 25. Where people browse, and not only how much, is associated with how much surveillance they meet. We release the panel, the audits, and the code.\\
+
+    \noindent
+    \textbf{Keywords:} Online Privacy, Online Safety, Digital Divide, KeyLogging, Tracking\\
+
+\newcommand{\quickwordcount}[1]{%
+  \immediate\write18{texcount -1 -sum -merge -q #1.tex output.bbl > #1-words.sum }%
+  \input{#1-words.sum} words%
+}
+\textbf{Word count:} \quickwordcount{paper}
+        
+\end{abstract}
+\vspace{1cm}
+\thispagestyle{empty}
+\newpage
+\setcounter{page}{1}
+\newpage
+
+
+\doublespacing
+%TC:endignore
+\section{Introduction}
+Two theories predict who is most at risk online. The first is the digital divide: risk follows vulnerability, so women, older people, racial minorities, and the less educated should be the most exposed, being less equipped to recognize what threatens them \citep{vandeursen2011internet, hadlington2018segmentation, whitty2019predicting}. The second is exposure through presence: risk follows opportunity, so whoever spends the most time online meets the most of whatever is out there, whatever their skill \citep{simoiu2020targeted, baki2023sixteen}. Where the two have been tested against observed behavior rather than self-report, the second has largely prevailed. Demographic differences in exposure to malicious domains vanish at the median once online presence is accounted for \citep{bad_domains}, and the people most often caught up in data breaches are the better educated and the heavily online \citep{cor2018pwned}.
+ 
+Web tracking should not be expected to behave the same way, and the reason is structural. Malware can be recognized and evaded, and people do evade it, leaving quickly once they land on a bad site. Breached accounts follow from accounts a person chose to open. Tracking is different in kind. It is installed by the sites a person visits, on terms set between those sites and third parties the visitor never selected, and it runs whether or not the visitor knows it is there. Sophistication and choice give a user some purchase on the first two risks. On the third they give almost none. If that is right, the composition of a person's browsing, and not merely its volume, should govern how much surveillance they meet.
+ 
+Testing this requires a quantity the literature has not measured. What is at issue is exposure, and exposure is not prevalence. Prevalence is a property of the web: the share of sites on which a technique can be found. Exposure is a property of a person: the share of that person's browsing that meets one. The two coincide only if people browse at random, which they do not. Our estimand is therefore the rate at which a person's browsing meets tracking technology, and the share of that browsing any single organization can observe. Our population is adults in the United States who browse the web. Our definition of that population excludes browsing inside mobile applications, which relies on embedded SDKs no browser-based audit can see \citep{Binns2018}, and tracking that leaves no client-side trace, such as CNAME cloaking and server-side collection. What remains is the tracking a user's own browser could in principle observe, which is also the tracking a browser vendor could in principle block.
+ 
+The estimand matters because the harms scale with it. Tracking data enables stalking, identity theft, and reputational injury \citep{citron2022privacy}; it steers people in financial hardship toward high-interest credit \citep{christl2016networks}; it has been used to withhold housing and employment advertising by race and location \citep{angwin2016facebook}; and a handful of behavioral traces suffices to re-identify a person in data stripped of identifiers \citep{achara2015unicity, deanonymizing}. Against part of this collection a user has recourse. Cookies can be blocked or deleted, and the major browsers have moved against third-party cookies. Against the rest a user has none. Session recording scripts capture mouse movement and form input as it happens \citep{leakyforms}, keyloggers take keystrokes before a form is ever submitted, and canvas fingerprinting identifies a device while storing nothing on it \citep{Acar2014, MS12}.
+ 
+Exposure has been measured, but by anything approaching the standard a population claim requires, it has not been measured on anyone in particular. The studies that begin from real browsing begin from samples of convenience: users of a privacy-focused browser \citep{trackingthetrackers}, customers of an antivirus vendor, carrying no demographics \citep{Dambra2022}, small extension cohorts \citep{hu2020multi}, volunteers recruited through university mailing lists \citep{pugliese2020long}, and crowdworkers sent to a list of assigned sites \citep{muthu2025beyond}. The one study to pair tracking with demographics measures something adjacent, the fingerprintability of a participant's device, which is a property of hardware and settings rather than of what the participant browses \citep{berke2025whose}. No dataset has yet joined the three things an answer requires, which are real browsing, the demographics of the people doing it, and audits across the range of techniques in use.
+ 
+We assemble that join and release it. We pair one month of passively metered browsing, 6.2 million visits to 64,074 domains by 1,134 adults on a YouGov panel matched to US population margins, with audits of every visited domain by Blacklight \citep{blacklight}, which detects seven techniques from ad trackers and third-party cookies through session recording, keylogging, and canvas fingerprinting. Linking the detected third parties to their parent organizations through DuckDuckGo's Tracker Radar converts encounters into the quantity that matters for surveillance, which is how much of one person's browsing one organization can see. The browsing panel is publicly archived and has been used to study exposure to malicious content \citep{bad_domains, data-dataverse}, which allows the surveillance risk estimated here to be set against a security risk measured on the same people over the same month.
+ 
+The design yields a conservative lower bound on exposure, for three reasons. First, the audit reached $53\%$ of the domains the panel visited, covering $76\%$ of visits, and visits to the remaining domains contribute nothing to any estimate. Those domains are not tracker-free: a hand-coded random sample of them, rescanned directly, carries more tracking than the domains the audit reached, $8.5$ ad trackers per domain against $6.5$. Second, the audit ran in January 2025 and the browsing was recorded in June 2022; measured with a single independent instrument at both dates, tracking was more prevalent in 2022 than later measurement implies, so the delay understates what the panel met. Third, panelists know they are metered, and metering misses devices and browsers they also use \citep{Bosch2024, penney2016chilling}. All three push observed exposure down rather than up. We do not assume these errors away. We measure each with instruments independent of Blacklight, HTTP Archive crawls, Wayback Machine snapshots, and direct re-audits of failed domains, and carry the resulting bounds through every estimate we report (\cref{sm:validity}).
+ 
+Four findings follow. Tracking is near universal and it arrives fast: more than $99\%$ of users meet ad trackers and third-party cookies, half of them inside twelve hours, and the invasive techniques reach $42$ to $52\%$ of users within two days. Exposure is concentrated in few hands: one organization, Google for nine users in ten, observes a median $54\%$ of a person's browsing. On gender and education, the pattern established for other online risks repeats, and the gaps close once browsing volume is held constant. On age it does not. The older the user, the more trackers met per visit, and the more uniformly the gap runs across techniques, from ad trackers through keylogging; users 65 and older meet $74$ to $87\%$ more trackers per visit than users under 25, a relative gap several times the size of the contemporary gender gap in earnings \citep{goldin2014grand}. Demographics taken together still account for under $8\%$ of the variance in exposure, so the inequality in surveillance lies overwhelmingly within demographic groups rather than between them. But the part that lies between them does not dissolve into browsing volume, as it does for malicious content and for breaches, and that is the respect in which surveillance differs from the other risks people meet online.
+ 
+In all, we start with the floor. We then replace the zero contributed by unaudited visits with measurement-calibrated imputation, which raises the mean ad-tracker rate from $5.0$ to between $6.2$ and $8.3$ per visit, and we show that the demographic comparisons hold under every fill we can defend. Lastly, we ask what the exposure implies for practice. The heaviest per-visit exposure falls on the users least likely to install defenses, and it falls in part through techniques that installing defenses would not stop, which argues for protections that ship on by default rather than for tools users must find. The concentration estimates give regulators a measured baseline for how much of a population's browsing a single firm observes. And the drift we document, an age skew that widened between 2022 and 2025 on an independent instrument, is a quantity no crawl can produce.
+ 
+We make four contributions:
+\begin{itemize}\itemsep2pt
+    \item \textbf{Population-level exposure.} The first estimates of user-level exposure to session recording, keylogging, and canvas fingerprinting, alongside conventional tracking, on a sample built to represent US adults, with per-user organizational concentration.
+    \item \textbf{Incidence, and a limit on the presence explanation.} Evidence that the account which explains demographic gaps in other online risks, that they reflect time spent online, does not extend to surveillance: the age gap survives adjustment for browsing volume, runs uniformly across techniques, and widened between 2022 and 2025.
+    \item \textbf{A validity framework for trace-plus-audit designs.} Independent-instrument bounds on the two compromises such designs cannot avoid, including a direct re-audit establishing that domains the scanner failed to reach carry more tracking than those it reached, which makes every estimate here a floor rather than a guess.
+    \item \textbf{Artifacts.} The anonymized browsing panel \citep{data-dataverse}, the full audit results, and the linkage and analysis code, released for questions other than ours.
+\end{itemize}
+
+\section{Related Work}
+\label{sec:related}
+
+Almost everything known about the prevalence of web tracking has been learned by visiting websites rather than by watching people. \citet{Englehardt2016} audited a million sites and found stateful and stateless tracking woven through the web's fabric; earlier and parallel work detected fingerprinting in the wild \citep{Acar2013, Nikiforakis2013, Acar2014, MS12}, learned to recognize it from behavior rather than from blocklists \citep{Iqbal2021}, mapped the actors in the cookie ecosystem \citep{SanchezRola2018, SanchezRola2021}, and caught forms exfiltrating email addresses before anyone pressed submit \citep{leakyforms}. Standing observatories follow the ecosystem month by month \citep{karaj2018whotracks}; longitudinal studies follow it across years and decades \citep{solomos2020clashtrackersmeasuringevolution, lerner2016internet}; domain-specific audits follow it onto hospital, pharmacy, and government health sites, where the stakes run highest \citep{niforatos2021prevalence, zheutlin2021data, zheutlin2022data}. Blacklight, the tool we use, belongs to this tradition \citep{blacklight}. The inventory these studies have built is detailed and, for its purpose, close to complete. Its purpose is not ours. A crawl records what a site does to whoever arrives; it cannot record how often anyone arrives, and the difference between the two is the whole of what we estimate.
+ 
+A second strand starts from browsing rather than from sites. What limits it has never been sample size. \citet{trackingthetrackers} measured tracker reach across 21 million page loads from 200,000 users and found a single organization present on $42\%$ of page visits in Germany. \citet{Dambra2022} joined browsing telemetry from 250,000 machines to custom crawls and showed that exposure measured from the user's side is more concentrated than exposure measured from the tracker's. Neither study wants for observations. What both want is a defensible relation between the people observed and anyone else: the first drew its users from Cliqz, a privacy-focused browser, and so selected on the disposition under study; the second drew its users from the customers of an antivirus vendor, all of them on Windows, and carries no demographics at all. The smaller studies inherit the same difficulty in sharper form. \citet{hu2020multi} audited a year of browsing for a volunteer cohort of tens of users enrolled through a Chrome extension. \citet{pugliese2020long} followed more than 1,300 volunteers recruited through university mailing lists, press releases, and researchers' personal contacts. \citet{muthu2025beyond} paid 30 crowdworkers to visit an assigned list of 100 sites and showed, valuably, that human interaction surfaces fingerprinting that crawlers miss. Privacy-browser users, antivirus customers, extension volunteers, mailing-list volunteers, crowdworkers on assigned sites: the strand has assembled every kind of sample except one drawn to represent a population.
+ 
+Two literatures ask who bears the risk, and they have not yet met. The first asks it of tracking and answers from the device. \citet{berke2025whose} collected browser fingerprints and demographics from 8,400 US participants and found lower-income and older users at greater risk of fingerprinting. The study is the closest to ours in what it asks and the furthest in what it measures. Its quantity is identifiability, which is what a device gives away about itself. Ours is exposure, which is what its owner's browsing runs into. Identifiability is a property of hardware and settings; exposure is a property of where people go; and the distinction carries practical weight, because a browser vendor can change the first, while the second changes only when the sites people visit change.
+ 
+The second literature asks who bears the risk of other online harms, and answers from behavior. Its long-standing expectation is that risk follows vulnerability, so the less digitally skilled should be the most exposed \citep{vandeursen2011internet, hadlington2018segmentation, whitty2019predicting}. Studies that observe conduct rather than collect self-reports have largely found otherwise: exposure follows opportunity, and demographic gaps shrink or invert once time spent online is taken into account \citep{simoiu2020targeted, baki2023sixteen, bad_domains, cor2018pwned}. The form of the adjustment matters for any comparison across these studies. They enter a measure of online presence, typically the count of sites a person visited, into a model of exposure, and read the demographic coefficients after adjustment; we report the same specification alongside our rate-normalized estimates so that the comparison is like for like (\cref{sec:demo_diff}). What no study in this literature has done is run the test on surveillance, which differs from malware and from breached credentials in that the exposed party neither seeks it out nor opts into it. A related line takes the measuring instrument as its object: \citet{Bosch2024} show that commercial metering panels fail to cover devices their panelists use, and that exposure estimates are biased in consequence, a warning our coverage and desktop-only analyses take up directly (\cref{sm:validity}).
+ 
+Ours is the design that joins what these strands hold separately: browsing as people actually do it, demographics for the people doing it, and audits across seven techniques, linked to the organizations that operate them. Each element is load-bearing. Exposure at the user level requires real browsing; disparities require demographics; a claim about a population requires a sample built to represent one. The last is the element that cannot be repaired after the fact. Estimates drawn from privacy-browser users or antivirus customers cannot be projected onto a population even in principle, whatever their sample size; ours are built to be. We add one element these designs have generally left to a limitations paragraph: an accounting of the two compromises every trace-plus-audit design makes, audits that postdate the browsing and audits that fail on part of it, with independent instruments bounding each (\cref{sm:validity}).
+\section{Research Design, Data, and Measures}
+ 
+We combine two sources. The first is a month of passively collected, anonymized, domain-level browsing from a YouGov panel of 1,200 US adults, covering 6.2 million visits (\cref{sec:browsing_data}). The second is domain-level audits from Blacklight, a scanning tool built by The Markup that detects seven tracking technologies, among them session recording, keylogging, and canvas fingerprinting (\cref{sec:blacklight}). Joining the two yields, for every person, the tracking technology present on everything they visited.
+ 
+From the join we build two measures of exposure (\cref{sec:measuring_exposure}). Cumulative exposure counts tracker encounters over the observation window. The exposure rate divides that count by the person's visits, giving trackers per visit. The pair separates exposure that follows from time spent online from exposure that follows from where that time is spent. Dividing by visits is one way to hold browsing volume constant; \cref{sec:demo_diff} reports a second, the specification used in studies of exposure to other online risks.
+ 
+Two features of the merge bound what the measures can say, and we quantify both rather than assume them away. Blacklight completed scans for $34{,}078$ of the $64{,}074$ unique domains ($53.2\%$), covering $76.4\%$ of visits, and visits to unscanned domains contribute zero, which makes every estimate a floor. Separately, the browsing predates the scans by thirty-one months. \cref{sm:validity} reports what each can do to the estimates: failed scans reflect bot detection and JavaScript challenges rather than dead sites; a directly re-audited random sample of unscanned domains carries more tracking than the scanned population, not less; per-user coverage is high, tightly distributed, and unrelated to demographics; and the cross-user ordering the demographic analyses rely on is stable across measurement dates. Sixty-six of the 1,200 recruited panelists logged no usable browsing and are excluded, which moves no demographic marginal by more than one percentage point.
+ 
+\subsection{Browsing Data}
+\label{sec:browsing_data}
+ 
+Our browsing data comes from YouGov, which maintains a large panel of US adults and uses matched sampling to construct its samples. YouGov draws a random sample from a large synthetic sampling frame \citep{rivers2009}, invites matching panelists to participate, and substitutes similar individuals for non-respondents. Our sample consists of 1,200 American adults who volunteered to install a passive metering application, YouGov Pulse, developed with RealityMine, on their devices in exchange for rewards. The application collected de-identified browsing over one month in June 2022 \citep{bad_domains, data-dataverse, ss-adult}, logging domain visits with anonymized URLs (for example, \textit{https://www.google.com/search?ANONYMIZED}) and timestamps, regardless of browser type or privacy settings. All participants gave informed consent and could opt out at any time. Passwords and secure form entries were never collected, and all data, including URLs, was anonymized (see \cref{sm:yougov}).
+ 
+The data comprise 6.2 million visits to 64,074 unique domains from 1,134 individuals over one month. Sixty-five individuals recorded no online activity during the month, and one recorded visits without usable metadata. \cref{tab:demo_summary} describes the analytical sample of $1{,}134$.
+ 
+\begin{table}[ht]
+\centering
+\caption{Sample description and benchmark against the CPS}
+\label{tab:demo_summary}
+\begin{tabular}{lrrrr}
+\toprule
+ & $n$ & Sample & CPS 2022 & $\Delta$ (pp) \\
+\midrule
+\input{tables/demo_summary}
+\bottomrule
+\end{tabular}
+\caption*{\footnotesize \textit{Note:} The analytical sample of $1{,}134$ panelists with usable browsing. CPS shares are weighted ASEC 2022 margins for adults 18 and over under the same category definitions. \input{tables/demo_summary_note} Sample age groups are birth cohorts cut from birth year, while CPS brackets are nominal ages, which accounts for part of the deviation among the youngest group. The ``Other'' race category bundles groups differently than the CPS recode.}
+\end{table}
+ 
+The sample tracks the Current Population Survey closely but not perfectly. Across the sixteen demographic margins in \cref{tab:demo_summary}, the mean absolute deviation from the weighted CPS ASEC 2022 shares is $1.2$ percentage points and the maximum is $2.6$ (high school diploma or below). Gender, education, and age margins are statistically indistinguishable from the CPS; race is not ($\chi^2$ tests in \cref{tab:demo_summary}), with the rejection driven largely by the small ``Other'' category, whose definition differs between YouGov and the CPS. Because our age groups are defined on birth year rather than on age at interview, the CPS margins are cut to the same birth cohorts; comparing our cohort-defined groups against nominal CPS age brackets would make the youngest group appear under-represented by construction, since it spans five birth years against the bracket's seven.
+ 
+Passive metering carries a known measurement limit of its own: panelists browse on devices and in browsers the meter does not cover \citep{Bosch2024}. \cref{sm:desktop_only} restricts the analysis to panelists whose logged activity is desktop only, where metering is most complete, and the demographic patterns hold.
+ 
+\subsection{Measuring Tracking on Domains}
+\label{sec:blacklight}
+ 
+Blacklight is an on-demand privacy inspection tool that simulates a fresh user arriving at a website and scans for seven stateful and stateless tracking methods, identifying them through browser automation, network request monitoring, and behavioral script analysis \citep{blacklight}. We submitted the $64{,}074$ unique domains visited in our sample to Blacklight in January 2025 and obtained results for $34{,}078$ ($53.2\%$), covering $76.4\%$ of all visits. Scans ran in a headless Chromium 126 browser emulating an iPhone 13 Mini user agent from a US-based environment, with a fresh browser cache per scan, a 30-second per-page timeout, and coverage of the homepage plus one randomly selected internal page; the full configuration is in \cref{sm:bl_tracking_mechanisms}. The mobile emulation matches the mixed desktop and mobile browsing of the panel; \cref{sm:desktop_only} checks sensitivity to device mix, and \cref{sm:validity} characterizes the domains that failed to scan and bounds what the failures and the scan timing can do to our estimates.
+ 
+Blacklight detects these seven tracking methods (details in \cref{sm:bl_tracking_mechanisms}):
+\begin{itemize}\itemsep0pt
+    \item \textbf{Ad Trackers:} Detected via outgoing requests matched to DuckDuckGo's ``Ad Motivated Tracking'' list.
+    \item \textbf{Third-party Cookies:} Detected by analyzing `Set-Cookie` headers on requests to third-party services.
+    \item \textbf{Facebook Pixel and Google Analytics:} Collect granular behavioral data for ad targeting and analytics.
+    \item \textbf{Session Recording Scripts:} Detected based on script behavior and a known list of URLs for session replay services.
+    \item \textbf{Keylogging:} Identified by typing known values into form fields and monitoring network activity for exfiltration of those exact keystrokes.
+    \item \textbf{Canvas Fingerprinting:} Detected by inspecting `\texttt{<canvas>}` behavior and analyzing pixel-level script outputs.
+\end{itemize}
+ 
+Of these, session recording, keylogging, and canvas fingerprinting are the most invasive \citep{Acar2014, karaj2018whotracks, blacklight, MS12, leakyforms, berke2025whose}. They also carry risks conventional tracking does not, because they operate outside the reach of the hygiene measures ordinarily recommended to users, such as ad blockers and cookie deletion.
+ 
+\subsection{Measuring Exposure to Tracking Methods}
+\label{sec:measuring_exposure}
+ 
+Each individual $i$ has a set of site visits $\mathcal{V}_i$, where each visit $v$ is a timestamped instance of visiting a page on domain $d$; $d(v)$ denotes the domain of visit $v$ and $\vert \mathcal{V}_i \vert$ the individual's total visits in the month. We compute exposure to tracking method $s$ by aggregating tracker counts over the domains visited (\cref{eq:cum_exposure}) and normalize by total visits to adjust for browsing intensity (\cref{eq:exposure_rate}).
+\begin{align}
+\text{Cumulative Exposure}_i^{(s)} &=
+    \sum_{v \in \mathcal{V}_i}
+    \left\vert
+        trackers^{(s)}_{d(v)}
+    \right\vert,
+\label{eq:cum_exposure} \\
+\text{Exposure Rate}_i^{(s)} &=
+    \left(
+        \frac{1}{\vert \mathcal{V}_i \vert}
+        \cdot
+        \text{Cumulative Exposure}_i^{(s)}
+    \right)
+\label{eq:exposure_rate}
+\end{align}
+ 
+Both measures are presence-weighted: they count tracking technologies present on visited domains, not confirmed data captures. For always-on technologies such as ad trackers and third-party cookies, presence and collection coincide. For interaction-dependent technologies such as keylogging, presence bounds collection from above, while the zero contributed by unscanned visits bounds presence from below. Presence is also the quantity a site controls and the quantity a privacy audit can verify.
+ 
+\subsection{Measuring Tracking by Organizations: Browsing History}\label{sec:browsing_history}
+ 
+\begin{equation}\label{eq:org_per_user}
+\left| \text{Organizations}_i \right| =
+\left|
+\bigcup_{v \in \mathcal{V}_i} O_{iv}
+\right|
+\end{equation}
+\begin{equation}\label{eq:ind_org_share_visits}
+\text{Tracking share}_{ij} =
+\frac{
+    \sum_{v \in \mathcal{V}_i}
+    \mathbf{1}
+    (j \in O_{iv})
+}
+{
+    \vert \mathcal{V}_i \vert
+}
+\end{equation}
+ 
+A tracker matters less as a script than as a party. To measure the breadth and depth of tracking by organizations, we link domain-level metadata from the Blacklight analyses, which identifies the third-party domains embedded on each visited domain (for example, \textit{connect.facebook.net}), to parent organizations (\textit{Facebook, Inc.}) using DuckDuckGo Tracker Radar (\url{https://github.com/duckduckgo/tracker-radar}), which maps over 38,000 third-party domains to over 19,000 organizations. Linking parent organizations ($O$) to the visit-level data ($\mathcal{V}$) lets us quantify the number of distinct organizations tracking each user (\cref{eq:org_per_user}) and the share of a user's browsing visible to any organization $j$ (\cref{eq:ind_org_share_visits}). Organizations owning several third-party domains on the same visited domain are counted once.%
+\footnote{
+    We also compute organizations' shares weighted by dwelling time ($t$):
+    \begin{equation}\label{eq:ind_org_share_duration}
+        \text{Tracking share}_{ij}^{\text{(dur)}} =
+        \frac{
+            \sum_{v \in \mathcal{V}_i}
+            \mathbf{1}
+            (j \in O_{iv})
+            \cdot
+            t_{iv}
+        }
+        {
+            \sum_{v \in \mathcal{V}_i}
+            t_{iv}
+        },
+    \end{equation}
+    as an alternative to \cref{eq:ind_org_share_visits}, and reach similar findings (\cref{sm:time_weighted_org_tracking}).
+}
+ 
+\subsection{Demographic Differences}\label{sec:demo_diff}
+ 
+We estimate disparities in two ways, which differ in how they hold browsing volume constant. Reporting both matters because the comparison we draw with other online risks turns on the adjustment, and we do not want a difference in method mistaken for a difference in the world.
+ 
+The first regresses exposure on demographics alone:
+\begin{equation}\label{eq:demo-diff}
+     \text{y}_i =
+     \alpha
+     \, + \beta_1   \text{gender}_i
+     \, + \beta_2^k \text{race}_i
+     \, + \beta_3^k \text{education}_i
+     \, + \beta_4^k \text{age group}_i^k
+     \, + \varepsilon_i,
+\end{equation}
+where $y_i$ is individual $i$'s exposure to one of the seven tracking methods, estimated by ordinary least squares with Huber-White standard errors, once on cumulative exposure and once on the exposure rate. Demographic covariates are gender (woman; ref: man), race and ethnicity (African American, Asian, Hispanic, Other; ref: White), education (some college, college degree, postgraduate; ref: high school or less), and age group (25--34, 35--49, 50--64, 65+; ref: 18--24). All predictors are indicators, so coefficients are directly comparable. Volume enters here only through the choice of outcome: the rate divides cumulative exposure by visits, which holds volume constant by imposing proportionality between browsing and exposure.
+ 
+The second adjustment does not impose it. Following the specification used in studies of exposure to other online risks, we enter online presence directly:
+\begin{equation}\label{eq:demo-presence}
+     Q_{\tau}(y_i) =
+     \alpha
+     \, + \beta_1   \text{gender}_i
+     \, + \beta_2^k \text{race}_i
+     \, + \beta_3^k \text{education}_i
+     \, + \beta_4^k \text{age group}_i^k
+     \, + \gamma_1 \text{visits}_i
+     \, + \gamma_2 \text{visits}_i^2
+     \, + \varepsilon_i,
+\end{equation}
+where $\text{visits}_i$ is the total number of sites individual $i$ visited during the month, scaled to the unit interval, and $y_i$ is cumulative exposure. We estimate at the median ($\tau = 0.5$) with bootstrapped standard errors, because exposure is heavily right-skewed and the median is the summary that skew does not distort.
+ 
+Neither adjustment dominates. Dividing by visits assumes exposure grows in proportion to browsing; entering visits and its square lets the data say otherwise, and prior work on other online risks reports a concave relationship, in which case the proportional assumption over-corrects for heavy browsers. Reporting both specifications means that when our demographic coefficients behave differently from those found for other risks, the difference is in the phenomenon and not in the arithmetic.
+
+
+\section{Results}
+\label{sec:results}
+ 
+\subsection{Exposure to Different Kinds of Tracking}
+\label{sec:prevalence_tracking}
+ 
+\input{tables/tab2_formatted}
+\input{tables/tab3_formatted}
+ 
+Tracking is near universal, and ad trackers and third-party cookies are the most common vehicles. Over the month, $99.1\%$ of users encountered more than ten ad trackers or third-party cookies (\cref{tab:cumulative-exposure}). Users encountered on average $27{,}407$ ad trackers ($\hat{\sigma} = 48{,}279$) and $32{,}325$ third-party cookies ($\hat{\sigma} = 55{,}184$), against medians of $9{,}738$ and $11{,}757$, so the distributions are heavily right-skewed. Normalizing by visits removes most of the skew: users meet on average $5.0$ ad trackers ($\hat{\sigma} = 3.6$) and $6.1$ third-party cookies ($\hat{\sigma} = 5.1$) per visit, with medians of $4.0$ and $4.8$ (\cref{tab:exposure-rate}). The tighter spread indicates that most of the variation in total exposure comes from how much people browse rather than from where they go. Every figure here is a floor, since visits to unscanned domains contribute zero. Replacing that zero with measurement-calibrated fills puts the mean ad-tracker rate between $6.2$ and $8.4$ per visit and the cookie rate between $7.0$ and $10.7$ (\cref{sm:coverage_bounds}); the tables report the floor.
+ 
+The invasive methods, session recording, keylogging, and canvas fingerprinting, sit on nearly $9\%$ of domains and are met less often. Users encounter session recording on $3\%$ of visits ($\hat{\sigma} = 0.05$), keylogging on $4\%$ ($\hat{\sigma} = 0.07$), and canvas fingerprinting on $6\%$ ($\hat{\sigma} = 0.09$) (\cref{tab:exposure-rate}). Low rates still accumulate: $91.7\%$ of users met canvas fingerprinting at least once, and over $65\%$ met all three at least ten times (\cref{tab:cumulative-exposure}). These counts record the presence of a technology on a visited domain rather than a confirmed capture. A keylogging script on a page a user never types into collects nothing, so for the interaction-dependent methods presence bounds collection from above, while the zero-filled visits bound presence from below.
+
+\begin{figure}[ht]
+% Center the caption for this table only
+\subcaptionsetup{justification=centering}
+  \centering
+  % Top: the figure
+  \begin{subfigure}{\textwidth}
+    \centering
+    \includegraphics[width=0.55\textwidth]{figures/cum_exposure_by_hour.pdf}
+    \caption{}
+  \end{subfigure}
+  % Bottom: the table
+  \begin{subfigure}[b]{\textwidth}
+    \centering
+    \scriptsize
+    \begin{tabular}{@{\hspace{0\tabcolsep}}lccccc@{\hspace{0\tabcolsep}}}
+      \toprule
+      &0h& 12h & 24h & 36h & 48h\\
+      \input{tables/cum_exposure_by_hour}
+      \bottomrule
+    \end{tabular}
+    \caption{}
+  \end{subfigure}
+\caption{
+    \footnotesize
+   The proportion of users who had encountered a particular tracker by a particular time. We start measuring at 6 PM on 31 May (due to time zones) when at least 50 users have logged browsing activity.
+   The table reports the cumulative proportions at the specified hours.
+}
+\label{fig:cum_exposure_by_hour}
+\end{figure}
+
+Because tracking is pervasive, exposure is rapid. Using browsing timestamps, we identify when each user first encountered each tracking method. Half of the users encounter an ad tracker or a third-party cookie within the first $12$ hours of the start of measurement (see \cref{fig:cum_exposure_by_hour}). By 48 hours, nearly $80\%$ have encountered at least one tracker or cookie. Even the more intrusive techniques---session recording, keylogging, and canvas fingerprinting---reach nearly half the users within $48$ hours.
+
+
+\subsection{Demographic Differences in Exposure to Tracking Methods}
+\label{sec:demo_diff_mechanisms}
+ 
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=1.0\textwidth]{figures/coefplot_demo_differences_cumulative.pdf}
+  \caption{
+    Demographic differences in \textit{cumulative exposure}.
+    Each panel reports OLS estimates (markers) and 95\% confidence intervals (lines) from \cref{eq:demo-diff} for one of the seven tracking methods, and for the number of visits observed by the top tracking organization.
+    Black markers are significant at $p < .05$.
+    Full tables in \cref{sm:regression_tables}.
+  }
+  \label{fig:coefplot_demo_differences_cumulative}
+\end{figure}
+ 
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=1.0\textwidth]{figures/coefplot_demo_differences_rate.pdf}
+  \caption{
+    Demographic differences in \textit{exposure rate}.
+    Each panel reports OLS estimates and 95\% confidence intervals from \cref{eq:demo-diff} for the per-visit rate of each tracking method, and for the share of visits observed by the top organization.
+    Black markers are significant at $p < .05$.
+    Full tables in \cref{sm:regression_tables}.
+  }
+  \label{fig:coefplot_demo_differences_rate}
+\end{figure}
+ 
+Before any adjustment for how much people browse, the gaps fall roughly where the presence account would put them (\cref{fig:coefplot_demo_differences_cumulative}). Gender predicts little, with one exception: women encounter more canvas fingerprinting than men ($\hat{\beta} = 93$, $\widehat{\mathrm{SE}} = 39.1$, $p < .05$). Racial differences are confined to three cases: Asian users are less exposed to keylogging and session recording, users categorized as `Other' are less exposed to keylogging, and Hispanic users are tracked less by Facebook Pixel and Google Analytics. Education and age matter more. College-educated users encounter $16{,}090$ more third-party cookies than users with a high school diploma or less ($p < .01$) and $88$ more session recorders ($\widehat{\mathrm{SE}} = 35.9$, $p < .05$), with postgraduates following the same pattern. Users 65 and above encounter more trackers on every method except Google Analytics.
+ 
+Expressing exposure per visit removes part of this (\cref{fig:coefplot_demo_differences_rate}). The education gaps largely disappear: more educated users are online more, not on more heavily tracked sites. That is the pattern reported for exposure to malicious content and to breached credentials, where demographic gaps are largely a function of time spent online rather than of who is spending it.
+ 
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=.55\textwidth]{figures/lowess_age_bl.pdf}
+  \caption{
+    Exposure rate by birth year.
+    Lines are LOWESS-smoothed standardized rates (z-scores) for the seven tracking methods, winsorized at the 95th percentile.
+    Vertical dashed lines mark the age-group boundaries.
+  }
+  \label{fig:lowess_age_bl}
+\end{figure}
+ 
+The age gap does not disappear. Users 65 and above continue to meet higher per-visit rates of ad trackers, third-party cookies, session recording, keylogging, and canvas fingerprinting, and the gradient runs smoothly across birth cohorts rather than resting on where the age bins were cut (\cref{fig:lowess_age_bl}). The gap is $74$ to $87\%$ of the under-25 mean depending on the method, a standardized effect of $0.6$ to $0.8$ (\cref{sm:implications}). The gender gap in canvas fingerprinting also survives, at one additional fingerprinting script per $100$ visits ($\widehat{\mathrm{SE}} = 0.005$, $p < .05$).%
+\footnote{
+    \label{fn:bonferroni}
+    Applying a Bonferroni correction for the $12$ demographic predictors tested ($p < .00417$), all coefficients with unadjusted $p < .01$ in \cref{tab:demo_differences_exposure_rate} remain significant.
+}
+Neither survival is an artifact of the audit. Per-user scan coverage is flat in age and in gender, and both coefficients are essentially unchanged under every scenario for filling unscanned visits (\cref{sm:implications}). The size of the age gap does depend on when tracking is measured: under June 2022 measurement from an independent instrument it is roughly a quarter smaller for ad trackers and half smaller for cookies than under the January 2025 scans, because tracking growth over the intervening period concentrated on the sites older users frequent (\cref{sm:temporal}).
+ 
+% >>> FILL: run \cref{eq:demo-presence} and replace every bracketed
+% value. Placeholders, not results.
+Dividing by visits is one way to hold browsing volume constant, and not the way the studies of other online risks held it. Estimating \cref{eq:demo-presence} instead, which enters the count of sites visited and its square into a median regression on cumulative exposure, reproduces their result for education, where the coefficient falls to [FILL] and loses significance, and departs from it for age, where users 65 and above remain [FILL] above the under-25 baseline ($p =$ [FILL]). Online presence enters with the concave shape reported for other risks ([FILL] linear, [FILL] quadratic). The age gap therefore survives both adjustments, which rules out its being an artifact of assuming that exposure grows in proportion to browsing.
+ 
+Asian users move the other way under adjustment. Lower on cumulative exposure only for session recording and keylogging, they show lower rates across nearly every method once volume is held constant, which is what visiting less heavily tracked sites would produce.
+ 
+Demographics account for little of the total variation, under $8\%$ across all models (\cref{sm:regression_tables}), so most of the inequality in surveillance lies within demographic groups rather than between them. What lies between them, though, does not reduce to time spent online in the way it does for other online risks. Adjusting for presence closes the demographic gaps in exposure to malicious content and to breached credentials. Here it closes the education gap and leaves the age gap standing. Surveillance differs from those risks in that the exposed party neither seeks it out nor opts into it, and the age result is what that difference looks like in the data.
+
+\subsection{Tracking by Organizations}
+\label{sec:tracker_organizations}
+ 
+\begin{figure}
+    \centering
+    \begin{subfigure}[t]{0.495\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/dist_org_per_user_summtable.pdf}
+        \caption{Number of organizations}
+        \label{fig:dist_org_per_user_summtable}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.495\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/dist_tracking_concentration_per_user_summtable}
+        \caption{Concentration across organizations}
+        \label{fig:dist_tracking_concentration_per_user_summtable}
+    \end{subfigure}
+ 
+    \vspace{0.5cm}
+ 
+    \begin{subfigure}[t]{0.495\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/top_trackers_reach_dominance_annotated_top_orgs}
+        \caption{Dominance against reach}
+        \label{fig:top_trackers_reach_dominance_annotated_top_orgs}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.495\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/dist_maxshare_hist_summtable.pdf}
+        \caption{Share observed by the top organization}
+        \label{fig:dist_maxshare_hist_summtable}
+    \end{subfigure}
+ 
+    \caption{
+        Tracking by parent organizations.
+        Panel (a) reports how many organizations track each user's browsing.
+        Panel (b) reports how unevenly that tracking is divided among them, as Gini coefficients, for users tracked by at least ten organizations.
+        Panel (c) plots each organization's dominance, the number of users for whom it observes a larger share of browsing than any other organization does, against its reach, the number of users it tracks at least once; the figures in parentheses give those two counts for the labelled organizations.
+        Panel (d) reports, for each user, the largest share of their browsing observed by any single organization.
+    }
+    \label{fig:tracking_by_organizations}
+\end{figure}
+ 
+What matters for surveillance is not how many trackers a person meets but how few parties those trackers report to. Users are typically tracked by $155$ to $318$ organizations, with a median of $242$ (\cref{fig:dist_org_per_user_summtable}). Breadth of this kind does not imply that the observation is spread evenly. Among users tracked by at least ten organizations, a handful account for most of what is seen, with a median Gini coefficient of $0.73$ (\cref{fig:dist_tracking_concentration_per_user_summtable}).
+ 
+Reach and dominance are separate quantities, and \cref{fig:top_trackers_reach_dominance_annotated_top_orgs} separates them. Reach counts the users an organization tracks at least once. Dominance counts the users for whom it observes more browsing than any competitor. Google leads on both, appearing in the tracker chain of $99.9\%$ of users and standing as the largest single observer for $89.1\%$ of them. Microsoft, Facebook, Amazon, and Cloudflare follow at a distance.%
+\footnote{
+    Tracking is likewise concentrated among a handful of domains (\cref{sm:top_tracking_domains}). Financial and e-commerce platforms contribute heavily to session recording and keylogging exposure; Microsoft and TikTok are prominent in canvas fingerprinting.
+}
+Google's position holds on the part of the web our scanner could not audit. Among a directly re-measured random sample of unscanned domains, $68$ to $72\%$ load a Google-owned third party, which is statistically indistinguishable from the $69\%$ visit-weighted share among the domains we did scan (\cref{sm:implications}).
+ 
+In absolute terms, the leading organization observes a mean $55\%$ of a user's browsing ($\hat{\sigma} = 0.16$) and a median of $54\%$; at the 75th percentile it observes $66\%$ (\cref{fig:dist_maxshare_hist_summtable}). Weighting by time spent rather than by visits gives similar figures (\cref{sm:time_weighted_org_tracking}). None of this concentration is arranged by the person being observed. Users choose the sites; the sites choose the third parties, and it is the second choice that determines how much of a browsing history ends up in one place.
+
+\subsection{Demographic Differences in Tracking by Organizations}
+\label{sec:demo_diff_organizations}
+ 
+The last question is who is most legible to the single organization that sees the most of them, which for $89.1\%$ of users is Google. We estimate \cref{eq:demo-diff} on the number of visits that organization observes and on the share of visits it observes (column (8) of \cref{tab:demo_differences_cum_exposure,tab:demo_differences_exposure_rate}).
+ 
+Women are marginally less legible than men, by $1.7$ percentage points of visits observed ($\widehat{\mathrm{SE}} = 1.0\%$, $p < .1$). College-educated and postgraduate users are more legible than users with a high school diploma or below, by $3.9$ ($\widehat{\mathrm{SE}} = 1.3\%$, $p < .01$) and $5.4$ percentage points ($\widehat{\mathrm{SE}} = 1.6\%$, $p < .01$). Both differences hold on the cumulative and the normalized measure.
+ 
+Age is the one place where the two measures disagree. Users 65 and above have more visits observed in total than users under 25, and a smaller share of visits observed, by at least $6.6$ percentage points for users 50 and above ($p < .01$).%
+\footnote{
+    As in \cref{sec:demo_diff_mechanisms}, the education and age differences persist after correcting for multiple comparisons (Footnote~\ref{fn:bonferroni}).
+}
+The two facts are consistent. Older users browse more and meet more trackers per visit, but they spread their browsing across sites in a way that leaves less of it under any single observer. Depth of exposure to one firm and breadth of exposure to the tracking ecosystem are different quantities, and demographics sort them differently.
+
+
+
+\section{Discussion}
+\label{sec:discussion}
+ 
+Two accounts of who bears the most risk online have been tested against observed behavior, and for malicious content and for breached credentials the second has prevailed: exposure follows opportunity, and demographic gaps close once time spent online is taken into account. Web tracking is the case where that account runs out. Adjusting for browsing volume closes the education gap here as it does elsewhere, and leaves the age gap standing. Users 65 and older meet $74$ to $87\%$ more trackers per visit than users under 25, a standardized gap of $0.6$ to $0.8$, and the gradient runs smoothly across birth cohorts rather than resting on where the bins were cut.
+ 
+The reason is structural rather than statistical. Malicious content can be recognized and avoided, and people do avoid it. Breached credentials follow from accounts a person opened. Tracking is installed by the sites a person visits, under arrangements between those sites and third parties the visitor never chose, and it runs whether or not the visitor knows it is there. Skill and caution have purchase on the first two risks and almost none on the third, so the composition of a person's browsing survives as a source of inequality where for other risks it does not. That older users are the group left exposed is the part with practical weight: the gap runs across every technique we measure, including session recording, keylogging, and canvas fingerprinting, which the hygiene measures ordinarily recommended to users do not reach.
+ 
+The magnitude deserves a benchmark, because effect sizes in this literature rarely have one. The gender gap in per-visit exposure is small and, apart from canvas fingerprinting, statistically indistinguishable from zero, which puts it an order of magnitude below the ten to twenty percent gender gap in earnings documented for high-income countries \citep{goldin2014grand}. The age gap is several times larger in relative terms than that earnings gap. And as most of the residual gender pay gap sits within occupations rather than between them, most variation in surveillance sits within demographic groups rather than between them: our covariates account for under $8\%$ of the variance. Who a person is explains little about how much surveillance they meet. What they browse explains a great deal.
+ 
+Two further results bear on how the tracking ecosystem is organized. Exposure is near universal and it arrives fast. More than $99\%$ of users met ad trackers and third-party cookies, half of them within twelve hours of the start of measurement, and the invasive techniques reached $42$ to $52\%$ of users within two days. And exposure is concentrated: users are tracked by a median of $242$ organizations, but a single organization observes a median $54\%$ of a person's browsing, and for $89.1\%$ of users that organization is Google. Microsoft and Facebook are dominant for roughly four percent of users each. We recover the same leading organizations as \citet{Dambra2022}, who aggregate over visits rather than over users, and the user-level measure adds what aggregation cannot: the concentration is not an artifact of a few heavy browsers but the ordinary condition of the median person. It also extends to the part of the web our scanner could not reach, where $68$ to $72\%$ of a directly re-audited sample of domains load a Google-owned third party.
+ 
+Every estimate here is a floor, and deliberately so. Visits to domains the audit could not complete contribute nothing, and a hand-coded random sample of those domains, rescanned directly, carries more tracking than the domains we did scan, $8.5$ ad trackers per domain against $6.5$. Replacing the zero with measurement-calibrated imputation puts the mean ad-tracker rate between $6.2$ and $8.3$ per visit against the $5.0$ we report. The demographic comparisons hold under every fill we can defend.
+ 
+What follows for practice runs in three directions. Protection is worst matched to need: the heaviest per-visit exposure falls on the users least likely to seek out defenses, and it falls in part through techniques that adopting defenses would not stop, which is an argument for protections that ship enabled by default in the browser rather than for tools users must find and install. Regulators concerned with a single firm's visibility into a population's browsing now have a measured baseline rather than an inference from crawls, and it is a lower bound. And the drift we document, an age skew that widened between June 2022 and June 2025 on an instrument held constant, is a quantity no site-centric audit can produce, which argues for treating exposure measurement as a recurring exercise rather than a one-off.
+ 
+\subsection{Limitations}
+\label{sec:limitations}
+ 
+The audit is browser-based, so it sees nothing of the tracking inside mobile applications, which runs through embedded SDKs \citep{achara2015unicity, Binns2018}. Restricting the analysis to the $690$ panelists whose logged activity is desktop only, where metering is most complete, leaves the demographic patterns in place (\cref{sm:desktop_only}), but that check conditions on the metered device and cannot speak to application traffic.
+ 
+Blacklight has blind spots of its own. It does not detect CNAME cloaking, and it does not see server-side collection that occurs outside the browser even when a user blocks cookies. It also does not distinguish tracking from adjacent uses of the same technology: session recording and canvas fingerprinting are sometimes deployed for bot detection or interface testing rather than surveillance \citep{blacklight, leakyforms}. Our estimand is defined accordingly, as the client-side tracking a user's own browser could in principle observe.
+ 
+Two features of the merge would ordinarily be assumed away, and we measured them instead. The audit completed for $53\%$ of domains, covering $76\%$ of visits. Scan success does not fall with reach; it is flat across the distribution and rises among the most-visited domains (\cref{tab:scan_by_reach}), so the failures are not concentrated where they would do most damage. Per-user coverage is high, tightly distributed, and unrelated to demographics (\cref{sm:user_coverage,sm:implications}). And the unscanned domains are neither dead nor tracker-free (\cref{sm:selection}). Separately, the audit postdates the browsing by thirty-one months. Measured with a single independent instrument at both dates, population-level tracking moved modestly and the cross-user ordering the demographic analyses depend on is stable, with correlations of $0.75$ to $0.91$ (\cref{sm:temporal}). Timing is not neutral for the age comparison in particular: under contemporaneous June 2022 measurement the age gap is roughly a quarter smaller for ad trackers and half smaller for cookies than under the January 2025 scans, so magnitudes should be read as of the scan date even though the qualitative result holds at either.
+ 
+The sample is matched to US population margins but not identical to them. Gender and education margins are statistically indistinguishable from the Current Population Survey; race and age are not, with a mean absolute deviation of $1.5$ percentage points across sixteen margins (\cref{tab:demo_summary}).
+ 
+Passive metering is imperfect in two further respects. Panelists browse on devices and in browsers the meter does not cover \citep{Bosch2024}, and knowing they are metered may suppress the browsing they do. Both push measured exposure down.
+ 
+Finally, our measures are presence-weighted. They record the tracking technology present on a visited domain, not a confirmed capture. For always-on technologies the two coincide; for interaction-dependent technologies such as keylogging, presence bounds collection from above while the zero-filled visits bound presence from below. Presence is the quantity a site controls and a privacy audit can verify, and it is the proxy this literature has used \citep{Dambra2022, karaj2018whotracks, blacklight, niforatos2021prevalence, zheutlin2021data, zheutlin2022data}.
+ 
+\section{Conclusion}
+\label{sec:conclusion}
+ 
+Nearly everyone is surveilled on the web, most of them within a day of being observed, and for nine users in ten a single company sees more than half of where they go. Those facts were widely suspected and are now measured on a sample built to stand for a population. The finding that does not follow from what came before concerns who bears the burden. For other online risks, demographic gaps in exposure are largely a matter of how much time people spend online. For surveillance they are not: the gap by age survives adjustment for browsing volume, runs across every technique we measure, and widened over the three years our instruments span. Exposure to surveillance is not something users select into, and it is not distributed the way the risks they can select into are. The browsing panel, the audits, and the analysis code are released so that the estimate can be improved on, and repeated.
+
+
+%TC:ignore
+% \section*{Statements and declarations}
+\subsection*{Ethics}
+% The study protocol (CSU IRB Protocol 6404) was reviewed by the Colorado State University Institutional Review Board.
+The study protocol was reviewed by the Colorado State University Institutional Review Board. The browsing data used in this study were passively collected, fully anonymized, and contained no personally identifiable information. No IRB approval was required.
+
+
+% \subsection*{Consent to participate}
+% Not applicable. This study uses anonymized, passively observed browsing data and publicly available domain-level tracking data. No direct interaction with participants occurred.
+
+% \subsection*{Consent for publication}
+% Not applicable.
+
+% \subsection*{Declaration of conflicting interest}
+% The author(s) declared no potential conflicts of interest with respect to the research, authorship, and/or publication of this article.
+
+% \subsection*{Funding statement}
+% The author(s) received no financial support for the research, authorship, and/or publication of this article.
+
+% \subsection*{Data availability}
+% To help others build on our work and facilitate replication, the code and data are publicly available under an open-source license at: \url{https://github.com/xxxxxxxx/xxxxxxx_xxxxxxxxxx} (masked to comply with the double-blind requirement).
+
+\section*{Code and Data}
+Code and data is available under an open source license at \url{https://github.com/themains/private_blacklight}.
+
+% -----------------------------------------------
+%   REFERENCES
+% -----------------------------------------------
+\FloatBarrier
+\singlespacing
+\clearpage
+% \bibliographystyle{apsr}
+\bibliographystyle{apalike}
+\bibliography{blacklight.bib}
+\addcontentsline{toc}{section}{References}
+\clearpage
+
+\appendix
+\onehalfspacing
+% -----------------------------------------------
+%   Appendix
+% -----------------------------------------------
+\renewcommand{\thesection}{\Alph{section}}
+\renewcommand\thetable{\thesection.\arabic{table}}
+\renewcommand\thefigure{\thesection.\arabic{figure}}
+\renewcommand\theequation{\thesection.\arabic{equation}}
+\counterwithin{figure}{section}
+\counterwithin{table}{section}
+\counterwithin{equation}{section}
+
+\begin{center}
+\Large{Supporting Information}
+\end{center}
+% \label{si}
+
+\FloatBarrier
+\section{Participant consent and data privacy}
+\label{sm:yougov}
+Before enrolling in a YouGov panel, people receive detailed information about the nature and scope of the data collection. Potential participants are informed about the types of data that will be collected, such as visited domains, and what will not be collected, including any information entered into secure forms, such as usernames, passwords, or payment details (See YouGov's FAQ, \url{https://today.yougov.com/about/faq}).
+
+Only after reviewing this information do individuals consent to participate. Participation is entirely voluntary, and panelists can pause or uninstall the tracking software at any time. (See pages 3 and 4 of the \href{https://web.archive.org/web/20240530184843/https://d25d2506sfb94s.cloudfront.net/r/106/YouGovPulse_Windows_Installation_Manual.pdf}{installation guide} for Terms and Conditions and Privacy Policy made known to participants.) 
+
+The browsing data collection application—YouGov Pulse---is developed in partnership with RealityMine and is available as a browser extension or mobile app. The app ensures anonymity: researchers never have access to identifying information, and no data is shared with third parties.
+
+To encourage participation, panelists earn points through YouGov's reward system---2,000 points upon joining and an additional 1,000 points for completing a full month of activity.
+
+
+\includepdf[pages=-,scale=0.75, frame=true]{figures/YouGovPulse_Windows_Installation_Manual.pdf}
+% \url{https://account.yougov.com/us-en/account/privacy-policy}
+
+% \url{https://today.yougov.com/about/faq}
+
+% can withdraw anytime or uninstall anytime: \url{https://yougov-pulse.en.aptoide.com/app}
+
+% \url{https://corporate.yougov.com/esg/governance/our-data-commitment}
+
+% \url{https://web.archive.org/web/20240530184843/https://d25d2506sfb94s.cloudfront.net/r/106/YouGovPulse_Windows_Installation_Manual.pdf}
+\iffalse
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{image.png}
+    \caption{Source: \url{https://web.archive.org/web/20240620182527/https://d25d2506sfb94s.cloudfront.net/r/106/You GovPulse_iOS_Installation_Manual.pdf}}
+    \label{fig:enter-label}
+\end{figure}
+\fi
+
+
+\clearpage
+\FloatBarrier
+\section{Tracking methods}\label{sm:bl_tracking_mechanisms}
+This appendix summarizes the seven tracking methods that Blacklight detects on the homepage of the domain and one additional randomly selected internal page \citep{blacklight}. 
+Blacklight analyses are retrieved from a 24--48-hour cache when available or performed in real-time if no recent results exist.
+Scans run in a headless Chromium 126 browser emulating an iPhone 13 Mini user agent, from an AWS US-California environment, with a 30-second per-page timeout, a network-idle wait condition, a fresh browser cache per scan, and with HTTP Archive capture enabled.
+The main scans were done in January 2025.
+We assess the temporal stability of the Blacklight analyses using a new audit in April 2026 for 500 of the top domains in terms of reach, covering 99.6\% of participants, 58.9\% of visits, and 59.3\% of browsing time. With the exception of Facebook Pixel, we find similarly high (or higher) prevalence rates across categories (Jan 2025 vs.\ Apr 2026): Ad Trackers (67.4\% vs.\ 67.2\%), Third-party Cookies (57.6\% vs.\ 53.6\%), Facebook Pixel (21.6\% vs.\ 16.6\%), Google Analytics (2.8\% vs.\ 23.8\%), Session Recording (10.0\% vs.\ 9.2\%), Keylogging (3.8\% vs.\ 4.2\%), and Canvas Fingerprinting (12.4\% vs.\ 20.6\%).
+
+\begin{itemize}
+    \item{
+        \textbf{Ad Tracking:} 
+        Ad trackers are third-party scripts embedded in websites that collect user browsing behavior and send it to advertising networks. These scripts help build user profiles for targeted advertising or retargeting across websites. Blacklight detects ad tracking by identifying network requests to known advertising domains (domains under ``Ad Motivated Tracking'', \url{https://github.com/duckduckgo/tracker-radar/blob/main/docs/CATEGORIES.md}) in the DuckDuckGo Tracker Radar list.
+    }
+    \item{
+        \textbf{Third-party Cookies:} 
+        Cookies are small text files stored in the user's browser.
+        Third-party cookies originate from domains other than the one being visited and are widely used to track users across websites.
+    }
+    \item{
+        \textbf{Facebook Pixel:} 
+        Facebook Pixel is a tracking script that monitors user behavior---such as page views, button clicks, and purchases---and sends this data to Facebook for ad targeting and conversion analytics.
+        It links off-site behavior to user profiles across the Facebook ecosystem, even if users are not logged in to Facebook.
+        Blacklight detects Facebook Pixel by identifying network requests to Facebook domains and inspecting URL query parameters for data patterns that match Pixel's documented schema.    
+    }
+    \item{
+        \textbf{Google Analytics:} 
+        Another major tracking tool operated by a major tech company is Google Analytics, which uses JavaScript tags and cookies to monitor user behavior such as session duration, navigation, and referrals.
+        Blacklight detects it by flagging requests to known Google Analytics endpoints, such as \texttt{http://stats.g.doubleclick.net}.
+    }
+
+    \item{
+        \textbf{Session Recording:} 
+        Session replay scripts record user activity on a website, including mouse movements, scrolling, and form inputs---often in real time \citep{leakyforms}.
+        These recordings can be replayed by website owners, revealing detailed behavioral data and potentially sensitive information.
+        Blacklight detects session recording by monitoring network requests for URL substrings known to be associated with session replay tools (\url{https://web.archive.org/web/20210830151649/https://gist.github.com/gunesacar/0c67b94ad415841cf3be6761714147ca}).
+    }
+    \item{
+        \textbf{Keylogging:} A potentially more invasive subset of session recording, keylogging captures every keystroke a user makes---including input into masked fields like passwords and credit card forms---before submission.
+        This technique can reveal highly sensitive user data.
+        Blacklight enters pre-determined text into input fields and monitors network requests for the same outgoing data.
+    }
+    \item{
+        \textbf{Canvas Fingerprinting:}
+        This method leverages the HTML5 canvas element to render invisible graphics and analyze subtle rendering differences based on the user's hardware and software configuration \citep{Acar2014, MS12}.
+        These differences can be used to create a persistent, stateless identifier for tracking users across sessions \citep{karaj2018whotracks, blacklight, pugliese2020long}.
+        Blacklight infers that canvas fingerprinting is used for tracking if scripts silently draw meaningful content on a sufficiently large canvas, do not use it for interactivity, and then extract pixel-level data in a way consistent with generating unique user identifiers.
+    }
+\end{itemize}
+
+
+% ============================================================
+% APPENDIX: MEASUREMENT VALIDITY  (\label{sm:validity})
+% Standalone extract for Overleaf. Built from repo commit dbc472d1.
+% Table fragments referenced (all in tables/): scan_failure_reasons,
+% wb_liveness, selection_audit_composition, selection_audit_tracking,
+% httparchive_drift, temporal_user_exposure, ha_bl_agreement,
+% wb_ha_agreement, coverage_bounds_wayback, implications_*.
+% Figures referenced (all in figures/): selection_audit_tracking,
+% temporal_user_exposure, coverage_bounds_wayback,
+% implications_demo_scenarios.
+% Cross-refs used by main text: sm:validity, sm:selection,
+% sm:user_coverage, sm:temporal, sm:instruments, sm:coverage_bounds,
+% sm:implications, sm:desktop_only.
+% Note: sample representativeness (CPS benchmark) is deliberately NOT
+% here; it lives with Table 1 in the data section, per
+% scripts/validity_strands.md, since it concerns the sample rather
+% than the measurement.
+% ============================================================
+
+% ============================================================
+% NEW: Measurement validity appendix
+% ============================================================
+\clearpage
+\FloatBarrier
+\section{Measurement Validity}
+\label{sm:validity}
+
+Two features of our design warrant scrutiny: browsing was observed in June 2022 but the Blacklight scans ran in January 2025, and the scans completed for $53.2\%$ of domains covering $76.4\%$ of visits. We examined both with independent instruments---HTTP Archive's monthly crawls, Wayback Machine snapshots from the browsing window, and a fresh Blacklight scan of a random sample of unscanned domains---asking not whether the paper's numbers survive but where they move and by how much. \cref{sm:selection} characterizes the unscanned domains. \cref{sm:user_coverage} shows that coverage is similar across users. \cref{sm:temporal} bounds temporal drift. \cref{sm:instruments} validates the auxiliary instruments where we rely on them. \cref{sm:coverage_bounds} replaces the zero-fill for unscanned visits with calibrated imputation. \cref{sm:implications} tests whether either compromise moves the demographic comparisons. \cref{sm:desktop_only} restricts to desktop-only panelists.
+
+Throughout, one asymmetry should be kept in view. The behavioral detections---canvas fingerprinting, session recording, and keylogging---require executing a live page and cannot be observed in request maps or static snapshots, so the auxiliary instruments are silent on them. For these three, the zero-fill's conservatism and the internal rescan in \cref{sm:temporal} are the evidence.
+
+\subsection{Scan Coverage and Selection}
+\label{sm:selection}
+
+Blacklight returned usable results for $34{,}078$ of the $64{,}074$ unique domains. If the failures were concentrated among heavily visited sites, the exposure measures would inherit a bias no reweighting could fix. They are not. \cref{tab:scan_by_reach} reports the share of domains scanned at increasing thresholds of reach, the number of panelists who visited the domain at least once. The share sits near $52\%$ from the full set through domains visited by at least ten panelists, then climbs to $72.3\%$ among the $130$ domains visited by a hundred panelists or more. Popular sites are, if anything, easier to scan. Weighted by traffic, the scanned set covers $4{,}767{,}099$ of $6{,}236{,}834$ visits, or $76.4\%$.
+
+\begin{table}[ht]
+\centering
+\caption{Blacklight scan success by domain reach}
+\label{tab:scan_by_reach}
+\begin{tabular}{lrr}
+\toprule
+Reach threshold & Domains & Scanned \\
+\midrule
+$\geq 1$ panelist    & 64{,}074 & 53.2\% \\
+$\geq 2$ panelists   & 17{,}828 & 52.8\% \\
+$\geq 5$ panelists   &  5{,}800 & 51.6\% \\
+$\geq 10$ panelists  &  2{,}745 & 51.3\% \\
+$\geq 50$ panelists  &     387 & 56.3\% \\
+$\geq 100$ panelists &     130 & 72.3\% \\
+\bottomrule
+\end{tabular}
+\caption*{\textit{Note:} Reach is the number of panelists who visited the domain at least once during June 2022.}
+\end{table}
+
+Why did the other half fail? Parsing the scraper's error log attributes nearly all failures to the domain side rather than to our infrastructure (\cref{tab:scan_failure_reasons}): $95.3\%$ of unscanned domains, carrying $82.3\%$ of unscanned visits, returned an empty scan result consistent with bot walls, JavaScript challenges, or non-HTML endpoints; $4.5\%$ reflect scraper-to-API network failures; and $51$ domains were unreachable at scan time, though these include large live sites and carry $10.5\%$ of unscanned visits.
+
+\begin{table}[ht]
+\centering
+\caption{Why scans failed}
+\label{tab:scan_failure_reasons}
+\begin{adjustbox}{max width=\textwidth}
+\begin{tabular}{lrrrrr}
+\toprule
+Failure reason & Domains & Visits & \% of unscanned & \% of unscanned & \% of all \\
+& & & domains & visits & visits \\
+\midrule
+\input{tables/scan_failure_reasons}
+\bottomrule
+\end{tabular}
+\end{adjustbox}
+\caption*{\textit{Note:} Failure causes parsed from the January 2025 scraper error log for the $29{,}996$ domains without a completed scan.}
+\end{table}
+
+Nor were the unscanned domains dead during the browsing window. Wayback Machine CDX queries establish that domains carrying at least $65.9\%$ of the unscanned visit mass were demonstrably alive in mid-2022; among unscanned domains with any 2022 check, the alive share is $80.2\%$ (\cref{tab:wb_liveness}).
+
+\begin{table}[ht]
+\centering
+\caption{Liveness of unscanned domains in mid-2022}
+\label{tab:wb_liveness}
+\begin{adjustbox}{max width=\textwidth}
+\begin{tabular}{lrrrr}
+\toprule
+Set & Domains & \% of all visits & \% domains alive & \% visit mass alive \\
+\midrule
+\input{tables/wb_liveness}
+\bottomrule
+\end{tabular}
+\end{adjustbox}
+\caption*{\textit{Note:} Liveness established via Wayback Machine CDX snapshots dated mid-2022. Shares are lower bounds; a domain without a snapshot is not necessarily dead.}
+\end{table}
+
+Finally, we audited a seeded random sample of $200$ unscanned domains directly: $100$ drawn proportional to visits and $100$ uniformly, each hand-coded against a written rubric (\texttt{selection\_audit/CODING\_RUBRIC.md} in the replication materials), probed, and freshly scanned with Blacklight in July 2026. By visit mass, the unscanned web is mostly ordinary user-facing content ($62\%$, CI $[51, 70]$) plus ad-tech and CDN infrastructure ($28\%$); dead domains account for $7\%$ (\cref{tab:selection_audit_composition}). Of the sample, $66\%$ produced completed scans in 2026, and tracking on those domains is heavier than in the scanned population: $8.45$ ad trackers per visit-weighted domain (CI $[4.76, 12.83]$) against $6.52$, and $10.03$ third-party cookies (CI $[4.58, 16.99]$) against $7.69$ (\cref{tab:selection_audit_tracking}, \cref{fig:selection_audit_tracking}). The direct measurements also agree with the calibrated fills of \cref{sm:coverage_bounds}, an out-of-sample check on that procedure.
+
+\begin{table}[ht]
+\centering
+\caption{Composition of the unscanned-domain audit sample}
+\label{tab:selection_audit_composition}
+\begin{adjustbox}{max width=\textwidth}
+\begin{tabular}{lrrcrrc}
+\toprule
+& \multicolumn{3}{c}{Visits stratum} & \multicolumn{3}{c}{Uniform stratum} \\
+\cmidrule(lr){2-4}\cmidrule(lr){5-7}
+Category & $n$ & \% & 95\% CI & $n$ & \% & 95\% CI \\
+\midrule
+\input{tables/selection_audit_composition}
+\bottomrule
+\end{tabular}
+\end{adjustbox}
+\caption*{\textit{Note:} $2 \times 100$ unscanned domains, hand-coded against a written rubric. The visits stratum is drawn proportional to visit mass; the uniform stratum is drawn uniformly over unscanned domains.}
+\end{table}
+
+\begin{table}[ht]
+\centering
+\caption{Tracking on freshly scanned unscanned domains}
+\label{tab:selection_audit_tracking}
+\begin{adjustbox}{max width=\textwidth}
+\begin{tabular}{lrrcrrr}
+\toprule
+& Scanned pop. & \multicolumn{2}{c}{Audit sample (direct scan)} & Strand-B & & Uniform \\
+Measure & (visit-wtd) & Mean & 95\% CI & predicted & $n$ & mean \\
+\midrule
+\input{tables/selection_audit_tracking}
+\bottomrule
+\end{tabular}
+\end{adjustbox}
+\caption*{\textit{Note:} Means per domain. Audit domains scanned with Blacklight in July 2026; the scanned population reflects January 2025 scans. ``Strand-B predicted'' is the calibrated fill of \cref{sm:coverage_bounds} evaluated on the audit domains.}
+\end{table}
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=.8\textwidth]{figures/selection_audit_tracking.pdf}
+  \caption{Tracking on the audit sample of unscanned domains: direct 2026 scans versus the scanned population and the calibrated fill.}
+  \label{fig:selection_audit_tracking}
+\end{figure}
+
+\subsection{Per-User Coverage}
+\label{sm:user_coverage}
+
+Coverage of $76.4\%$ of visits is a pooled figure, and a pooled figure is consistent with some panelists being covered almost completely and others hardly at all. Because every quantity in the paper is measured at the user level, that heterogeneity would matter. It is small. Across the $1{,}134$ panelists, the share of visits landing on a scanned domain has a mean of $74.2\%$, a median of $76.6\%$, and a standard deviation of $14.9$ percentage points; the fifth and ninety-fifth percentiles are $46.3\%$ and $94.4\%$. Put differently, $92.9\%$ of panelists have at least half their visits covered and $67.0\%$ have at least $70\%$ covered. \cref{sm:implications} shows coverage is also unrelated to demographics.
+
+\subsection{Temporal Drift}
+\label{sm:temporal}
+
+The browsing predates the scans by thirty-one months. We bound the drift over that interval in two ways: with a single independent instrument measured at both dates, and with an internal Blacklight rescan.
+
+\paragraph{Same-instrument drift.} HTTP Archive crawls millions of origins monthly and stores every request. For the $11{,}592$ panel domains (desktop; $11{,}573$ mobile) present in both the June 2022 and June 2025 crawls, we classify third-party requests against tracker lists and compare (\cref{tab:httparchive_drift}). Visit-weighted ad-tracker prevalence declined from $98.1\%$ to $95.2\%$; the share of domains with any known tracker moved by $0.1$ percentage points. Header-set third-party cookies and Facebook requests declined more, consistent with the industry's retreat from third-party cookies and tighter pixel governance. In every category, June 2022 tracking was at least as prevalent as later measurement suggests: the delayed scans understate exposure during the browsing window.
+
+\begin{table}[ht]
+\centering
+\caption{Same-instrument tracking drift on panel domains, June 2022 to June 2025 (HTTP Archive)}
+\label{tab:httparchive_drift}
+\begin{adjustbox}{max width=\textwidth}
+\begin{tabular}{llrrrrrrr}
+\toprule
+& & & \multicolumn{3}{c}{Share of domains (\%)} & \multicolumn{3}{c}{Visit-weighted (\%)} \\
+\cmidrule(lr){4-6}\cmidrule(lr){7-9}
+Platform & Measure & $N$ & 2022 & 2025 & $\Delta$ & 2022 & 2025 & $\Delta$ \\
+\midrule
+\input{tables/httparchive_drift}
+\bottomrule
+\end{tabular}
+\end{adjustbox}
+\caption*{\textit{Note:} Panel domains present in both crawls. Constructs are HTTP Archive's: header-set cookies are a subset of all third-party cookies; Google Analytics/GTM is presence, not remarketing.}
+\end{table}
+
+Drift at the domain level matters only insofar as it moves user-level quantities. Recomputing each panelist's exposure under the June 2022 versus June 2025 domain measurements shifts means modestly---ad trackers $-6.3\%$, Google Analytics $-4.3\%$, Facebook requests $-30.3\%$, header-set cookies $+21.0\%$---while preserving the cross-user ordering the demographic analyses rely on, with correlations of $0.75$ to $0.91$ (\cref{tab:temporal_user_exposure}, \cref{fig:temporal_user_exposure}).
+
+\begin{table}[ht]
+\centering
+\caption{User-level exposure under June 2022 versus June 2025 measurement (HTTP Archive)}
+\label{tab:temporal_user_exposure}
+\begin{tabular}{lrrrr}
+\toprule
+Measure & Mean, 2022 & Mean, 2025 & $\Delta$ (\%) & $r$ \\
+\midrule
+\input{tables/temporal_user_exposure}
+\bottomrule
+\end{tabular}
+\caption*{\textit{Note:} Per-user visit-weighted rates computed with the same browsing data and the same instrument, swapping only the measurement date. $r$ is the cross-user Pearson correlation between the two.}
+\end{table}
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=.9\textwidth]{figures/temporal_user_exposure.pdf}
+  \caption{Per-user exposure under June 2022 versus June 2025 domain measurement.}
+  \label{fig:temporal_user_exposure}
+\end{figure}
+
+\paragraph{Internal rescan.} We rescanned with Blacklight in April 2026 the $500$ widest-reach domains among those scanned successfully in January 2025; the $500$ cover $99.6\%$ of panelists, $58.9\%$ of visits, and $54\%$ of the median panelist's visits. Net prevalence is stable for the categories carrying most of our estimates: ad trackers move $0.2$ percentage points, session recording $0.8$, keylogging $0.4$; third-party cookies fall $4.0$ points and Facebook Pixel $5.0$ (\cref{tab:rescan_drift}). Canvas fingerprinting rises $8.2$ points and Google Analytics remarketing $21.0$. We do not read these last two as web drift. The 2026 audit ran Blacklight 3.10.0 under Chromium 138 against 3.4.0 under Chromium 126 in 2025, and detection for both categories changed in between; Google Analytics is the one category where we decline to interpret the change at all. Two categories absent in 2025 appear in 2026, TikTok Pixel on $3.8\%$ of domains and X Pixel on $6.6\%$, a reminder that the tracker inventory is itself not fixed. This rescan is also the only temporal evidence available for the behavioral detections, and it shows their domain-level flags stable in aggregate.
+
+Aggregate stability conceals domain-level churn. Agreement between the two scans runs from $75.2\%$ for third-party cookies to $94.4\%$ for keylogging, but persistence among January positives is lower for rare categories: $56.0\%$ for session recording and $31.6\%$ for keylogging (\cref{tab:rescan_drift}). Misclassification of this kind is close to classical; it attenuates the demographic coefficients rather than manufacturing them, and exposure aggregates over thousands of domains per user.
+
+\begin{table}[ht]
+\centering
+\caption{Blacklight rescan of the top-500 panel domains, January 2025 versus April 2026}
+\label{tab:rescan_drift}
+\begin{adjustbox}{max width=\textwidth}
+\begin{tabular}{lrrrrr}
+\toprule
+& Jan 2025 & Apr 2026 & Change & Agreement & Persistence \\
+& (\%) & (\%) & (pp) & (\%) & (\%) \\
+\midrule
+Ad trackers           & 67.4 & 67.2 & $-0.2$ & 83.4 & 87.5 \\
+Third-party cookies   & 57.6 & 53.6 & $-4.0$ & 75.2 & 75.0 \\
+Facebook Pixel        & 21.6 & 16.6 & $-5.0$ & 83.8 & 50.9 \\
+Session recording     & 10.0 &  9.2 & $-0.8$ & 92.0 & 56.0 \\
+Key logging           &  3.8 &  4.2 & $+0.4$ & 94.4 & 31.6 \\
+Canvas fingerprinting & 12.4 & 20.6 & $+8.2$ & 85.8 & 75.8 \\
+Google Analytics      &  2.8 & 23.8 & $+21.0$ & 76.2 & 50.0 \\
+\bottomrule
+\end{tabular}
+\end{adjustbox}
+\caption*{\textit{Note:} $N = 500$. Agreement is the share of domains with the same label in both scans; persistence is the share of January positives still positive in April. The 2026 audit used Blacklight 3.10.0 on Chromium 138 against 3.4.0 on Chromium 126 in 2025; the canvas fingerprinting and Google Analytics changes coincide with the instrument change and should not be read as web drift.}
+\end{table}
+
+\subsection{Instrument Agreement}
+\label{sm:instruments}
+
+Strands using HTTP Archive and Wayback are only as good as those instruments' agreement with Blacklight where they measure the same thing at the same time. On the construct they share, they agree: for ad-tracker presence, HTTP Archive and Blacklight coincide on $86.1\%$ of the $6{,}902$ jointly measured domains (January 2025, mobile emulation on both sides), with Spearman $\rho = 0.60$ on counts (\cref{tab:ha_bl_agreement}). Where the constructs differ, the labels say so: header-set cookies are a subset of all third-party cookies, and Google Analytics/GTM presence is a much broader construct than Blacklight's remarketing detection, which is why their agreement is low and why we do not use those pairs as stand-ins. In June 2022, Wayback static parses recover $92.2\%$ of HTTP Archive's ad-tracker presence on the $410$ jointly measured domains (\cref{tab:wb_ha_agreement}), which licenses the smaller Wayback fill in \cref{sm:coverage_bounds}.
+
+\begin{table}[ht]
+\centering
+\caption{HTTP Archive versus Blacklight, contemporaneous agreement (January 2025)}
+\label{tab:ha_bl_agreement}
+\begin{adjustbox}{max width=\textwidth}
+\begin{tabular}{lrrrrr}
+\toprule
+Measure pair & $N$ & HA prev. (\%) & BL prev. (\%) & Agreement (\%) & $\rho$ \\
+\midrule
+\input{tables/ha_bl_agreement}
+\bottomrule
+\end{tabular}
+\end{adjustbox}
+\caption*{\textit{Note:} Jointly measured domains, mobile emulation on both sides. Row labels state construct differences explicitly.}
+\end{table}
+
+\begin{table}[ht]
+\centering
+\caption{Wayback versus HTTP Archive, contemporaneous agreement (June 2022)}
+\label{tab:wb_ha_agreement}
+\begin{adjustbox}{max width=\textwidth}
+\begin{tabular}{lrrrrrr}
+\toprule
+Measure & $N$ & WB prev. (\%) & HA prev. (\%) & Agreement (\%) & Recall of HA (\%) & $\rho$ \\
+\midrule
+\input{tables/wb_ha_agreement}
+\bottomrule
+\end{tabular}
+\end{adjustbox}
+\caption*{\textit{Note:} Wayback parses are static request maps of archived snapshots; dynamic behaviors do not execute in replay, so recall of HTTP Archive positives is the operative statistic.}
+\end{table}
+
+\subsection{Bounding the Coverage Gap}
+\label{sm:coverage_bounds}
+
+The main estimates set unscanned visits to zero. Here we replace the zero with fills and report the resulting interval for each mean exposure rate (\cref{tab:coverage_bounds}, \cref{fig:coverage_bounds}). The first three columns are assumption-only fills: zero (the published construction), the scanned visit-weighted mean, and the scanned 90th percentile. The next columns use measurement: HTTP Archive's June 2022 request maps cover $62.7\%$ of the missing visit mass and Wayback snapshots another $3.2\%$; for covered visits the fill is $E[\text{Blacklight count} \mid \text{auxiliary presence}]$ estimated on jointly measured domains, so magnitudes stay on the Blacklight scale, and only the residual missing mass takes the assumption-based fill. The calibrated interval puts the ad-tracker rate in $[6.20, 8.27]$ per visit against the published $4.98$, and third-party cookies in $[7.56, 9.97]$ against $6.12$. The direct audit of \cref{sm:selection} agrees from the other side. We keep the published tables as the defensible floor and report the bounds here.
+
+\begin{table}[ht]
+\centering
+\caption{Mean exposure rates under alternative fills for unscanned visits}
+\label{tab:coverage_bounds}
+\begin{adjustbox}{max width=\textwidth}
+\begin{tabular}{lrrrrrrrr}
+\toprule
+& \multicolumn{3}{c}{Assumption-only fill} & \multicolumn{2}{c}{HA-calibrated} & \multicolumn{3}{c}{HA + Wayback calibrated} \\
+\cmidrule(lr){2-4}\cmidrule(lr){5-6}\cmidrule(lr){7-9}
+Measure & Zero & Mean & p90 & Zero & p90 & Zero & Mean & p90 \\
+\midrule
+\input{tables/coverage_bounds_wayback}
+\bottomrule
+\end{tabular}
+\end{adjustbox}
+\caption*{\textit{Note:} ``Zero'' reproduces the published construction. Calibrated columns fill auxiliary-covered visits with $E[\text{Blacklight count} \mid \text{auxiliary presence}]$ from jointly measured domains; the residual missing mass takes the column's assumption fill. Facebook Pixel and Google Analytics rely on presence constructs with weak cross-instrument agreement (\cref{sm:instruments}) and are shown for completeness.}
+\end{table}
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=.9\textwidth]{figures/coverage_bounds_wayback.pdf}
+  \caption{Bounds on mean exposure rates under assumption-only and measurement-calibrated fills for unscanned visits.}
+  \label{fig:coverage_bounds}
+\end{figure}
+
+\subsection{Do the Threats Move the Comparisons?}
+\label{sm:implications}
+
+The strands above bound levels. This section tests whether either threat moves the paper's comparisons.
+
+\paragraph{Coverage is demographically flat.} Regressing per-user scan coverage (\cref{sm:user_coverage}) on the demographic specification of \cref{eq:demo-diff} yields $R^2 = 0.01$ with no coefficient significant at the five percent level; the largest is Woman at $-1.55$ percentage points ($p = .08$) (\cref{tab:implications_coverage_by_demo}). Differential missingness cannot manufacture or mask group gaps of the size we study.
+
+\begin{table}[ht]
+\centering
+\caption{Per-user scan coverage (percentage points) by demographics}
+\label{tab:implications_coverage_by_demo}
+\begin{tabular}{lr}
+\toprule
+& Coverage (pp) \\
+\midrule
+\input{tables/implications_coverage_by_demo}
+\bottomrule
+\end{tabular}
+\caption*{\textit{Note:} OLS with Huber-White standard errors in parentheses. $R^2 = 0.01$, $n = 1{,}134$. * $p<.1$, ** $p<.05$, *** $p<.01$.}
+\end{table}
+
+\paragraph{The demographic estimates are invariant to imputation.} Re-estimating the exposure-rate regressions with unscanned visits imputed under each calibrated scenario leaves every conclusion intact (\cref{tab:implications_demo_fill_scenarios}, \cref{fig:implications_demo_scenarios}). The college gap stays small and marginal (ads $0.49$ under zero-fill against $0.42$ to $0.43$ under measured fills, never significant at five percent under the latter); the 65+ coefficient is essentially unchanged (ads $2.81$ against $2.85$ to $2.86$; cookies $3.07$ against $3.11$ to $3.14$, all $p < .01$); and the Asian coefficient strengthens slightly (ads $-1.20$ to $-1.38$; cookies $-1.49$ to $-1.71$, all $p < .01$).
+
+\begin{table}[ht]
+\centering
+\caption{Exposure-rate regressions under alternative fills for unscanned visits}
+\label{tab:implications_demo_fill_scenarios}
+\begin{adjustbox}{max width=\textwidth}
+\begin{tabular}{lrrrrrrrr}
+\toprule
+& \multicolumn{4}{c}{Ad trackers / visit} & \multicolumn{4}{c}{Third-party cookies / visit} \\
+\cmidrule(lr){2-5}\cmidrule(lr){6-9}
+& Zero & Mean & HA & HA+WB & Zero & Mean & HA & HA+WB \\
+\midrule
+\input{tables/implications_demo_fill_scenarios}
+\bottomrule
+\end{tabular}
+\end{adjustbox}
+\caption*{\textit{Note:} Each column re-estimates \cref{eq:demo-diff} on the per-user rate under the named fill for unscanned visits. ``Zero'' reproduces the published estimates. Huber-White standard errors in parentheses. * $p<.1$, ** $p<.05$, *** $p<.01$.}
+\end{table}
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=.9\textwidth]{figures/implications_demo_scenarios.pdf}
+  \caption{Key demographic coefficients under each fill scenario for unscanned visits.}
+  \label{fig:implications_demo_scenarios}
+\end{figure}
+
+\paragraph{Timing is not neutral for the age comparison.} Estimating the same demographic specification on same-instrument exposure rates at each measurement date shows that tracking growth between June 2022 and June 2025 concentrated on the sites older users frequent: the 65+ drift coefficient is $+2.28$ ad trackers and $+4.57$ cookies per visit (both $p < .01$) (\cref{tab:implications_drift_by_demo}). The age gradient is large and significant under contemporaneous June 2022 measurement as well ($+7.42$ ad trackers per visit), but the January 2025 instrument overstates the June 2022 gap by roughly a quarter for ad trackers and half for cookies. The qualitative conclusion holds at either date; magnitudes should be read as of the scan date. The widening itself is substantively interesting: the age skew in tracking exposure grew between 2022 and 2025. Education gaps show no differential drift (College: $-0.22$ ads per visit, $p = .68$), and neither does the Asian coefficient ($-0.61$, $p = .15$).
+
+\begin{table}[ht]
+\centering
+\caption{Same-instrument demographic gaps at both measurement dates (HTTP Archive)}
+\label{tab:implications_drift_by_demo}
+\begin{adjustbox}{max width=\textwidth}
+\begin{tabular}{lrrrrrr}
+\toprule
+& \multicolumn{3}{c}{Ad trackers / visit} & \multicolumn{3}{c}{Cookies (header-set) / visit} \\
+\cmidrule(lr){2-4}\cmidrule(lr){5-7}
+& June 2022 & June 2025 & Drift & June 2022 & June 2025 & Drift \\
+\midrule
+\input{tables/implications_drift_by_demo}
+\bottomrule
+\end{tabular}
+\end{adjustbox}
+\caption*{\textit{Note:} Each pair of date columns estimates \cref{eq:demo-diff} on per-user rates built from the same browsing data and the same instrument at that date; the drift column regresses the within-user difference. Huber-White standard errors in parentheses. * $p<.1$, ** $p<.05$, *** $p<.01$.}
+\end{table}
+
+\paragraph{Google's reach extends to the unscanned web.} On the fresh July 2026 scans of the audit sample, $68.3\%$ of visits-stratum domains (CI $[56, 78]$) and $72.1\%$ of uniform-stratum domains (CI $[60, 81]$) load at least one Google-owned third party, statistically indistinguishable from the $69.3\%$ visit-weighted share in the scanned population (\cref{tab:implications_google_reach_audit}). The concentration finding of \cref{sec:tracker_organizations} extends to the domains we could not scan.
+
+\begin{table}[ht]
+\centering
+\caption{Google third-party presence on scanned versus unscanned domains}
+\label{tab:implications_google_reach_audit}
+\begin{adjustbox}{max width=\textwidth}
+\begin{tabular}{lrrc}
+\toprule
+Set & Share (\%) & $N$ & 95\% CI \\
+\midrule
+\input{tables/implications_google_reach_audit}
+\bottomrule
+\end{tabular}
+\end{adjustbox}
+\end{table}
+
+\paragraph{Benchmarks for the gaps.} \cref{tab:implications_gap_benchmarks} re-expresses the key exposure-rate gaps relative to the reference group's mean rate and as Cohen's $d$, the figures used in \cref{sec:discussion}.
+
+\begin{table}[ht]
+\centering
+\caption{Demographic gaps in exposure rates as shares of the reference mean and effect sizes}
+\label{tab:implications_gap_benchmarks}
+\begin{adjustbox}{max width=\textwidth}
+\begin{tabular}{llrrrr}
+\toprule
+Measure & Group & Coef. & Ref. mean & \% of ref. & Cohen's $d$ \\
+\midrule
+\input{tables/implications_gap_benchmarks}
+\bottomrule
+\end{tabular}
+\end{adjustbox}
+\caption*{\textit{Note:} Coefficients from the published exposure-rate regressions (zero-fill). * $p<.1$, *** $p<.01$.}
+\end{table}
+
+\subsection{Desktop-Only Sensitivity}
+\label{sm:desktop_only}
+
+Metering is more complete on desktop than on mobile, where a share of activity moves through applications the extension never sees. Restricting the sample to the $690$ panelists whose logged activity is desktop only leaves the pattern intact: Asian panelists remain less exposed per visit across categories, the age gradient survives at close to full size, and the gender gap in canvas fingerprinting is if anything larger. Two results weaken: the age coefficients on session recording lose significance, and the education coefficients, already small once normalized, shrink further. Halving the sample costs precision, and the desktop-only estimates should be read as a check on sign and rough magnitude rather than as a second set of point estimates. (Rates in this check are computed per scanned visit for both samples, so magnitudes are not directly comparable to \cref{tab:demo_differences_exposure_rate}, which normalizes by all visits.)
+
+\clearpage
+\FloatBarrier
+\section{Regression Tables}
+\label{sm:regression_tables}
+Estimates displayed in \cref{fig:coefplot_demo_differences_cumulative,fig:coefplot_demo_differences_rate}.
+\input{tables/tab5_formatted}
+\input{tables/tab6_formatted}
+
+
+\clearpage
+\FloatBarrier
+\section{Organization tracking weighted by time}
+\label{sm:time_weighted_org_tracking}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=.55\textwidth]{figures/dist_maxshare_hist_duration_summtable.pdf}
+  \caption{
+    \small
+    The largest share of each user's browsing time online tracked by a single organization (\cref{eq:ind_org_share_duration}):
+    \begin{equation*}
+            \text{Tracking share}_{ij}^{\text{(dur)}} = 
+            \frac{
+                \sum_{v \in \mathcal{V}_i} 
+                \mathbf{1}
+                (j \in O_{iv})
+                \cdot
+                t_{iv}
+            }
+            {
+                \sum_{v \in \mathcal{V}_i} 
+                t_{iv}
+            }.
+        \end{equation*}
+    See \cref{fig:dist_maxshare_hist_summtable} for the corresponding figure for tracking shares by site visits.
+  }
+  \label{fig:dist_maxshare_hist_duration_summtable}
+\end{figure}
+
+
+
+\clearpage
+\FloatBarrier
+\section{Top Tracking Domains}
+\label{sm:top_tracking_domains}
+% \input{tables/tab4_formatted}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\begin{table}[ht]
+\centering
+% \ssmall
+\setlength\tabcolsep{2 pt}
+\setlength{\defaultaddspace}{0pt}
+\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}
+\caption{Top domains contributing to exposure}
+\label{tab:bl_top_contributors_domain}
+\begingroup
+\centering
+\begin{adjustbox}{max width=\textwidth}
+\begin{tabular}{@{\hspace{0\tabcolsep}}llllllll@{\hspace{0\tabcolsep}}}
+% \begin{tabularx}{\textwidth}{l YY Y Y Y Y Y}
+      \toprule
+      &\multicolumn{1}{c}{Ads}&\multicolumn{1}{c}{Cookies}&\multicolumn{1}{c}{FB Pixel}&\multicolumn{1}{c}{GA}&\multicolumn{1}{c}{Session rec}&\multicolumn{1}{c}{Keyloggers}&\multicolumn{1}{c}{Canvas FP}\\
+      &\multicolumn{1}{c}{(1)}&\multicolumn{1}{c}{(2)}&\multicolumn{1}{c}{(3)}&\multicolumn{1}{c}{(4)}&\multicolumn{1}{c}{(5)}&\multicolumn{1}{c}{(6)}&\multicolumn{1}{c}{(7)}\\
+      \midrule
+      \input{tables/bl_top_contributors_domain}
+      \bottomrule
+   \end{tabular}
+\end{adjustbox}
+\par\endgroup
+\caption*{
+    \footnotesize \textit{Note:}
+    This table reports the top 50 domains (rows) contributing to individual-level exposure for each of the seven tracking methods (columns).
+    A domain $d$'s contribution to individual-level exposure is computed as:
+    \begin{equation*}
+    \text{Contribution}_d^{(s)} = 
+    \sum_{i} \sum_{v \in \mathcal{V}_{id}} 
+    \vert trackers^{(s)}_d \vert,
+    \end{equation*}
+    based on all individual-domain visit instances, weighted by the number of trackers of type $s$ present on domain $d$.
+    Parentheses report the total number of visits.
+}
+\end{table}
+
+
+%TC:endignore
+\end{document}
