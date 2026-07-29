@@ -76,6 +76,12 @@ def main():
     who = pd.read_csv(FP_WHO)
     comb = pd.read_csv(FP_COMBINED)
 
+    # Drop anything a previous run added, so re-running recomputes from the
+    # published columns instead of merging onto its own output and producing
+    # suffixed duplicates.
+    DERIVED = ["who_visits", "who_coverage"]
+    comb = comb.drop(columns=[c for c in DERIVED if c in comb.columns])
+
     covered = set(who.loc[who[COVERAGE_KEY].notna(), "domain_name"])
     print(
         f"WhoTracksMe covers {len(covered):,} of {who['domain_name'].nunique():,} "
@@ -116,6 +122,7 @@ def main():
         c
         for c in comb.columns
         if c.startswith("who_")
+        and c not in DERIVED
         and not c.endswith(("_rate", "_al1", "_al3", "_al5", "_al10"))
     ]
     before = {c: comb[f"{c}_rate"].mean() for c in who_cols if f"{c}_rate" in comb}
