@@ -212,3 +212,13 @@ pyrightconfig.json
 /data/wayback
 /data/httparchive
 /data/cps/*.zip
+
+# LaTeX build artifacts (ms/blacklight.pdf is committed; its intermediates are not)
+ms/*.aux
+ms/*.bbl
+ms/*.blg
+ms/*.fdb_latexmk
+ms/*.fls
+ms/*.out
+ms/*.log
+*-words.sum
