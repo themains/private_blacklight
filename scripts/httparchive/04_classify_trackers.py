@@ -146,6 +146,17 @@ def classify(cats):
         ),
         include_groups=False,
     )
+    # Restore the pages whose requests were ALL first-party. They are grouped
+    # out of `tp` entirely, so without this they vanish from the measures table
+    # -- not as unmeasured domains, but as measured domains whose every count is
+    # genuinely zero. The deletion is differential, which is what makes it a
+    # bias rather than a nuisance: 288 of 13,711 June-2022 desktop pages have no
+    # third party against 472 of 12,748 in June 2025 (2.1% against 3.7%). Since
+    # these are exactly the "lost all third parties" cases, dropping them makes
+    # the later crawl look more tracked than it is and understates every decline.
+    all_pages = reqs[grp].drop_duplicates().set_index(grp).index
+    measures = measures.reindex(all_pages).fillna(0)
+
     # n_requests over ALL requests (first- and third-party) for context.
     measures["n_requests"] = reqs.groupby(grp)["n_requests"].sum()
     measures = measures.reset_index()
