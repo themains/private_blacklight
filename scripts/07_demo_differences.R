@@ -109,7 +109,24 @@ col_headers <- c(
   "Keylogger",
   "Session rec",
   "Canvas FP",
-  "Top share"      
+  "Top share"
+)
+
+# Cumulative outcomes only: ad trackers, cookies and top-org visits are divided
+# by 100 at the top of this script so their columns stay narrow. Nothing in the
+# table said so, which invites the reading that Facebook Pixel exposure (383)
+# exceeds ad-tracker exposure (274) when the truth is 383 against 27,407. Mark
+# the rescaled columns in the header. The rate table is not rescaled and keeps
+# the plain headers.
+col_headers_cum <- c(
+  "Ad (00s)",
+  "Cookies (00s)",
+  "FB Pixel",
+  "GA",
+  "Keylogger",
+  "Session rec",
+  "Canvas FP",
+  "Top share (00s)"
 )
 
 
@@ -139,7 +156,7 @@ etable(
   fitstat = c("my", "r2", "n"),
   se.row = FALSE,
   depvar=FALSE,
-  headers = col_headers,
+  headers = col_headers_cum,
   tex = TRUE,
   adjustbox=TRUE,
   file = "../tables/demo_differences_cum_exposure.tex",
@@ -169,8 +186,13 @@ models_rate <- lapply(
 
 etable(
   models_rate,
-  digits = 2,
-  digits.stats = 2,
+  # Three significant digits here, two for the cumulative table above. Rate
+  # coefficients on the behavioural measures are ~0.01-0.04, so two digits
+  # collapses 0.035 to 0.04 and 0.014 to 0.01 and loses the distinction
+  # between them. The cumulative outcomes are in the hundreds and do not
+  # need it.
+  digits = 3,
+  digits.stats = 3,
   dict = COEF_LABELS,
   order = COEF_ORDER,
   signif.code = c("***"=0.01, "**"=0.05, "*"=0.10),
@@ -184,13 +206,14 @@ etable(
   replace=TRUE,  
   style.tex = style.tex("aer")
 )
-cat(readLines("../tables/demo_differences_exposure_rate.tex"), sep = "\n")
-table_ = cat(readLines("../tables/demo_differences_exposure_rate.tex"), sep = "\n")
-# Replace the \times 10^{...} with just 0
+# Rate coefficients are small enough that etable renders some in scientific
+# notation, which reads badly in the table; show those as 0.000 instead.
+# NB: read with readLines, not cat -- cat returns NULL, so assigning from it
+# left `table_` empty and truncated this file to zero bytes.
+table_ <- readLines("../tables/demo_differences_exposure_rate.tex")
 table_ <- gsub("\\$-?\\d+\\.\\d+\\\\times 10\\^\\{-\\d+\\}\\$", "0.000", table_)
-# Write back cleaned version
 writeLines(table_, "../tables/demo_differences_exposure_rate.tex")
-cat(readLines("../tables/demo_differences_exposure_rate.tex"), sep = "\n")
+cat(table_, sep = "\n")
 
 
 # Bonferroni --------------------------------------------------------------

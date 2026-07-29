@@ -91,7 +91,9 @@ savefig <- function(
 }
 
 
-df_coef_rate  <- process_model_list(models, yvars_rate)
+# 07_demo_differences.R builds `models_rate` and `models_cum`; there is no
+# object called `models`.
+df_coef_rate  <- process_model_list(models_rate, yvars_rate)
 coefplot_rate <- make_coefplot(df_coef_rate)
 savefig(coefplot_rate, "coefplot_demo_differences_rate")
 

@@ -20,8 +20,7 @@ from scipy import stats
 from utilities import pandas_to_tex
 
 ASEC_URL = (
-    "https://www2.census.gov/programs-surveys/cps/datasets/2022/march/"
-    "asecpub22csv.zip"
+    "https://www2.census.gov/programs-surveys/cps/datasets/2022/march/" "asecpub22csv.zip"
 )
 FP_ASEC_ZIP = "../data/cps/asecpub22csv.zip"
 FP_CPS_MARGINS = "../data/cps/cps_asec_2022_margins.csv"
@@ -125,12 +124,19 @@ def recode_asec(df: pd.DataFrame) -> pd.DataFrame:
         bins=[30, 39, 42, 43, 46],
         labels=["HS or Below", "Some college", "College", "Postgrad"],
     )
-    # Table 1's age groups cut birthyr, so its brackets are birth cohorts
-    # (e.g. "65+" includes people aged 64 at the survey); the CPS side uses
-    # the nominal brackets.
+    # Table 1's age groups cut birthyr, so its brackets are birth cohorts, and
+    # the CPS side has to be cut to the same cohorts rather than to the nominal
+    # brackets the labels suggest.
+    #
+    # The sample cuts birthyr at [1929, 1958, 1973, 1988, 1998, 2003] against a
+    # June-2022 field period, so "<25" is birthyr 1999-2003, i.e. ages 19-23 --
+    # five single-year cohorts. Cutting CPS at A_AGE 18-24 gives seven. That
+    # alone predicts a sample share of 11.354 x 5/7 = 8.11% against an observed
+    # 8.2%, which is essentially the whole of the deviation the age chi-square
+    # was picking up. Matching the cohorts removes the artefact.
     df["agegroup_lab"] = pd.cut(
         df["A_AGE"],
-        bins=[17, 24, 34, 49, 64, 200],
+        bins=[17, 23, 33, 48, 63, 200],
         labels=["<25", "25-34", "35-49", "50-64", "65+"],
     )
     return df
@@ -181,9 +187,7 @@ def build_table(margins: pd.DataFrame) -> pd.DataFrame:
     )
 
     for _, row in df_demo.iterrows():
-        assert (row["n"], round(row["perc"], 1)) == expected_panel[row["cat"]], row[
-            "cat"
-        ]
+        assert (row["n"], round(row["perc"], 1)) == expected_panel[row["cat"]], row["cat"]
     return df_demo
 
 
@@ -246,9 +250,7 @@ if __name__ == "__main__":
 
     print("\nPanel vs. CPS ASEC 2022 (adults 18+, weighted):")
     print(
-        df_demo[["cat", "n", "perc", "cps_perc", "diff"]]
-        .round(1)
-        .to_string(index=False)
+        df_demo[["cat", "n", "perc", "cps_perc", "diff"]].round(1).to_string(index=False)
     )
     tests = gof_tests(df_demo)
     write_note(df_demo, tests)
