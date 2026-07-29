@@ -35,6 +35,7 @@ Output: data/combined_yg_bl_who_derived_hist_tracking.csv  (who_* rates, who_cov
 import os
 import sys
 
+import numpy as np
 import pandas as pd
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
@@ -133,7 +134,11 @@ def main():
         how="left",
         validate="1:1",
     )
-    denom = out["who_visits"].replace(0, pd.NA)
+    # np.nan, not pd.NA: pd.NA promotes the quotient to object dtype, and
+    # .describe() on an object Series returns count/unique/top/freq instead of
+    # the moment summary. The rate table below was silently reporting the number
+    # of distinct values in its "mean" column.
+    denom = out["who_visits"].replace(0, np.nan)
     for c in who_cols:
         if f"{c}_rate" in out.columns:
             out[f"{c}_rate"] = out[c] / denom

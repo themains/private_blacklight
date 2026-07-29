@@ -173,7 +173,13 @@ def main():
 
         shifts = np.array([s for s in shifts if np.isfinite(s)])
         centre = np.median(shifts)
-        p_value = float(np.mean(np.abs(shifts - centre) >= abs(observed - centre)))
+        # (k + 1) / (B + 1), not k / B. The observed assignment is itself one
+        # draw from the randomization distribution, so excluding it lets a
+        # p-value of exactly zero be reported from a finite number of draws and
+        # makes the test anti-conservative by 1/(B+1). With B = 200 the smallest
+        # attainable p is 1/201 = .005, so no claim below that is supportable.
+        extreme = int(np.sum(np.abs(shifts - centre) >= abs(observed - centre)))
+        p_value = (1 + extreme) / (1 + len(shifts))
 
         results.append(
             {

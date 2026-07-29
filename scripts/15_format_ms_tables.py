@@ -89,7 +89,7 @@ BARE = {
 # Both regression tables are bare rows since 07_demo_differences.py replaced
 # the fixest version, which used to emit its own adjustbox tabular.
 REG_HEAD = (
-    r"Ad & Cookies & FB Pixel & GA & Keylogger & Session rec & Canvas FP & Top share"
+    r"Ad & Cookies & FB Pixel & GA & Keylogger & Session rec & Canvas FP & Top org share"
 )
 BARE["tab5_formatted"] = dict(
     fragment="demo_differences_exposure_rate.tex",
@@ -109,7 +109,7 @@ BARE["tab6_formatted"] = dict(
     align="l" + "c" * 8,
     header=(
         r"Measure & Ad (00s) & Cookies (00s) & FB Pixel & GA & Keylogger & "
-        r"Session rec & Canvas FP & Top share (00s) \\"
+        r"Session rec & Canvas FP & Top org visits (00s) \\"
     ),
     caption=(
         "Demographic differences in cumulative tracking exposure. OLS with "

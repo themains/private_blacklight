@@ -179,8 +179,13 @@ def main():
 
     cum_heads = [
         f"{SHORT[m]} (00s)" if f"bl_{m}" in RESCALE_100 else SHORT[m] for m in MEASURES
-    ] + ["Top share (00s)"]
-    rate_heads = [SHORT[m] for m in MEASURES] + ["Top share"]
+    ] + ["Top org visits (00s)"]
+    # The cumulative model regresses top_org_visits, a count, while the rate
+    # model regresses top_org_share, a bounded share. Both columns used to be
+    # headed "Top share", which made the cumulative column read as a share
+    # expressed in hundreds -- a quantity that cannot exist. Its dependent
+    # variable mean of 30 is 3,009 visits divided by 100.
+    rate_heads = [SHORT[m] for m in MEASURES] + ["Top org share"]
 
     # Three significant digits for rates: the behavioural coefficients are
     # ~0.01-0.04, and two digits collapses 0.035 to 0.04 and 0.014 to 0.01.

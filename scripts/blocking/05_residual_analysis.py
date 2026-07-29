@@ -39,9 +39,9 @@ def levels_table(user):
     """Exposure per visit, unblocked and under each tier, with ID bounds."""
     rows = []
     for measure in config.MEASURES:
-        base = user[f"bl_{measure}_rate"].mean()
+        base = user[f"{blk.base_col(measure)}_rate"].mean()
         row = {
-            "measure": blk.MEASURE_LABELS[measure],
+            "measure": blk.BASE_LABELS[measure],
             "unblocked": base,
             "assumed": measure in blk.ASSUMED,
         }
@@ -59,7 +59,7 @@ def gap_table(user):
     """65+ coefficient and log-ratio gap, unblocked and under each tier."""
     rows = []
     for measure in config.MEASURES:
-        y_pre = f"bl_{measure}_rate"
+        y_pre = f"{blk.base_col(measure)}_rate"
         specs = [("unblocked", y_pre)] + [
             (f"tier_{t}", f"bl_{measure}_resid_{t}_rate") for t in config.TIER_ORDER
         ]
@@ -67,7 +67,7 @@ def gap_table(user):
             model = blk.fit(yvar, user)
             coef = model.loc["Age: 65+"]
             entry = {
-                "measure": blk.MEASURE_LABELS[measure],
+                "measure": blk.BASE_LABELS[measure],
                 "measure_key": measure,
                 "assumed": measure in blk.ASSUMED,
                 "spec": name,

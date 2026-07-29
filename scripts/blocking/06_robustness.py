@@ -98,14 +98,14 @@ def main():
 
     rows = []
     for measure in blk.HEADLINE_MEASURES:
-        y_pre = f"bl_{measure}_rate"
+        y_pre = f"{blk.base_col(measure)}_rate"
         y_post = f"bl_{measure}_resid_{tier}_rate"
         for spec in SPECS:
             b_pre, se_pre, p_pre = age_effect(y_pre, user, spec)
             b_post, se_post, p_post = age_effect(y_post, user, spec)
             rows.append(
                 {
-                    "measure": blk.MEASURE_LABELS[measure],
+                    "measure": blk.BASE_LABELS[measure],
                     "measure_key": measure,
                     "spec": spec,
                     "unblocked": b_pre,

@@ -102,6 +102,26 @@ HEADLINE_TIER = "C"
 # the paper's tables say.
 MEASURE_LABELS = {m: constants.var_labels[f"bl_{m}"] for m in config.MEASURES}
 
+# The published cookie measure counts cookies; the Blacklight payload attributes
+# them per domain, so the residual after blocking is a count of unblocked
+# cookie-setting domains. 04_residual_measures builds `third_party_cookie_domains`
+# for exactly this reason and says so in a comment, but every consumer went on
+# using the cookie count as the baseline -- dividing a domain count by a cookie
+# count, which overstated what blocking removes by 14 percentage points (84.3%
+# against the true 70.2%). Routing every baseline through this one function is
+# what stops the two from being confused again.
+BASE_COLUMN = {"third_party_cookies": "bl_third_party_cookie_domains"}
+
+# Where the baseline is a different quantity from the published measure, the row
+# has to say so rather than inherit the published measure's name.
+BASE_LABELS = {**MEASURE_LABELS, "third_party_cookies": "Third-Party Cookie Domains"}
+
+
+def base_col(measure):
+    """Published column the residual for `measure` is actually comparable to."""
+    return BASE_COLUMN.get(measure, f"bl_{measure}")
+
+
 # Facebook Pixel and Google Analytics cards carry no responsible-domain list, so
 # their attribution is assumed, and the lists happen to block both largely
 # through path rules a hostname cannot trigger. Reported, never headlined.

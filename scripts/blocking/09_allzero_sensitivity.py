@@ -58,10 +58,19 @@ def load_domains():
 
 def person_rates(visits, domains, spec):
     """Visit-weighted per-person rates under one treatment of the all-zero set."""
-    cols = [f"bl_{m}" for m in config.MEASURES] + [
-        f"bl_{m}_resid_{TIER}" for m in config.MEASURES
-    ]
-    src = [m for m in config.MEASURES] + [f"{m}_resid_{TIER}" for m in config.MEASURES]
+    # third_party_cookie_domains rides along because it is the baseline the
+    # cookie residual is actually comparable to -- see blk.base_col.
+    extra = ["third_party_cookie_domains"]
+    cols = (
+        [f"bl_{m}" for m in config.MEASURES]
+        + [f"bl_{m}_resid_{TIER}" for m in config.MEASURES]
+        + [f"bl_{m}" for m in extra]
+    )
+    src = (
+        [m for m in config.MEASURES]
+        + [f"{m}_resid_{TIER}" for m in config.MEASURES]
+        + extra
+    )
 
     d = visits.merge(
         domains[["private_domain", "all_zero"] + src],
@@ -118,7 +127,7 @@ def main():
 
     rows = []
     for measure in blk.HEADLINE_MEASURES:
-        row = {"measure": blk.MEASURE_LABELS[measure]}
+        row = {"measure": blk.BASE_LABELS[measure]}
         for spec in SPECS:
             d = out[spec]
             y, y_r = f"bl_{measure}", f"bl_{measure}_resid_{TIER}"
@@ -126,7 +135,9 @@ def main():
             row[f"{spec}_mean"] = d[y].mean()
             row[f"{spec}_coef"] = fit.params[blk.AGE_TERM]
             row[f"{spec}_p"] = fit.pvalues[blk.AGE_TERM]
-            base = d[y].mean()
+            # The residual share needs the baseline the residual is comparable
+            # to, which for cookies is the domain count, not the cookie count.
+            base = d[blk.base_col(measure)].mean()
             row[f"{spec}_resid_share"] = (
                 100 * d[y_r].mean() / base if base else float("nan")
             )

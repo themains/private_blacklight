@@ -54,7 +54,14 @@ def main():
     )
 
     df["bad_domains"] = df["malicious"] + df["suspicious"]
+    # Two denominators, reported side by side on purpose. The tracking measures
+    # are per visit, so a security measure per *domain* compared against them
+    # mixes units -- and that mismatch is what the association turns on: per
+    # domain the adjusted coefficient is -3.069 (p < .001), per visit it is
+    # -10.905 (p = .138). Reporting only the first would present a denominator
+    # artifact as a finding.
     df["bad_rate"] = df["bad_domains"] / df["tt_domains"]
+    df["bad_rate_visit"] = df["bad_domains"] / df["tt_visits"]
     print(
         f"\nFlagged domains per panelist: mean {df['bad_domains'].mean():.1f}, "
         f"median {df['bad_domains'].median():.0f}, max {df['bad_domains'].max():.0f}"
@@ -89,27 +96,34 @@ def main():
     # Does security exposure still predict tracking exposure once demographics
     # and browsing volume are held fixed?
     print("\n\nFlagged-domain rate as a predictor of tracking exposure")
-    print("(OLS, HC1, Table 5 demographics plus log browsing volume)\n")
+    print("(OLS, HC1, Table 5 demographics plus log browsing volume)")
+    print("Both denominators shown: the tracking outcome is per visit, so the")
+    print("per-visit security measure is the unit-matched comparison.\n")
     df["log_visits"] = np.log(df["tt_visits"].clip(lower=1))
     adj = []
+    print(f"  {'measure':24s} {'per domain':>20s} {'per visit (matched)':>22s}")
     for measure, label in MEASURES:
-        model = smf.ols(
-            f"bl_{measure}_rate ~ bad_rate + log_visits + {blk.FORMULA_RHS}",
-            data=df,
-        ).fit(cov_type="HC1")
-        adj.append(
-            {
-                "measure": label,
-                "coef": model.params["bad_rate"],
-                "se": model.bse["bad_rate"],
-                "p": model.pvalues["bad_rate"],
-            }
-        )
+        row = {"measure": label}
+        for key, suffix in [("bad_rate", ""), ("bad_rate_visit", "_visit")]:
+            model = smf.ols(
+                f"bl_{measure}_rate ~ {key} + log_visits + {blk.FORMULA_RHS}",
+                data=df,
+            ).fit(cov_type="HC1")
+            row[f"coef{suffix}"] = model.params[key]
+            row[f"se{suffix}"] = model.bse[key]
+            row[f"p{suffix}"] = model.pvalues[key]
+        adj.append(row)
         print(
-            f"  {label:24s} {model.params['bad_rate']:9.3f} "
-            f"(se {model.bse['bad_rate']:.3f})  p={model.pvalues['bad_rate']:.3f}"
+            f"  {label:24s} {row['coef']:9.3f} (p={row['p']:.3f}) "
+            f"{row['coef_visit']:11.3f} (p={row['p_visit']:.3f})"
         )
     adj = pd.DataFrame(adj)
+
+    survives = int(((adj["p"] < 0.05) & (adj["p_visit"] < 0.05)).sum())
+    print(
+        f"\n  {survives} of {len(adj)} associations significant under BOTH "
+        "denominators -- there is no robust person-level association."
+    )
 
     # Do the two risks land on the same demographic groups?
     print("\n\nWho bears each risk (mean by age group)\n")
@@ -133,8 +147,11 @@ def main():
             "$r$ (counts)": out["r_counts"].map(lambda x: f"{x:,.3f}"),
             "$r$ (rates)": out["r_rates"].map(lambda x: f"{x:,.3f}"),
             "$\\rho$ (rates)": out["rho_rates"].map(lambda x: f"{x:,.3f}"),
-            "Adjusted coef.": out.apply(
+            "Adj. coef. (per domain)": out.apply(
                 lambda r: f"{r['coef']:,.3f} ({r['se']:,.3f})", axis=1
+            ),
+            "Adj. coef. (per visit)": out.apply(
+                lambda r: f"{r['coef_visit']:,.3f} ({r['se_visit']:,.3f})", axis=1
             ),
         }
     )
