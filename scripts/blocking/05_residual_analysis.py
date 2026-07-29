@@ -19,7 +19,7 @@ specification, reused unchanged via blocking/common.py so the estimates are
 comparable with it line for line.
 
 Multiplicity: 7 measures x 3 tiers = 21 residual age-gap tests. Following
-07_demo_differences.R, raw-p stars stay in the tex and a Bonferroni check
+07_demo_differences.py, raw-p stars stay in the tex and a Bonferroni check
 against 0.05/21 is printed beside the unadjusted verdict.
 """
 

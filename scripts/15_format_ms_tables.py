@@ -10,8 +10,8 @@ headers and label are added here.
 
 Input:  tables/individual_blacklight_cumulative_exposure_summary.tex  (03_exposure)
         tables/individual_blacklight_exposure_rate_summary.tex        (03_exposure)
-        tables/demo_differences_exposure_rate.tex                     (07_demo_differences.R)
-        tables/demo_differences_cum_exposure.tex                      (07_demo_differences.R)
+        tables/demo_differences_exposure_rate.tex                     (07_demo_differences)
+        tables/demo_differences_cum_exposure.tex                      (07_demo_differences)
         tables/bl_top_contributors_domain.tex                         (05_top_bltracker_domain)
 Output: tables/tab2_formatted.tex  (Table 2, tab:cumulative-exposure)
         tables/tab3_formatted.tex  (Table 3, tab:exposure-rate)
@@ -132,8 +132,8 @@ def read_fragment(name):
     body = open(path).read().strip()
     if not body:
         raise ValueError(
-            f"{path} is empty. 07_demo_differences.R truncated this file for "
-            "13 months via a cat()/writeLines bug; re-run it before formatting."
+            f"{path} is empty. The R script this replaced truncated it for 13 "
+            "months via a cat()/writeLines bug; run 07_demo_differences.py first."
         )
     return body
 

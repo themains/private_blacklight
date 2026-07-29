@@ -19,7 +19,7 @@ other:
 
   bins        65+ vs <25, the paper's coding                     (primary)
   vs_rest     65+ vs everyone else, no small reference cell
-  continuous  birthyr, the variable GAMs_age.R smooths, per decade
+  continuous  birthyr, the variable 18_age_spline.py splines, per decade
 
 and separately, a fourth specification that is *not* comparable with them and is
 never averaged into them:

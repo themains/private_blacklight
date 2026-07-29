@@ -174,7 +174,7 @@ def bootstrap_ci(data, statistic, reps=BOOTSTRAP_REPS, seed=BOOTSTRAP_SEED):
 def bonferroni_report(rows, n_family=None, alpha=0.05, label="residual age gap"):
     """Print unadjusted and Bonferroni verdicts side by side.
 
-    Follows the convention in 07_demo_differences.R: the correction is a
+    Follows the convention in 07_demo_differences.py: the correction is a
     console-side check against a lowered threshold, shown next to the
     unadjusted verdict, and deliberately kept out of the published fragment so
     the tables stay comparable with the paper's. What differs here is the
@@ -225,7 +225,7 @@ BLACK, DARK, MID, LIGHT = (
 )
 SHADES = ["0.0", "0.35", "0.6", "0.8"]
 MARKERS = ["o", "s", "^", "D"]
-ACCENT = "#800000"  # reference lines only, as in coefplot.R
+ACCENT = "#800000"  # reference lines only, as in 07b_coefplot.py
 
 FIGSIZE_1 = (8, 3.6)
 FIGSIZE_2 = (9.5, 4.6)

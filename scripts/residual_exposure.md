@@ -117,7 +117,7 @@ direction still unknown.
 - **Raking fixes margins, not selection.** Post-stratification corrects age,
   gender, education and race composition and nothing else.
 - **Multiplicity.** The residual age-gap family is 7 measures x 3 tiers = 21
-  tests. Following `07_demo_differences.R`, raw-p stars stay in the tables and a
+  tests. Following `07_demo_differences.py`, raw-p stars stay in the tables and a
   Bonferroni check at 0.05/21 is printed to the console; 9 of 21 survive it.
 - **Unscanned domains still contribute zero**, so residual levels inherit the
   paper's lower-bound convention.

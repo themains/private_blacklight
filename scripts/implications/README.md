@@ -10,7 +10,7 @@ mass. The write-up that turns these results into proposed paper text is
 
 ## Design
 
-Regressions replicate `scripts/07_demo_differences.R` exactly (OLS on
+Regressions share the Table 5/6 specification with `scripts/07_demo_differences.py` (OLS on
 gender/race/education/age-group dummies, references Male / White /
 HS-or-Below / <25, Huber–White HC1) in statsmodels, and a **replication
 gate** must reproduce ms Table 5's benchmark coefficients (65+: +2.81 ad

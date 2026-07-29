@@ -119,6 +119,20 @@ implications: ## Demographic robustness to coverage/timing threats + Google reac
 
 
 ########################################################################
+# Demographic differences: Tables 5-6, Figures 4-5, and the age-gradient
+# diagnostic. All three fit through implications/config.py, so the tables and
+# the coefficient plots cannot report different estimates.
+########################################################################
+.PHONY: regressions
+regressions: ## Tables 5-6, the two coefficient plots, and the age-spline check
+	@echo "==> $@"
+	cd scripts && \
+		$(abspath $(VENVPATH))/bin/python 07_demo_differences.py && \
+		$(abspath $(VENVPATH))/bin/python 07b_coefplot.py && \
+		$(abspath $(VENVPATH))/bin/python 18_age_spline.py
+
+
+########################################################################
 # Residual exposure under best-available defenses
 # (see scripts/blocking/README.md and scripts/residual_exposure.md)
 # Step 02 fetches EasyList/EasyPrivacy/Disconnect from GitHub, pinned to the

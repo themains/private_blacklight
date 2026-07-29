@@ -1,6 +1,6 @@
 """Step 02: are the paper's demographic comparisons robust to the threats?
 
-Replicates the exact specification of scripts/07_demo_differences.R (OLS on
+Holds the specification behind Tables 5 and 6 (OLS on
 gender/race/education/age-group dummies with the same reference categories,
 Huber-White HC1 errors) in statsmodels, then asks three questions:
 

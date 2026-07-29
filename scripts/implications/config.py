@@ -29,7 +29,8 @@ SCENARIOS = ["zero", "mean", "ha_mean", "hawb_mean"]
 WB_KEYS = ["ddg_join_ads", "fb_pixel", "google_analytics"]
 
 # --------------------------------------------------------------------------- #
-# Regression spec (mirrors scripts/07_demo_differences.R exactly)
+# Regression spec behind Tables 5 and 6; scripts/07_demo_differences.py and
+# scripts/07b_coefplot.py both fit through it, so table and figure cannot drift.
 # --------------------------------------------------------------------------- #
 FORMULA_RHS = (
     "C(gender_lab, Treatment('Male'))"
