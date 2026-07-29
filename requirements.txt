@@ -19,3 +19,4 @@ google-cloud-bigquery
 db-dtypes
 beautifulsoup4
 wayback
+adblock

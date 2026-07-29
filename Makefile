@@ -119,6 +119,68 @@ implications: ## Demographic robustness to coverage/timing threats + Google reac
 
 
 ########################################################################
+# Residual exposure under best-available defenses
+# (see scripts/blocking/README.md and scripts/residual_exposure.md)
+# Step 02 fetches EasyList/EasyPrivacy/Disconnect from GitHub, pinned to the
+# commit nearest the Blacklight scan window.
+########################################################################
+.PHONY: blocking
+blocking: ## Attribute behaviors to third parties, apply blocklists, recompute exposure
+	@echo "==> $@"
+	cd scripts/blocking && \
+		$(abspath $(VENVPATH))/bin/python 01_extract_attribution.py && \
+		$(abspath $(VENVPATH))/bin/python 02_fetch_blocklists.py && \
+		$(abspath $(VENVPATH))/bin/python 03_apply_blocklists.py && \
+		$(abspath $(VENVPATH))/bin/python 04_residual_measures.py && \
+		$(abspath $(VENVPATH))/bin/python 05_residual_analysis.py && \
+		$(abspath $(VENVPATH))/bin/python 06_robustness.py && \
+		$(abspath $(VENVPATH))/bin/python 07_placebo.py
+
+# Needs data/yg/realityMine_web_desktop_2022-06-01_2022-06-30.csv (287 MB,
+# public on Harvard Dataverse). 09 prints the download command if it is absent.
+.PHONY: residual
+residual: ## Category, device, projection and security analyses on the residual measures
+	@echo "==> $@"
+	cd scripts && \
+		$(abspath $(VENVPATH))/bin/python 09_build_visit_panel.py && \
+		$(abspath $(VENVPATH))/bin/python 10_sensitive_categories.py && \
+		$(abspath $(VENVPATH))/bin/python 11_age_gap_decomposition.py && \
+		$(abspath $(VENVPATH))/bin/python 12_device_age_gradient.py && \
+		$(abspath $(VENVPATH))/bin/python 13_security_privacy_link.py && \
+		$(abspath $(VENVPATH))/bin/python 14_poststrat_weights.py
+	cd scripts/blocking && \
+		$(abspath $(VENVPATH))/bin/python 08_figures.py
+
+
+########################################################################
+# Manuscript
+#
+# Compiled from the REPO ROOT, not from ms/: \input{tables/...} and
+# \includegraphics{figures/...} are root-relative while \bibliography is
+# ms-relative, so BIBINPUTS/TEXINPUTS reconcile the two without editing the
+# .tex. -shell-escape is required by the \quickwordcount macro, which shells
+# out to texcount.
+########################################################################
+.PHONY: tables-ms
+tables-ms: ## Wrap pipeline fragments into the tab*_formatted files the ms inputs
+	@echo "==> $@"
+	cd scripts && $(abspath $(VENVPATH))/bin/python 15_format_ms_tables.py
+
+.PHONY: paper
+paper: ## Compile ms/blacklight.pdf (runs tables-ms first)
+paper: tables-ms
+	@echo "==> $@"
+	BIBINPUTS="ms:" TEXINPUTS=".:ms:" latexmk -pdf -shell-escape \
+		-interaction=nonstopmode -outdir=ms ms/blacklight.tex
+	@echo "==> wrote ms/blacklight.pdf"
+
+.PHONY: paper-clean
+paper-clean: ## Remove LaTeX build artifacts
+	@echo "==> $@"
+	latexmk -C -outdir=ms ms/blacklight.tex
+
+
+########################################################################
 # Other utilities
 ########################################################################
 .PHONY: clean

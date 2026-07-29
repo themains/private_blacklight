@@ -21,6 +21,16 @@ data/yg/realityMine_web_desktop_2022-06-01_2022-06-30.csv
 data/yg/realityMine_web_mobile_2022-06-01_2022-06-30.csv
 data/tracker-radar/
 
+# Residual-exposure intermediates: all regenerable by `make blocking`.
+# The blocklists themselves are pinned by commit and sha256 in
+# data/blocklists/manifest.json, which is committed; the small result CSVs in
+# data/blocking/ are committed too.
+data/blocklists/*.txt
+data/blocking/bl_domain_scripts.csv
+data/blocking/blocked_pairs.csv
+data/blocking/blacklight_domain_residual.csv
+data/blocking/visit_panel.parquet
+
 # Created by https://www.toptal.com/developers/gitignore/api/python
 # Edit at https://www.toptal.com/developers/gitignore?templates=python
 

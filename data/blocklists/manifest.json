@@ -1,0 +1,38 @@
+{
+  "pin_date": "2025-01-10",
+  "lists": {
+    "easylist": {
+      "repo": "easylist/easylist",
+      "path": "easylist",
+      "commit": "d80136f0c2a68fe7079337f70df10a9407c12431",
+      "committed": "2025-01-10T22:45:50Z",
+      "file": "easylist_2025-01-10.txt",
+      "sha256": "0ac0ffcf55460bec9de2e05bb90b87e76194bec07b430ed68bd34442adddd498",
+      "lines": 61186,
+      "hosts": null,
+      "fragments": 16
+    },
+    "easyprivacy": {
+      "repo": "easylist/easylist",
+      "path": "easyprivacy",
+      "commit": "069c39ba1b7d5c5d574483b8fbb1ff7b536093c5",
+      "committed": "2025-01-10T14:01:28Z",
+      "file": "easyprivacy_2025-01-10.txt",
+      "sha256": "6291a82e7464dcc34478bcc619445824cb9a1713d0ac4546b13ab8ac4961a210",
+      "lines": 53659,
+      "hosts": null,
+      "fragments": 38
+    },
+    "disconnect": {
+      "repo": "disconnectme/disconnect-tracking-protection",
+      "path": "services.json",
+      "commit": "fec791f0ae656ad6b08bc7eb2d1f1c5c4cab6689",
+      "committed": "2024-12-16T22:26:27Z",
+      "file": "disconnect_2025-01-10.txt",
+      "sha256": "f31b8386769df1d6394f5bdb95b08ba45228d45020610e24385b01b30597ac59",
+      "lines": 3842,
+      "hosts": 3842,
+      "fragments": null
+    }
+  }
+}

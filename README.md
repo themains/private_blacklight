@@ -94,6 +94,36 @@ zero-filling them understates it. (`tables/scan_failure_reasons.tex`,
 `tables/selection_audit_composition.tex`,
 `tables/selection_audit_tracking.tex`)
 
+### Residual exposure under best-available defenses
+
+A separate line of work from the validity strands above: those bound what the
+paper already measures, while this asks what a *defense* would have removed.
+Blacklight names the third-party domains responsible for each behavior it
+detects, so applying EasyList, EasyPrivacy and Disconnect to those domains and
+recomputing every exposure measure is arithmetic rather than simulation. Map in
+[`scripts/residual_exposure.md`](scripts/residual_exposure.md); pipeline in
+[`scripts/blocking/README.md`](scripts/blocking/README.md); run with
+`make blocking && make residual`.
+
+Blocking removes most ad-tracker (77%) and third-party-cookie (84%) exposure and
+narrows the 65+ gap in both — from 1.90× the youngest group's exposure to 1.26×
+on ad trackers. A placebo of random blocklists removing the same amount shows
+that narrowing is not merely arithmetic (*p* = .05, *p* < .001). Blocking barely
+touches canvas fingerprinting — 93% survives and the age coefficient does not
+move — which is what those scripts are built to do, and that is the most robust
+result here. The apparent widening for session recording does *not* survive its
+own placebo (*p* = .31) and is not reported as evidence of regressive
+protection; what holds is narrower, in reach rather than intensity. Projected
+onto CPS 2022 margins, 215M US adults [210, 221] met a keylogging script in the
+month and 190M [184, 197] would still have behind a blocker. Decomposing the age
+gap puts 85% of it on which sites older panelists choose *within* categories
+rather than which categories they browse, and it is not a device artifact: the
+coefficient is 2.809 pooled and 2.804 with device controlled, significant among
+desktop and mobile panelists separately. (`tables/residual_levels.tex`,
+`tables/residual_age_gap.tex`, `tables/sensitive_category_exposure.tex`,
+`tables/age_gap_decomposition.tex`, `tables/device_age_gradient.tex`,
+`tables/population_projection.tex`, `tables/security_privacy_link.tex`)
+
 ## 🔗 Adjacent Repositories
 
 - [themains/reg_breach](https://github.com/themains/reg_breach) — Have I Been Pwned? Yes. Evidence from HIBP and Emails From Voter Registration Files.
