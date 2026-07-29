@@ -125,15 +125,50 @@ def main():
         "denominators -- there is no robust person-level association."
     )
 
-    # Do the two risks land on the same demographic groups?
+    # Do the two risks land on the same demographic groups? This is where the
+    # comparison holds. No person-level association survives both denominators
+    # above, but the group-level gradients are unambiguous and they run in
+    # opposite directions, which is a claim about composition rather than about
+    # individuals and does not depend on the per-person denominator choice.
     print("\n\nWho bears each risk (mean by age group)\n")
-    by_age = df.groupby("agegroup_lab").agg(
-        n=("caseid", "size"),
-        ad_trackers=("bl_ddg_join_ads_rate", "mean"),
-        keylogging=("bl_key_logging_rate", "mean"),
-        bad_domain_rate=("bad_rate", "mean"),
+    order = ["<25", "25-34", "35-49", "50-64", "65+"]
+    by_age = (
+        df.groupby("agegroup_lab")
+        .agg(
+            n=("caseid", "size"),
+            ad_trackers=("bl_ddg_join_ads_rate", "mean"),
+            keylogging=("bl_key_logging_rate", "mean"),
+            bad_domain_rate=("bad_rate", "mean"),
+        )
+        .reindex(order)
     )
     print(by_age.to_string(float_format="%.4f"))
+    rho = by_age["ad_trackers"].corr(by_age["bad_domain_rate"], method="spearman")
+    print(f"\nSpearman across the {len(by_age)} age-group means: {rho:+.2f}")
+    if rho > -0.5:
+        raise ValueError(
+            f"the two risks no longer diverge across age groups (rho = {rho:+.2f}); "
+            "the manuscript passage in the discussion must be revised"
+        )
+
+    # LaTeX escaping: `<25` needs math mode and the bracket labels use en dashes.
+    def _age_label(x):
+        return "$<$25" if x == "<25" else x.replace("-", "--")
+
+    blk.pandas_to_tex(
+        pd.DataFrame(
+            {
+                "Age group": [_age_label(i) for i in by_age.index],
+                "$n$": by_age["n"].map("{:,}".format),
+                "Ad trackers per visit": by_age["ad_trackers"].map("{:.2f}".format),
+                "Flagged domains (\\%)": (100 * by_age["bad_domain_rate"]).map(
+                    "{:.1f}".format
+                ),
+            }
+        ),
+        blk.table_path("risk_divergence_by_age.tex"),
+    )
+    print("Wrote tables/risk_divergence_by_age.tex")
 
     out = corr.merge(adj, on="measure", suffixes=("", "_adj"))
     out.to_csv(

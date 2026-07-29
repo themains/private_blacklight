@@ -129,7 +129,9 @@ regressions: ## Tables 5-6, the two coefficient plots, and the age-spline check
 	cd scripts && \
 		$(abspath $(VENVPATH))/bin/python 07_demo_differences.py && \
 		$(abspath $(VENVPATH))/bin/python 07b_coefplot.py && \
-		$(abspath $(VENVPATH))/bin/python 18_age_spline.py
+		$(abspath $(VENVPATH))/bin/python 18_age_spline.py && \
+		$(abspath $(VENVPATH))/bin/python 19_presence_adjusted.py && \
+		$(abspath $(VENVPATH))/bin/python 21_robustness_denominator.py
 
 
 ########################################################################
@@ -156,6 +158,7 @@ blocking: ## Attribute behaviors to third parties, apply blocklists, recompute e
 residual: ## Category, device, projection and security analyses on the residual measures
 	@echo "==> $@"
 	cd scripts && \
+		$(abspath $(VENVPATH))/bin/python 20_org_share_denominator.py && \
 		$(abspath $(VENVPATH))/bin/python 09_build_visit_panel.py && \
 		$(abspath $(VENVPATH))/bin/python 10_sensitive_categories.py && \
 		$(abspath $(VENVPATH))/bin/python 11_age_gap_decomposition.py && \

@@ -328,7 +328,7 @@ The first regresses exposure on demographics alone:
 \end{equation}
 where $y_i$ is individual $i$'s exposure to one of the seven tracking methods, estimated by ordinary least squares with Huber-White standard errors, once on cumulative exposure and once on the exposure rate. Demographic covariates are gender (woman; ref: man), race and ethnicity (African American, Asian, Hispanic, Other; ref: White), education (some college, college degree, postgraduate; ref: high school or less), and age group (25--34, 35--49, 50--64, 65+; ref: 18--24). All predictors are indicators, so coefficients are directly comparable. Volume enters here only through the choice of outcome: the rate divides cumulative exposure by visits, which holds volume constant by imposing proportionality between browsing and exposure.
  
-The second adjustment does not impose it. Following the specification used in studies of exposure to other online risks, we enter online presence directly:
+The second adjustment does not impose it. Following the specification used in studies of exposure to other online risks \citep{bad_domains, cor2018pwned}, we enter online presence directly:
 \begin{equation}\label{eq:demo-presence}
      Q_{\tau}(y_i) =
      \alpha
@@ -340,9 +340,9 @@ The second adjustment does not impose it. Following the specification used in st
      \, + \gamma_2 \text{visits}_i^2
      \, + \varepsilon_i,
 \end{equation}
-where $\text{visits}_i$ is the total number of sites individual $i$ visited during the month, scaled to the unit interval, and $y_i$ is cumulative exposure. We estimate at the median ($\tau = 0.5$) with bootstrapped standard errors, because exposure is heavily right-skewed and the median is the summary that skew does not distort.
+where $\text{visits}_i$ is the total number of site visits individual $i$ made during the month, scaled to the unit interval, and $y_i$ is cumulative exposure. We estimate at the median ($\tau = 0.5$) with bootstrapped standard errors, because exposure is heavily right-skewed and the median is the summary that skew does not distort.
  
-Neither adjustment dominates. Dividing by visits assumes exposure grows in proportion to browsing; entering visits and its square lets the data say otherwise, and prior work on other online risks reports a concave relationship, in which case the proportional assumption over-corrects for heavy browsers. Reporting both specifications means that when our demographic coefficients behave differently from those found for other risks, the difference is in the phenomenon and not in the arithmetic.
+Neither adjustment dominates. Dividing by visits assumes exposure grows in proportion to browsing; entering visits and its square lets the data say otherwise, and prior work on other online risks reports a concave relationship \citep{bad_domains}, in which case the proportional assumption over-corrects for heavy browsers. Reporting both specifications means that when our demographic coefficients behave differently from those found for other risks, the difference is in the phenomenon and not in the arithmetic.
 
 
 \section{Results}
@@ -442,9 +442,7 @@ The age gap is also not an artifact of the rate's denominator. Dividing each pan
  
 Neither survival is an artifact of the audit. Per-user scan coverage is flat in age and in gender, and both coefficients are essentially unchanged under every scenario for filling unscanned visits (\cref{sm:implications}). The size of the age gap does depend on when tracking is measured: under June 2022 measurement from an independent instrument it is roughly a quarter smaller for ad trackers and half smaller for cookies than under the January 2025 scans, because tracking growth over the intervening period concentrated on the sites older users frequent (\cref{sm:temporal}).
  
-% >>> FILL: run \cref{eq:demo-presence} and replace every bracketed
-% value. Placeholders, not results.
-Dividing by visits is one way to hold browsing volume constant, and not the way the studies of other online risks held it. Estimating \cref{eq:demo-presence} instead, which enters the count of sites visited and its square into a median regression on cumulative exposure, reproduces their result for education, where the coefficient falls to [FILL] and loses significance, and departs from it for age, where users 65 and above remain [FILL] above the under-25 baseline ($p =$ [FILL]). Online presence enters with the concave shape reported for other risks ([FILL] linear, [FILL] quadratic). The age gap therefore survives both adjustments, which rules out its being an artifact of assuming that exposure grows in proportion to browsing.
+Dividing by visits is one way to hold browsing volume constant, and not the way studies of other online risks held it. Estimating \cref{eq:demo-presence} instead, which enters total visits and their square into a median regression on cumulative exposure, reproduces the pattern reported for those risks in education: the college coefficient falls from $6{,}062$ to $285$ ad-tracker encounters and is no longer distinguishable from zero ($p = .44$). It departs from that pattern in age. Users 65 and above still meet $3{,}531$ more ad trackers over the month than users under 25 ($p < .001$), which is $85\%$ of the under-25 median, and $3{,}191$ more third-party cookies ($p = .001$), or $63\%$ (\cref{sm:presence}). Browsing volume itself enters strongly and positively ($+399{,}112$ per unit of scaled visits, $p < .001$), with a negative quadratic term ($-258{,}720$) that matches the concave shape reported elsewhere in sign but, unlike those estimates, is not precisely estimated here ($p = .22$). The age gap therefore survives both adjustments, which rules out its being an artifact of assuming that exposure grows in proportion to browsing.
  
 Asian users move the other way under adjustment. Lower on cumulative exposure only for session recording and keylogging, they show lower rates across nearly every method once volume is held constant, which is what visiting less heavily tracked sites would produce.
  
@@ -527,6 +525,24 @@ Two accounts of who bears the most risk online have been tested against observed
  
 The reason is structural rather than statistical. Malicious content can be recognized and avoided, and people do avoid it. Breached credentials follow from accounts a person opened. Tracking is installed by the sites a person visits, under arrangements between those sites and third parties the visitor never chose, and it runs whether or not the visitor knows it is there. Skill and caution have purchase on the first two risks and almost none on the third, so the composition of a person's browsing survives as a source of inequality where for other risks it does not. That older users are the group left exposed is the part with practical weight: the gap runs across every technique we measure, including session recording, keylogging, and canvas fingerprinting, which the hygiene measures ordinarily recommended to users do not reach.
  
+The same panel carries a security measure for the same people over the same month, and it points the other way. Antivirus vendors flagged some of the domains these panelists visited as malicious or suspicious, and exposure to those domains falls as age rises exactly where tracking exposure climbs (\cref{tab:risk_divergence_by_age}). Users under 25 meet the fewest ad trackers per visit and the largest share of flagged domains; users 65 and above meet the most trackers and the smallest share. Across the five age groups the two gradients are almost perfectly opposed (Spearman $-0.90$). We report this as a fact about composition, not about individuals: at the person level, once browsing volume and demographics are held fixed, the association between the two risks is not robust to how each is normalized, and we do not claim one.
+
+That the two risks land on opposite groups is what the structural account predicts. Avoidance is available against malicious content and is practised more by the users who have more of the skills that avoidance requires; it is not available against tracking, so tracking accumulates wherever browsing goes.
+
+\begin{table}[ht]
+\centering
+\caption{Two online risks, opposite age gradients}
+\label{tab:risk_divergence_by_age}
+\begin{tabular}{lrrr}
+\toprule
+Age group & $n$ & Ad trackers per visit & Flagged domains (\%) \\
+\midrule
+\input{tables/risk_divergence_by_age}
+\bottomrule
+\end{tabular}
+\caption*{\textit{Note:} Same $1{,}134$ panelists and the same observation month for both measures. ``Flagged domains'' is the share of a panelist's distinct visited domains that antivirus vendors classified as malicious or suspicious \citep{bad_domains}. Spearman correlation across the five group means is $-0.90$.}
+\end{table}
+
 The magnitude deserves a benchmark, because effect sizes in this literature rarely have one. The gender gap in per-visit exposure is small and, apart from canvas fingerprinting, statistically indistinguishable from zero, which puts it an order of magnitude below the ten to twenty percent gender gap in earnings documented for high-income countries \citep{goldin2014grand}. The age gap is several times larger in relative terms than that earnings gap. And as most of the residual gender pay gap sits within occupations rather than between them, most variation in surveillance sits within demographic groups rather than between them: our covariates account for under $8\%$ of the variance. Who a person is explains little about how much surveillance they meet. What they browse explains a great deal.
  
 Two further results bear on how the tracking ecosystem is organized. Exposure is near universal and it arrives fast. More than $99\%$ of users met ad trackers and third-party cookies, half of them within twelve hours of the start of measurement, and the invasive techniques reached $42$ to $52\%$ of users within two days. And exposure is concentrated: users are tracked by a median of $242$ organizations, but a single organization observes a median $54\%$ of a person's browsing, and for $89.0\%$ of users that organization is Google. Microsoft and Facebook are dominant for roughly four percent of users each. We recover the same leading organizations as \citet{Dambra2022}, who aggregate over visits rather than over users, and the user-level measure adds what aggregation cannot: the concentration is not an artifact of a few heavy browsers but the ordinary condition of the median person. It also extends to the part of the web our scanner could not reach, where $68$ to $72\%$ of a directly re-audited sample of domains load a Google-owned third party.
@@ -1093,6 +1109,62 @@ Metering is more complete on desktop than on mobile, where a share of activity m
 Estimates displayed in \cref{fig:coefplot_demo_differences_cumulative,fig:coefplot_demo_differences_rate}.
 \input{tables/tab5_formatted}
 \input{tables/tab6_formatted}
+
+
+\clearpage
+\FloatBarrier
+\section{Holding browsing volume constant without assuming proportionality}
+\label{sm:presence}
+
+\cref{eq:demo-diff} holds browsing volume constant by dividing cumulative
+exposure by visits, which imposes proportionality between the two.
+\cref{eq:demo-presence} does not impose it: browsing volume and its square enter
+the right-hand side of a median regression on cumulative exposure, and the data
+decide the shape. Studies of other online risks adjust this second way, so
+reporting both is what allows a difference between our demographic coefficients
+and theirs to be read as a difference in the phenomenon rather than in the
+arithmetic.
+
+\cref{tab:presence_adjusted_median} gives both specifications for all seven
+tracking measures and for the visits observed by the top organization. Panel A
+is demographics alone; Panel B adds the volume terms. The comparison the text
+draws is vertical: what happens to a coefficient when volume is allowed in.
+
+Two features of the estimation are worth stating. Standard errors are
+bootstrapped over panelists, $1{,}000$ draws, and every draw converged. And
+because \texttt{statsmodels} solves the median regression by iteratively
+reweighted least squares --- an approximation to what is exactly a linear
+program --- each reported fit is re-solved through an exact linear-programming
+solver and the two objectives are required to agree; the largest relative gap
+across the sixteen fits is $5 \times 10^{-9}$.
+
+The education result reproduces what other-risk studies report: the college
+coefficient falls from $6{,}062$ to $285$ and becomes indistinguishable from
+zero. The age result does not: the $65+$ coefficient falls but remains large and
+significant. Browsing volume enters with a large positive linear term and a
+negative quadratic one, the concave shape reported elsewhere, though here the
+quadratic is not precisely estimated for any measure.
+
+\begin{table}[ht]
+\centering
+\caption{Demographic differences in cumulative exposure, before and after adjusting for browsing volume}
+\label{tab:presence_adjusted_median}
+\begin{adjustbox}{max width=\textwidth}
+\begin{tabular}{lcccccccc}
+\toprule
+& Ad & Cookies & FB Pixel & GA & Keylogger & Session rec & Canvas FP & Top org visits \\
+\midrule
+\input{tables/presence_adjusted_median}
+\bottomrule
+\end{tabular}
+\end{adjustbox}
+\caption*{\textit{Note:} Median regressions ($\tau = 0.5$) of cumulative exposure,
+with standard errors from $1{,}000$ bootstrap draws over panelists in parentheses.
+Panel A estimates \cref{eq:demo-diff} at the median; Panel B estimates
+\cref{eq:demo-presence}, adding total visits and their square, each rescaled to the
+unit interval. Reference categories are male, white, high school or below, and under
+25. * $p<.1$, ** $p<.05$, *** $p<.01$.}
+\end{table}
 
 
 \clearpage

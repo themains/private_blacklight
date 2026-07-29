@@ -44,7 +44,6 @@ _HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, _HERE)
 
 import constants  # noqa: E402
-from utilities import pandas_to_tex  # noqa: E402
 
 REPO = os.path.abspath(os.path.join(_HERE, ".."))
 FP_COMBINED = os.path.join(REPO, "data", "combined_yg_bl_who_derived_hist_tracking.csv")
@@ -75,6 +74,7 @@ PRESENCE_LABELS = {
 # The two values the manuscript paragraph names explicitly.
 PROSE_TERMS = ["Educ: College", "Age: 65+"]
 PROSE_MEASURES = ["Ad Trackers", "Third-Party Cookies"]
+PROSE_OUTCOMES = ["bl_ddg_join_ads", "bl_third_party_cookies"]
 
 
 def _load_config():
@@ -203,11 +203,15 @@ def estimate(yvar, label, data):
 
     # The demographic block must be the one behind Tables 5 and 6, or the
     # "adjusting for volume changes X" claim is comparing two different models.
-    got = [t for t in out["raw"].index if t in DEMO_LABELS.values()]
-    if got != list(DEMO_LABELS.values()):
+    # Membership, not sequence: patsy orders the design matrix its own way and
+    # the table reindexes onto COEF_LABELS regardless, so ordering carries no
+    # information about whether the specifications agree.
+    got = {t for t in out["raw"].index if t in set(DEMO_LABELS.values())}
+    want = set(DEMO_LABELS.values())
+    if got != want:
         raise ValueError(
-            f"{label}: demographic terms {got} do not match the Table 5-6 "
-            f"specification {list(DEMO_LABELS.values())}"
+            f"{label}: demographic terms differ from the Table 5-6 specification. "
+            f"missing {sorted(want - got)}; unexpected {sorted(got - want)}"
         )
     return out
 
@@ -222,21 +226,44 @@ def cell(row):
     return f"{row.b:,.0f}{stars(row.p)} ({row.se:,.0f})"
 
 
-def build_table(results):
-    """One column per measure per specification, in the order the models are fit."""
-    columns = {}
-    for label, res in results.items():
-        columns[label] = res["raw"].apply(cell, axis=1)
-        columns[f"{label}, adj."] = res["presence"].apply(cell, axis=1)
-    order = list(dict.fromkeys(COEF_LABELS.values()))
+def panel(results, key, order):
+    """One specification: a row per coefficient, a column per outcome."""
+    columns = {label: res[key].apply(cell, axis=1) for label, res in results.items()}
     frame = pd.DataFrame(columns).reindex(order).fillna("")
     return frame.reset_index(names="Coefficient")
 
 
-def report_manuscript_values(results):
+def write_table(results, fp):
+    """Two stacked panels rather than sixteen side-by-side columns.
+
+    Eight outcomes crossed with two specifications is seventeen columns, which
+    no page can carry legibly. Stacking puts the same information on nine, and
+    it stacks the way the claim reads: the paragraph is about what moves between
+    Panel A and Panel B for a given outcome, which is a vertical comparison.
+    """
+    order = list(dict.fromkeys(COEF_LABELS.values()))
+    a = panel(results, "raw", [t for t in order if t in DEMO_LABELS.values()])
+    b = panel(results, "presence", order)
+    ncol = a.shape[1]
+    head = r"\multicolumn{%d}{l}{\textit{%s}} \\"
+
+    lines = [head % (ncol, "Panel A. Demographics only")]
+    lines += [" & ".join(r) + r" \\" for r in a.astype(str).to_numpy()]
+    lines += [
+        r"\addlinespace",
+        head % (ncol, "Panel B. Demographics and browsing volume"),
+    ]
+    lines += [" & ".join(r) + r" \\" for r in b.astype(str).to_numpy()]
+
+    with open(f"{fp}.tex", "w") as f:
+        f.write("\n".join(lines) + "\n")
+    return ncol
+
+
+def report_manuscript_values(results, data):
     """Every value ms/blacklight.tex:445 needs, so none of them is typed by hand."""
     print("\n=== Values for the Equation (7) paragraph ===")
-    for label in PROSE_MEASURES:
+    for label, yvar in zip(PROSE_MEASURES, PROSE_OUTCOMES):
         raw, pres = results[label]["raw"], results[label]["presence"]
         print(f"\n{label}")
         for term in PROSE_TERMS:
@@ -251,15 +278,16 @@ def report_manuscript_values(results):
                 f"SE {pres.loc[term, 'se']:8,.0f}   p = {pres.loc[term, 'p']:.3f}"
             )
         # The previous paragraph states the age gap as a share of the under-25
-        # mean, so give the adjusted gap on the same footing. The intercept is
-        # the fitted median for the reference cell: male, White, HS or below,
-        # under 25, at zero visits.
+        # mean, so give the adjusted gap on the same footing. The denominator is
+        # the observed under-25 median, NOT the fitted intercept: with volume
+        # and volume squared on the right-hand side the intercept is the fitted
+        # median at zero visits, which is both outside the data (the minimum is
+        # two visits) and negative here, so dividing by it returns a meaningless
+        # -195%.
         gap = pres.loc["Age: 65+", "b"]
-        base = pres.attrs["intercept"] + pres.loc["Total visits (scaled)", "b"] * 0
-        print(
-            f"  {'65+ as share of reference':24s} {gap:,.0f} / {base:,.0f} = "
-            f"{gap / base:.0%}" if base else "  reference median is zero"
-        )
+        base = float(data.loc[data["agegroup_lab"] == "<25", yvar].median())
+        share = f"{gap / base:.0%}" if base else "undefined (under-25 median is zero)"
+        print(f"  {'65+ vs under-25 median':24s} {gap:9,.0f} / {base:,.0f} = {share}")
 
 
 def main():
@@ -289,10 +317,12 @@ def main():
             f"failed draws {res['raw'].attrs['failed']}/{res['presence'].attrs['failed']}"
         )
 
-    pandas_to_tex(build_table(results), FP_TABLE)
-    print(f"\nSaved: tables/{os.path.basename(FP_TABLE)}.tex")
+    ncol = write_table(results, FP_TABLE)
+    print(
+        f"\nSaved: tables/{os.path.basename(FP_TABLE)}.tex ({ncol} columns, two panels)"
+    )
 
-    report_manuscript_values(results)
+    report_manuscript_values(results, data)
     print("\n=== Volume Adjustment Complete ===")
 
 
