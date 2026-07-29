@@ -147,8 +147,10 @@ residual: ## Category, device, projection and security analyses on the residual 
 		$(abspath $(VENVPATH))/bin/python 11_age_gap_decomposition.py && \
 		$(abspath $(VENVPATH))/bin/python 12_device_age_gradient.py && \
 		$(abspath $(VENVPATH))/bin/python 13_security_privacy_link.py && \
-		$(abspath $(VENVPATH))/bin/python 14_poststrat_weights.py
+		$(abspath $(VENVPATH))/bin/python 14_poststrat_weights.py && \
+		$(abspath $(VENVPATH))/bin/python 16_who_coverage.py
 	cd scripts/blocking && \
+		$(abspath $(VENVPATH))/bin/python 09_allzero_sensitivity.py && \
 		$(abspath $(VENVPATH))/bin/python 08_figures.py
 
 
