@@ -16,8 +16,8 @@ Input:  tables/individual_blacklight_cumulative_exposure_summary.tex  (03_exposu
 Output: tables/tab2_formatted.tex  (Table 2, tab:cumulative-exposure)
         tables/tab3_formatted.tex  (Table 3, tab:exposure-rate)
         tables/tab4_formatted.tex  (Table 4, tab:bl_top_contributors_domain)
-        tables/tab5_formatted.tex  (Table 5, tab:demo_differences_exposure_rate)
-        tables/tab6_formatted.tex  (Table 6, tab:demo_differences_cum_exposure)
+        tables/tab5_formatted.tex  (Table D.1, tab:demo_differences_cum_exposure)
+        tables/tab6_formatted.tex  (Table D.2, tab:demo_differences_exposure_rate)
 """
 
 import os
@@ -92,18 +92,6 @@ REG_HEAD = (
     r"Ad & Cookies & FB Pixel & GA & Keylogger & Session rec & Canvas FP & Top org share"
 )
 BARE["tab5_formatted"] = dict(
-    fragment="demo_differences_exposure_rate.tex",
-    label="tab:demo_differences_exposure_rate",
-    align="l" + "c" * 8,
-    header="Measure & " + REG_HEAD + r" \\",
-    caption=(
-        "Demographic differences in tracking exposure per visit. OLS with "
-        "Huber-White (HC1) standard errors in parentheses. Reference "
-        "categories are male, white, high school or below, and under 25. "
-        "$^{***}p<0.01$, $^{**}p<0.05$, $^{*}p<0.10$."
-    ),
-)
-BARE["tab6_formatted"] = dict(
     fragment="demo_differences_cum_exposure.tex",
     label="tab:demo_differences_cum_exposure",
     align="l" + "c" * 8,
@@ -116,6 +104,18 @@ BARE["tab6_formatted"] = dict(
         "Huber-White (HC1) standard errors in parentheses. Ad trackers, "
         "third-party cookies and top-organisation visits are expressed in "
         "hundreds. $^{***}p<0.01$, $^{**}p<0.05$, $^{*}p<0.10$."
+    ),
+)
+BARE["tab6_formatted"] = dict(
+    fragment="demo_differences_exposure_rate.tex",
+    label="tab:demo_differences_exposure_rate",
+    align="l" + "c" * 8,
+    header="Measure & " + REG_HEAD + r" \\",
+    caption=(
+        "Demographic differences in tracking exposure per visit. OLS with "
+        "Huber-White (HC1) standard errors in parentheses. Reference "
+        "categories are male, white, high school or below, and under 25. "
+        "$^{***}p<0.01$, $^{**}p<0.05$, $^{*}p<0.10$."
     ),
 )
 
