@@ -165,8 +165,13 @@ def main():
             c[wb_only] = wb_fill[wb_only]
             c[~scanned & ~ha_measured & ~wb_measured] = fill_mean
         else:
-            # no Wayback visibility for this measure: hawb falls back to ha
-            c[~scanned & ~ha_measured] = fill_mean
+            # No Wayback visibility for this measure, so hawb must fall back to
+            # ha exactly. The mask has to be ~k_measured, not ~ha_measured: for
+            # cookies a domain can be in HTTP Archive and still never have been
+            # queried for cookies, and those domains belong in the assumption
+            # arm. With ~ha_measured they matched neither arm, kept NaN, and
+            # user_rate's skipna summation silently scored them as zero.
+            c[~scanned & ~k_measured] = fill_mean
         scen["hawb_mean"] = c
 
         for name, counts in scen.items():
