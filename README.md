@@ -1,148 +1,155 @@
 # Exposed: Shedding *Blacklight* on Online Privacy
 
-**Who is the most surveilled online?** We join one month of passively observed
-browsing by 1,134 US adults — 4.4 million visits to 64,074 domains — to
-domain-level privacy audits from [Blacklight](https://themarkup.org/blacklight),
-and ask who meets the most tracking.
+Users 65 and over meet 76 to 87 percent more trackers per visit than users under
+25. That gap is not about spending more time online. Gaps by gender and
+education close once we account for how much someone browses, but the age gap
+does not, and it is not a story about older people visiting different kinds of
+site. Within the same content categories they land on the more heavily tracked
+ones: site choice accounts for 82 percent of the ad-tracker gap and category mix
+for 7 percent.
 
-Two accounts compete. One says risk follows **vulnerability**: the least
-digitally literate should be the most exposed. The other says risk follows
-**opportunity**: exposure should track how much time someone spends online and
-little else. Neither survives intact. Tracking is close to universal, so there
-is little room for a vulnerability gap on *whether* you are tracked; gaps by
-gender and education close once browsing volume is accounted for, as the
-opportunity account predicts. But the age gap does not close. Users 65 and older
-meet 76–87% more trackers per visit than users under 25 — a difference in *where*
-people browse, not only how much.
+We reach that by joining one month of passively metered browsing by 1,134 US
+adults, 4.4 million visits to 64,074 domains, to domain-level privacy audits
+from [Blacklight](https://themarkup.org/blacklight).
 
-### What we find
+Two accounts of who bears online risk compete, and neither survives. On the
+first, risk follows vulnerability, so the least digitally literate should be the
+most exposed. On the second it follows opportunity, so exposure should track
+time online and little else. Tracking turns out to be close to universal, which
+leaves almost no room for a vulnerability gap in *whether* you are tracked. The
+education and gender gaps behave as the opportunity account predicts and close
+under adjustment. The age gap does not.
 
-- **Tracking is near-universal and fast.** Over 99% of users encounter ad
-  trackers and third-party cookies; half of them within twelve hours. Session
-  recording, keylogging and canvas fingerprinting reach 42–52% of users within
-  two days.
-- **Concentration.** One organization — Google, for nine users in ten — observes
-  a median 54% of a person's browsing.
-- **The age gap is about site choice.** Unadjusted, panelists 65+ meet 1.90×
-  the ad-tracker exposure of under-25s; adjusted for gender, race and education
-  the gap is 76–87%. It survives controlling for device, and decomposes to 87%
-  *within* content categories — older panelists visit more heavily tracked sites
-  inside the same categories, not different categories.
-- **Every estimate is a lower bound.** Visits to domains Blacklight could not
-  scan are counted as tracker-free. A re-audit of a random sample of those
-  domains finds *more* tracking on them, not less.
-- **Blockers help, unevenly.** EasyList/EasyPrivacy/Disconnect would remove 77%
-  of ad-tracker and 84% of third-party-cookie exposure and narrow the age gap to
-  1.28×, but 93% of canvas fingerprinting survives — which is what
-  fingerprinting scripts are built to do.
+Three further results.
 
----
+Tracking arrives fast. Over 99 percent of users meet ad trackers and third-party
+cookies, half of them within twelve hours. Session recording, keylogging and
+canvas fingerprinting reach 43 to 53 percent of users within two days.
+
+A single company sees most of a person's browsing. Google is the top observer
+for nine users in ten, and the top organization sees a median 58 percent of a
+person's visits.
+
+Blockers help, but unevenly. EasyList, EasyPrivacy and Disconnect together
+remove 76 percent of ad-tracker exposure and 70 percent of third-party-cookie
+exposure, and they narrow the unadjusted 65-plus gap from 1.90 to 1.26 times.
+They leave 94 percent of canvas fingerprinting standing, which is what
+fingerprinting scripts are built for.
+
+Every estimate here is a floor. Visits to domains Blacklight could not reach
+count as tracker-free, so the true numbers are higher. We know the floor is real
+because re-auditing a random sample of unreachable domains finds more tracking
+on them, not less.
 
 ## Research design
 
 **The panel.** YouGov fielded a browsing panel metered by RealityMine in June
-2022, matched to US population margins. We use the 1,134 panelists with usable
-browsing and profile data: 4.4M visits, 64,074 unique domains.
+2022, matched to US population margins. The analysis uses the 1,134 panelists
+with usable browsing and profile data: 4.4M visits to 64,074 domains.
 
-**The audit.** Blacklight visits a domain and reports seven techniques: ad
-trackers (outgoing requests matched to DuckDuckGo's "Ad Motivated Tracking"
-list), third-party cookies (`Set-Cookie` headers on third-party requests),
-session recording, keylogging, canvas fingerprinting, Facebook Pixel and Google
-Analytics. Three of these — session recording, keylogging and canvas
-fingerprinting — are the most invasive, and the ones that operate outside the
-reach of the hygiene measures users are ordinarily told to adopt.
+**The audit.** Blacklight loads a domain and reports seven techniques: ad
+trackers (outgoing requests matched to DuckDuckGo's Ad Motivated Tracking list),
+third-party cookies (`Set-Cookie` headers on third-party requests), session
+recording, keylogging, canvas fingerprinting, Facebook Pixel, and Google
+Analytics remarketing. Three of them, session recording, keylogging and canvas
+fingerprinting, are the most invasive, and they operate outside the reach of the
+hygiene measures users are ordinarily told to adopt.
 
 Each scan also names the third-party domains responsible for each behavior. That
 is what makes the blocking analysis arithmetic rather than simulation, and what
 lets us link third parties to parent organizations through DuckDuckGo's Tracker
-Radar to ask how much of one person's browsing a single organization can see.
+Radar to ask how much of one person's browsing a single company can see.
 
-**The join.** Exposure is measured per person two ways: **cumulative** (total
-tracker-encounters over the month) and **rate** (per visit). A person's exposure
-is the visit-weighted sum of the tracking on the domains they actually visited,
-so it reflects browsing composition rather than a domain-level average.
+**The join.** Exposure is measured per person two ways: cumulative, meaning
+total tracker encounters over the month, and rate, meaning per visit. A person's
+exposure is the visit-weighted sum of the tracking on the domains they actually
+visited, so it reflects what they browsed rather than a domain-level average.
 
-**What could go wrong, and what we did about it.** Browsing was observed in June
-2022 but Blacklight scanned in ~January 2025, and scans completed for ~54% of
-unique domains (~79% of visits). Rather than assume either problem away, we
-measured both against independent instruments — HTTP Archive's monthly crawls
-and Wayback Machine snapshots — and re-audited a coded random sample of the
-unscanned domains. Both point the same direction: the published numbers
-understate exposure. Details in [Validity](#validity) below.
+**What could go wrong.** Browsing was observed in June 2022 but Blacklight
+scanned around January 2025, and scans completed for 54 percent of unique
+domains, covering 79 percent of visits. Rather than assume either problem away,
+we measured both against instruments that do not share Blacklight's failure
+modes: HTTP Archive's monthly crawls, Wayback Machine snapshots, and a re-audit
+of a coded random sample of the domains that failed. Both point the same way, so
+the published numbers understate exposure. Details under [Validity](#validity).
 
 **What this is not.** These are associations in an observational panel, not
 causal effects of age. Blacklight measures a domain at one point in time, not
 what any individual's browser actually loaded. Assumptions about missing data
-are enumerated, with their direction, in
+are enumerated, with the direction each one bends, in
 [`scripts/missing_data.md`](scripts/missing_data.md).
-
----
 
 ## Reproducing
 
 Every table, figure and quoted number in the manuscript is generated by the R
-pipeline in `scripts/R/`. Python remains for data collection and for one
-analysis step R cannot do: matching third parties against blocklist rules, which
+pipeline in `scripts/R/`. Python remains for data collection and for the one
+analysis step R cannot do, matching third parties against blocklist rules, which
 needs adblock-rust.
 
 ```bash
 make setup                # both environments, from renv.lock and uv.lock
-make analysis             # every table and figure (~7 min, cold)
+make analysis             # every table and figure, about seven minutes cold
 make paper                # runs the analysis, then compiles ms/blacklight.pdf
 make help                 # every target
 ```
 
-Both environments are locked. `renv.lock` records the R closure (15 direct
-packages, 104 with dependencies); `uv.lock` records Python's. `make lock`
-refreshes both. The Python extras are grouped by the step that needs them, so
-re-deriving the blocklist attribution does not mean installing a BigQuery
-client:
+Both environments are locked. `renv.lock` records the R closure, 15 direct
+packages and 104 with their dependencies; `uv.lock` records Python's. `make
+lock` refreshes both. The Python extras are grouped by the step that needs them,
+so re-deriving the blocklist attribution does not mean installing a BigQuery
+client.
 
 | extra | for |
 | --- | --- |
-| `blocking` | `adblock==0.6.0`, pinned because it reproduces the committed `blocked_pairs.csv` byte-for-byte |
+| `blocking` | `adblock==0.6.0`, pinned because it reproduces the committed `blocked_pairs.csv` byte for byte |
 | `bigquery` | HTTP Archive extraction |
 | `wayback` | Wayback snapshot fetching |
 | `scraping` | scan scraping and the rescan probe |
 | `legacy` | the superseded Python analysis, kept runnable for comparison |
 
 `scripts/R/99_run_all.R` sources the numbered scripts in order and writes a
-timestamped log to `logs/`. It verifies the sha256 of every pinned reference
-list before doing anything else, so a swapped blocklist or public-suffix list
-fails in a second rather than surfacing as a quietly different number later.
+timestamped log to `logs/`. It verifies the sha256 of every pinned reference list
+before doing anything else, so a swapped blocklist or public suffix list fails in
+a second instead of surfacing as a quietly different number three tables later.
 
 | script | what it builds |
 | --- | --- |
-| `00_setup` / `01_constants` / `02_helpers` | packages, measure vocabulary, age cut, seeds, table writers, figure theme |
+| `00_setup`, `01_constants`, `02_helpers` | packages, measure vocabulary, age cut, seeds, table writers, figure theme |
 | `03_import` | Blacklight and WhoTracksMe scans, the visit panel |
-| `04_orgs` | third parties → parent organizations, via a pinned public suffix list |
-| `05_person` | the join → person-level analysis file |
-| `06_describe` | Tables 1–4, organization and exposure figures |
-| `07_demography` | Tables 5–6, coefficient plots, the age-gap decomposition |
+| `04_orgs` | third parties to parent organizations, via a pinned public suffix list |
+| `05_person` | the join, giving the person-level analysis file |
+| `06_describe` | Tables 1 to 4, organization and exposure figures |
+| `07_demography` | Tables 5 and 6, coefficient plots, the age-gap decomposition |
 | `08_robustness` | denominator, fill scenarios, drift, median regression |
 | `09_blocking` | residual exposure, placebo, population projection |
 | `10_validity` | coverage bounds, temporal drift, selection audit |
 
 Every stochastic step takes an explicit seed, so repeated runs agree.
 
+Several steps gate before writing anything. The residual-exposure module rebuilds
+person-level exposure from raw visits by a second route and stops unless the two
+agree. The raking must reproduce its own CPS targets. The cumulative-exposure
+curve must still reproduce. A number that moves is meant to stop the run, not
+appear quietly in the next draft.
+
 ### What needs data you have to fetch
 
-Most of the pipeline runs from committed data. Three things do not:
+Most of the pipeline runs from committed data. Three things do not.
 
-- **`data/yg/realityMine_web_2022-06-01_2022-06-30.csv`** — the combined visit
-  file (2.0 GB, `doi:10.7910/DVN/VIV4TS`), which Dataverse reports as
-  restricted. Only `cum_exposure_by_hour` needs it, and only for the visit
-  timestamps; the desktop and mobile files carry 1.84M timestamped visits
-  between them, but a first-encounter curve built from two of three files runs
-  2–5 points low at every hour mark. The table and figure are therefore pinned
-  in `data/pinned/` from the full-data run, and `06_describe.R` rebuilds them
-  from the public files on every run as a consistency check.
-- **HTTP Archive** — billed BigQuery. The extracts are committed; the query is
-  not re-run.
-- **Blocklist matching** — `data/blocking/blocked_pairs.csv`, the result of
-  matching 332,890 domain-script pairs against pinned EasyList, EasyPrivacy and
-  Disconnect rules with Python's `adblock` engine. R has no equivalent rule
-  matcher, so the pairs are frozen alongside the lists they came from.
+The visit source, `data/yg/realityMine_web_2022-06-01_2022-06-30.parquet`, is
+built from a file Dataverse reports as restricted (2.0 GB,
+`doi:10.7910/DVN/VIV4TS`, file 6797139). Convert it once with
+`scripts/R/tools/csv_to_parquet.R`, after which the CSV can be discarded: the
+parquet holds the same content in 183 MB, and the pipeline reads four of its 27
+columns.
+
+HTTP Archive extraction is billed BigQuery. The extracts are committed and the
+query is not re-run.
+
+Blocklist matching produces `data/blocking/blocked_pairs.csv` by matching 339,912
+domain-script pairs against pinned EasyList, EasyPrivacy and Disconnect rules
+with Python's `adblock`. R has no equivalent rule matcher, so the pairs are
+frozen alongside the lists they came from.
 
 ### Layout
 
@@ -151,92 +158,94 @@ data/           panel, Blacklight scans, WhoTracksMe, blocklists, CPS margins
 scripts/
   R/            the analysis pipeline; 99_run_all.R runs it end to end
   python/       data collection, and the superseded analysis it replaced
-tables/         .tex; tab2_formatted..tab6_formatted are the manuscript floats
+tables/         .tex; tab2_formatted to tab6_formatted are the manuscript floats
 figures/        .pdf
 ms/             manuscript source
 lit/            background reading
 archive/        superseded outputs; see archive/README.md
-logs/           one run log per `make analysis` (not tracked)
+logs/           one run log per `make analysis`, not tracked
 ```
 
-Tables and figures are committed, so the manuscript compiles from a fresh clone
-without running the pipeline or holding the raw data.
-
-Every script carries a header naming its inputs, its outputs, and which
-manuscript table or figure it produces. Several gate before writing anything —
-the residual-exposure module rebuilds person-level exposure from raw visits by a
-second route and stops unless the two agree; the reference lists are checked
-against the sha256 in their manifests; the raking must reproduce its own CPS
-targets; and the cumulative-exposure curve must still reproduce.
-
----
+The two scan corpora are stored as archives rather than loose files, since
+34,512 Blacklight payloads cost 119 MB packed against 838 MB expanded.
+`03_import.R` expands them on demand, and a loose directory wins if one is
+present. Tables and figures are committed, so the manuscript compiles from a
+fresh clone without running the pipeline or holding the raw data.
 
 ## Validity
 
-Two features of the design deserve scrutiny: the ~2.5-year gap between browsing
-and scanning, and the ~53% domain scan rate. Full strand map in
-[`scripts/validity_strands.md`](scripts/validity_strands.md).
+Two features of the design deserve scrutiny: the roughly two-and-a-half-year gap
+between browsing and scanning, and the 54 percent domain scan rate. Full strand
+map in [`scripts/validity_strands.md`](scripts/validity_strands.md).
 
 **A. Timing.** On matched panel domains measured by the same instrument at both
-dates, visit-weighted ad-tracker prevalence moved 98.1% → 95.2% between June 2022
-and June 2025; "any known tracker" barely moved (99.9% → 98.1%). Recomputing
-user-level exposure under June-2022 vs Jan-2025 measurements shifts means
-modestly (ad trackers −6.3%, Google Analytics −4.3%) while the cross-user
-ordering the demographic analyses depend on is strongly preserved (*r* =
-0.75–0.91). If anything, 2025-era scans *understate* June-2022 exposure.
+dates, visit-weighted ad-tracker prevalence moved from 98.1 to 95.2 percent
+between June 2022 and June 2025, and any known tracker barely moved, 99.9 to
+98.1. Recomputing user-level exposure under June-2022 against January-2025
+measurements shifts the means modestly while the cross-user ordering the
+demographic analyses depend on is strongly preserved. If anything, 2025-era
+scans understate June-2022 exposure.
 
-**B. Coverage.** The construction already counts unscanned visits as zero
-tracking, so published rates are lower bounds by design. Replacing that
-assumption with measurement — June-2022 HTTP Archive request maps cover 62.7% of
-the missing visit mass, Wayback another 3.2%, calibrated to Blacklight's scale on
-jointly measured domains — narrows the ad-tracker interval from [5.19, 10.83] to
-[6.17, 8.13] per visit, against 5.19 published. Third-party cookies: 6.32
-published, [7.02, 10.72] measured. Accounting for unscanned domains *raises*
+**B. Coverage.** The construction counts unscanned visits as zero tracking, so
+published rates are lower bounds by design. Replacing that assumption with
+measurement narrows the ad-tracker interval from 5.19 to 10.83 down to 6.17 to
+8.13 per visit, against 5.19 published. June-2022 HTTP Archive request maps cover
+63.3 percent of the missing visit mass and Wayback another 2.4, each calibrated
+to Blacklight's scale on jointly measured domains. Third-party cookies: 6.32
+published, 7.09 to 10.51 measured. Accounting for unscanned domains raises
 exposure.
 
 **C. Instruments agree where they measure the same thing.** HTTP Archive and
-Blacklight (both ~Jan 2025) agree on ad-tracker presence for 86% of shared
-domains; Wayback static parses recover 92% of ad-tracker presence, weaker for
-JS-injected measures (Facebook 47%). Construct differences — header-set vs
-JS-set cookies, GA presence vs GA remarketing — are labeled in every table.
+Blacklight, both around January 2025, agree on ad-tracker presence for 86 percent
+of shared domains. Wayback static parses recover 92 percent of ad-tracker
+presence and do worse on JavaScript-injected measures, 47 percent for Facebook.
+Construct differences, header-set against JavaScript-set cookies and Google
+Analytics presence against remarketing, are labeled in every table.
 
 **D. What the unscanned half actually is.** Scan failures reflect
-unscannability, not dead sites: at least 66% of unscanned visit mass was on
-domains demonstrably alive in mid-2022. A seeded random sample of 200 unscanned
-domains, coded against a written
+unscannability, not dead sites: at least 66 percent of unscanned visit mass was
+on domains demonstrably alive in mid-2022. A seeded random sample of 200
+unscanned domains, coded against a written
 [rubric](scripts/selection_audit/CODING_RUBRIC.md), is mostly ordinary
-user-facing content (62% of visit mass, CI [51, 70]) plus tracking and CDN
-infrastructure (28%); dead-with-no-trace domains are 7%. Re-scanning succeeded
-for 66% of the sample, and on those domains tracking measured *directly* is
-heavier than in the originally scanned population (8.2 ad trackers per
-visit-weighted domain, CI [4.7, 12.2], vs 6.5) — the same direction as the
-coverage bounds in strand B.
+user-facing content, 61 percent of visit mass with a confidence interval of 51 to
+70, plus tracking and CDN infrastructure at 28 percent; domains dead with no
+trace are 7 percent. Re-scanning succeeded for 66 percent of the sample, and on
+those domains tracking measured directly is heavier than in the originally
+scanned population, 8.11 ad trackers per visit-weighted domain against 6.43, with
+a confidence interval of 4.6 to 12.1. That is the same direction as the coverage
+bounds in strand B.
+
+A retry pass later recovered 434 of the domains the first scrape failed on, and
+they are in the estimates above. They carry 3.0 percent of panel visit mass and
+are more heavily tracked than the domains the first pass reached, 10.8 ad
+trackers per domain against 6.9, which is again the same direction.
 
 ## Residual exposure under best-available defenses
 
-A separate question from the validity strands: those bound what the paper
-measures, this asks what a *defense* would have removed. Because Blacklight names
-the third parties responsible for each behavior, applying EasyList, EasyPrivacy
-and Disconnect to those domains and recomputing every measure is arithmetic
-rather than simulation. Map in
-[`scripts/residual_exposure.md`](scripts/residual_exposure.md); pipeline in
-[`scripts/blocking/README.md`](scripts/blocking/README.md).
+The validity strands bound what the paper measures. This asks something else:
+what a defense would have removed. Because Blacklight names the third parties
+responsible for each behavior, applying EasyList, EasyPrivacy and Disconnect to
+those domains and recomputing every measure is arithmetic rather than
+simulation. Map in
+[`scripts/residual_exposure.md`](scripts/residual_exposure.md).
 
-Blocking removes most ad-tracker (77%) and third-party-cookie (84%) exposure and
-narrows the unadjusted 65+ gap from 1.90× to 1.26× on ad trackers. A placebo of random
-blocklists removing the same amount shows that narrowing is not merely
-arithmetic (*p* = .05, *p* = .001). It barely touches canvas fingerprinting — 93%
-survives and the age coefficient does not move — which is the most robust result
-here. The apparent *widening* for session recording does not survive its own
-placebo (*p* = .18) and is not reported as evidence of regressive protection.
-Projected onto CPS 2022 margins, 217M US adults [212, 223] met a keylogging
-script in the month and 192M [185, 198] would still have behind a blocker.
+Blocking removes 76 percent of ad-tracker and 70 percent of third-party-cookie
+exposure, and narrows the unadjusted 65-plus gap from 1.90 to 1.26 times on ad
+trackers. A placebo of random blocklists removing the same amount of exposure
+shows the narrowing is not merely arithmetic, *p* = .05 for ad trackers and
+*p* = .001 for cookies. Blocking barely touches canvas fingerprinting: 94 percent
+survives and the age coefficient does not move, which is the most robust result
+here. The apparent widening for session recording does not survive its own
+placebo, *p* = .18, so we do not report it as evidence of regressive protection.
+Projected onto CPS 2022 margins, 217M US adults, interval 212 to 223, met a
+keylogging script in the month, and 192M, interval 185 to 198, would still have
+met one behind a blocker.
 
 ## Data
 
 - [YouGov browsing panel](https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/VIV4TS)
 - [Blacklight scans of panel domains](https://doi.org/10.7910/DVN/3N7TDZ)
-- [WhoTracksMe](https://whotracks.me/) — used for external comparison only; no
+- [WhoTracksMe](https://whotracks.me/), used for external comparison only; no
   manuscript estimate depends on it
 
 ## 🔗 Adjacent Repositories

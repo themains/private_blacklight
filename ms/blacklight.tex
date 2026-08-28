@@ -52,6 +52,16 @@
 \usepackage{float}
 \usepackage{placeins}
 
+% Two coefficient plots are 6.5 by 8 inches, as tall as the text block. At
+% LaTeX's default topfraction of 0.7 a float that tall may not share a page with
+% text, and at floatpagefraction 0.5 a page holding one does not count as a
+% float page either, so they queued up and came out ten pages after they were
+% cited. Widen both allowances.
+\renewcommand{\topfraction}{0.9}
+\renewcommand{\bottomfraction}{0.8}
+\renewcommand{\textfraction}{0.07}
+\renewcommand{\floatpagefraction}{0.7}
+
 % Captions
 \usepackage[
     skip=0pt,
@@ -167,7 +177,7 @@ Four findings follow.
 % 1
 Tracking is near universal and it arrives fast: more than $99\%$ of users meet ad trackers and third-party cookies, half of them inside twelve hours, and the invasive techniques (session recording, keylogging, and canvas fingerprinting) reach $42$ to $52\%$ of users within two days.
 % 2
-Exposure is concentrated: one organization, Google for nine users in ten, observes a median $54\%$ of a person's browsing.
+Exposure is concentrated: one organization, Google for nine users in ten, observes a median $58\%$ of a person's browsing.
 % 3 
 On gender and education, the pattern established for other online risks repeats, and the gaps close once browsing volume is held constant. On age it does not. The older the user, the more trackers met per visit, and the more uniformly the gap runs across techniques, from ad trackers through keylogging; users 65 and older meet $76$ to $87\%$ more trackers per visit than users under 25.
 % 4
@@ -383,7 +393,7 @@ Second, the main estimates derive from a January 2025 Blacklight audit of web do
 \input{tables/tab2_formatted}
 \input{tables/tab3_formatted}
  
-Tracking is near universal, and ad trackers and third-party cookies are the most common vehicles. Over the month, $99.1\%$ of users encountered at least ten ad trackers or third-party cookies (\cref{tab:cumulative-exposure}). Users encountered on average $19{,}701$ ad trackers ($\hat{\sigma} = 32{,}710$) and $23{,}093$ third-party cookies ($\hat{\sigma} = 37{,}190$), against medians of $7{,}720$ and $9{,}216$, so the distributions are heavily right-skewed. Normalizing by visits removes most of the skew: users meet on average $5.2$ ad trackers ($\hat{\sigma} = 3.8$) and $6.3$ third-party cookies ($\hat{\sigma} = 5.2$) per visit, with medians of $4.1$ and $5.0$ (\cref{tab:exposure-rate}). The tighter spread indicates that most of the variation in total exposure comes from how much people browse rather than from where they go. Every figure here is a floor, since visits to the initially unscanned domains contribute zero. Replacing that zero with measurement-calibrated fills leads to higher estimates, with the mean ad-tracker rate between $6.2$ and $8.2$ per visit and the cookie rate between $7.0$ and $10.7$ (\cref{sm:coverage_bounds}).
+Tracking is near universal, and ad trackers and third-party cookies are the most common vehicles. Over the month, $99.1\%$ of users encountered at least ten ad trackers or third-party cookies (\cref{tab:cumulative-exposure}). Users encountered on average $19{,}701$ ad trackers ($\hat{\sigma} = 32{,}710$) and $23{,}093$ third-party cookies ($\hat{\sigma} = 37{,}190$), against medians of $7{,}720$ and $9{,}216$, so the distributions are heavily right-skewed. Normalizing by visits removes most of the skew: users meet on average $5.2$ ad trackers ($\hat{\sigma} = 3.8$) and $6.3$ third-party cookies ($\hat{\sigma} = 5.2$) per visit, with medians of $4.1$ and $5.0$ (\cref{tab:exposure-rate}). The tighter spread indicates that most of the variation in total exposure comes from how much people browse rather than from where they go. Every figure here is a floor, since visits to the initially unscanned domains contribute zero. Replacing that zero with measurement-calibrated fills leads to higher estimates, with the mean ad-tracker rate between $6.2$ and $8.1$ per visit and the cookie rate between $7.1$ and $10.5$ (\cref{sm:coverage_bounds}).
  
 The invasive methods, session recording, keylogging, and canvas fingerprinting, sit on $4$ to $9\%$ of domains individually, and on $17\%$ taken together, and are met less often. Users encounter session recording on $3\%$ of visits ($\hat{\sigma} = 0.05$), keylogging on $4\%$ ($\hat{\sigma} = 0.07$), and canvas fingerprinting on $6\%$ ($\hat{\sigma} = 0.09$) (\cref{tab:exposure-rate}). Low rates still accumulate: $91.7\%$ of users met canvas fingerprinting at least once, and $59\%$ met all three at least ten times (\cref{tab:cumulative-exposure}).
 
@@ -404,6 +414,10 @@ Because tracking is pervasive, exposure is rapid. Using browsing timestamps, we 
 	\begin{subfigure}[b]{\textwidth}
 		\centering
 		\scriptsize
+		% Spread the columns so the table meets the plot above it at both
+		% margins. Scaling the table to width instead would set its type
+		% larger than the body text.
+		\setlength{\tabcolsep}{26.1pt}
 		\begin{tabular}{@{\hspace{0\tabcolsep}}lccccc@{\hspace{0\tabcolsep}}}
 			\toprule
 			&0h& 12h & 24h & 36h & 48h\\
@@ -423,7 +437,7 @@ Because tracking is pervasive, exposure is rapid. Using browsing timestamps, we 
 \subsection{Demographic Differences in Exposure to Tracking Methods}
 \label{sec:demo_diff_mechanisms}
  
-\begin{figure}[ht]
+\begin{figure}[htbp]
   \centering
   \includegraphics[width=1.0\textwidth]{figures/coefplot_demo_differences_cumulative.pdf}
   \caption{
@@ -435,7 +449,7 @@ Because tracking is pervasive, exposure is rapid. Using browsing timestamps, we 
   \label{fig:coefplot_demo_differences_cumulative}
 \end{figure}
  
-\begin{figure}[!ht]
+\begin{figure}[htbp]
   \centering
   \includegraphics[width=1.0\textwidth]{figures/coefplot_demo_differences_rate.pdf}
   \caption{
@@ -538,10 +552,10 @@ Even so, demographics overall account for little of the total variation in track
 \end{figure}
 
 Trackers report to organizations, and a quantity that matters for surveillance is how much of one person's browsing a single organization can observe.
-Within the observation month, users are typically tracked by $155$ to $318$ organizations, with a median of $242$ (\cref{fig:dist_org_per_user_summtable}). Among users tracked by at least ten organizations, a handful of organizations account for most of what is seen, with a median Gini coefficient of $0.73$ (\cref{fig:dist_tracking_concentration_per_user_summtable}).
+Within the observation month, users are typically tracked by $163$ to $333$ organizations, with a median of $254$ (\cref{fig:dist_org_per_user_summtable}). Among users tracked by at least ten organizations, a handful of organizations account for most of what is seen, with a median Gini coefficient of $0.73$ (\cref{fig:dist_tracking_concentration_per_user_summtable}).
  
 \cref{fig:top_trackers_reach_dominance_annotated_top_orgs} documents the tracking reach and dominance of organizations.
-Reach counts the users an organization tracks at least once. Dominance counts the users for whom it observes more browsing than any competitor. Google leads on both, appearing in the tracker chain of $99.7\%$ of users and standing as the largest single observer for $89.0\%$ of them. Microsoft, Facebook, Amazon, and Cloudflare follow at a distance.%
+Reach counts the users an organization tracks at least once. Dominance counts the users for whom it observes more browsing than any competitor. Google leads on both, appearing in the tracker chain of $99.7\%$ of users and standing as the largest single observer for $88.3\%$ of them. Microsoft, Facebook, Amazon, and Cloudflare follow at a distance.%
 \footnote{
     Tracking is likewise concentrated among a handful of domains (\cref{sm:top_tracking_domains}). Financial and e-commerce platforms contribute heavily to session recording and keylogging exposure; Microsoft and TikTok are prominent in canvas fingerprinting.
 }
@@ -552,7 +566,7 @@ In absolute terms, the leading organization observes a mean $56\%$ of a user's b
 \subsection{Demographic Differences in Tracking by Organizations}
 \label{sec:demo_diff_organizations}
 
-The last question is who is most legible to the single organization that sees the most of them, which for $89.0\%$ of users is Google.  We estimate \cref{eq:demo-diff} on the number of visits that organization observes and on the share of visits it observes (column (8) of \cref{tab:demo_differences_cum_exposure,tab:demo_differences_exposure_rate}).
+The last question is who is most legible to the single organization that sees the most of them, which for $88.3\%$ of users is Google.  We estimate \cref{eq:demo-diff} on the number of visits that organization observes and on the share of visits it observes (column (8) of \cref{tab:demo_differences_cum_exposure,tab:demo_differences_exposure_rate}).
 
 Women are marginally less legible than men, by $1.9$ percentage points of visits observed ($\widehat{\mathrm{SE}} = 1.0\%$, $p < .1$). College-educated and postgraduate users are more legible than users with a high school diploma or below, by $3.6$ ($\widehat{\mathrm{SE}} = 1.3\%$, $p < .01$) and $5.5$ percentage points ($\widehat{\mathrm{SE}} = 1.7\%$, $p < .01$). Both differences hold on the cumulative and the normalized measure. Racial differences are small and statistically insignificant on both measures.%
 \footnote{
@@ -593,7 +607,7 @@ Age group & $n$ & Ad trackers per visit & Flagged domains (\%) \\
 
 The magnitude deserves a benchmark, because effect sizes in this literature rarely have one. The gender gap in per-visit exposure is small and, apart from canvas fingerprinting, statistically indistinguishable from zero, which puts it an order of magnitude below the ten to twenty percent gender gap in earnings documented for high-income countries \citep{goldin2014grand}. The age gap is several times larger in relative terms than that earnings gap. And as most of the residual gender pay gap sits within occupations rather than between them, most variation in surveillance sits within demographic groups rather than between them: our covariates account for under $8\%$ of the variance. Who a person is explains little about how much surveillance they meet. What they browse explains a great deal.
  
-Two further results bear on how the tracking ecosystem is organized. Exposure is near universal and it arrives fast. More than $99\%$ of users met ad trackers and third-party cookies, half of them within twelve hours of the start of measurement. And exposure is concentrated: users are tracked by a median of $242$ organizations, but a single organization observes a median $54\%$ of a person's browsing, and for $89.0\%$ of users that organization is Google. Microsoft and Facebook are dominant for roughly four percent of users each. We recover the same leading organizations as \citet{Dambra2022}, who aggregate over visits rather than over users, and the user-level measure adds what aggregation cannot: the concentration is not an artifact of a few heavy browsers but the ordinary condition of the median person. It also extends to the part of the web our scanner could not reach, where $68$ to $72\%$ of a directly re-audited sample of domains load a Google-owned third party.
+Two further results bear on how the tracking ecosystem is organized. Exposure is near universal and it arrives fast. More than $99\%$ of users met ad trackers and third-party cookies, half of them within twelve hours of the start of measurement. And exposure is concentrated: users are tracked by a median of $254$ organizations, but a single organization observes a median $58\%$ of a person's browsing, and for $88.3\%$ of users that organization is Google. Microsoft and Facebook are dominant for roughly four percent of users each. We recover the same leading organizations as \citet{Dambra2022}, who aggregate over visits rather than over users, and the user-level measure adds what aggregation cannot: the concentration is not an artifact of a few heavy browsers but the ordinary condition of the median person. It also extends to the part of the web our scanner could not reach, where $68$ to $72\%$ of a directly re-audited sample of domains load a Google-owned third party.
  
 Every estimate here is a floor, and deliberately so. Visits to domains the audit could not complete contribute nothing, and a hand-coded random sample of those domains, rescanned directly, carries more tracking than the domains we did scan. Replacing the zero with measurement-calibrated imputation puts the mean ad-tracker rate between $6.2$ and $8.2$ per visit against the $5.0$ we report. The demographic comparisons hold under every fill we can defend.
 
