@@ -38,7 +38,7 @@ build_exposure_summary <- function(data, kind = c("cumulative", "rate"), path) {
 # ---------------------------------------------------------------------------
 # CPS margins are a committed 350-byte artifact (data/cps/cps_asec_2022_margins.csv)
 # derived once from the ASEC public-use file, which is gitignored at 157MB. The
-# derivation lives in scripts/python/08_cps_benchmark.py --refresh; a normal run
+# derivation lives in scripts/collect/08_cps_benchmark.py --refresh; a normal run
 # reads the artifact and never touches census.gov.
 FP_CPS_MARGINS <- file.path(DATA_DIR, "cps", "cps_asec_2022_margins.csv")
 DEMO_VARS <- c("gender_lab", "race_lab", "educ_lab", "agegroup_lab")

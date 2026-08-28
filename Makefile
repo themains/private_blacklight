@@ -47,7 +47,7 @@ lock: ## Refresh both lockfiles from what is installed now
 #
 # One command runs everything: scripts/R/99_run_all.R sources 00-08 in order
 # and writes every table and figure the manuscript inputs. Data collection is
-# separate and stays in Python (scripts/privacy_scraper, scripts/python).
+# separate and stays in Python, under scripts/collect/.
 ########################################################################
 .PHONY: analysis
 analysis: ## Run the full R analysis pipeline (all tables and figures)

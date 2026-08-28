@@ -1,7 +1,7 @@
 # What the validity work implies for the paper — and proposed text
 
-Every number below is produced by the pipelines in `scripts/httparchive/`,
-`scripts/wayback/`, `scripts/selection_audit/`, and `scripts/implications/`
+Every number below is produced by the pipelines in `scripts/collect/httparchive/`,
+`scripts/collect/wayback/`, `scripts/collect/selection_audit/`, and `scripts/collect/implications/`
 (provenance in each section). Part 1 maps each of the paper's claims to what
 the evidence says. Part 2 is proposed text for the manuscript, ready to
 adapt on Overleaf. Framing throughout: we investigated whether the two
@@ -345,7 +345,7 @@ BibTeX entries to add to `ms/blacklight.bib`:
   data are YouGov Pulse/RealityMine.
 - `tables/demo_differences_exposure_rate.tex` in the repo is empty (0
   bytes) — ms Table 5 is not currently regenerable from the repo; the
-  statsmodels replication in `scripts/implications/02_demo_robustness.py`
+  statsmodels replication in `scripts/R/08_robustness.R`
   reproduces its benchmark coefficients exactly and can serve as the
   regeneration path if the R toolchain is unavailable.
 - Committed `tables/demo_summary.tex` differs slightly from the compiled

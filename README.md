@@ -206,7 +206,7 @@ Analytics presence against remarketing, are labeled in every table.
 unscannability, not dead sites: at least 66 percent of unscanned visit mass was
 on domains demonstrably alive in mid-2022. A seeded random sample of 200
 unscanned domains, coded against a written
-[rubric](scripts/selection_audit/CODING_RUBRIC.md), is mostly ordinary
+[rubric](scripts/collect/selection_audit/CODING_RUBRIC.md), is mostly ordinary
 user-facing content, 61 percent of visit mass with a confidence interval of 51 to
 70, plus tracking and CDN infrastructure at 28 percent; domains dead with no
 trace are 7 percent. Re-scanning succeeded for 66 percent of the sample, and on

@@ -25,12 +25,24 @@ from utilities import pandas_to_tex
 ASEC_URL = (
     "https://www2.census.gov/programs-surveys/cps/datasets/2022/march/" "asecpub22csv.zip"
 )
-FP_ASEC_ZIP = "../data/cps/asecpub22csv.zip"
-FP_CPS_MARGINS = "../data/cps/cps_asec_2022_margins.csv"
-FP_COMBINED = "../data/combined_yg_bl_who_derived_hist_tracking.csv"
-FP_TABLE = "../tables/demo_summary"
-FP_NOTE = "../tables/demo_summary_note.tex"
-FP_TABLE_N = "../tables/demo_summary_n.tex"
+# Resolved from this file, not the working directory. Run from the wrong place,
+# the old relative paths silently created an empty scripts/data/ instead of
+# finding the real one.
+_HERE = os.path.dirname(os.path.abspath(__file__))
+REPO_ROOT = os.path.abspath(os.path.join(_HERE, "..", ".."))
+
+# Live output: the CPS margins the R pipeline rakes onto. Everything below it is
+# superseded -- R generates the demo-summary tables now, and FP_COMBINED names a
+# person-level file removed as superseded because it carried the double-counted
+# visit aggregate. Run this with --refresh to rebuild the margins; the
+# table-building path will not find its input.
+FP_ASEC_ZIP = os.path.join(REPO_ROOT, "data", "cps", "asecpub22csv.zip")
+FP_CPS_MARGINS = os.path.join(REPO_ROOT, "data", "cps", "cps_asec_2022_margins.csv")
+FP_COMBINED = os.path.join(REPO_ROOT, "data",
+                           "combined_yg_bl_who_derived_hist_tracking.csv")
+FP_TABLE = os.path.join(REPO_ROOT, "tables", "demo_summary")
+FP_NOTE = os.path.join(REPO_ROOT, "tables", "demo_summary_note.tex")
+FP_TABLE_N = os.path.join(REPO_ROOT, "tables", "demo_summary_n.tex")
 
 ASEC_COLS = ["A_AGE", "A_SEX", "PEHSPNON", "PRDTRACE", "A_HGA", "MARSUPWT"]
 
