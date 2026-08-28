@@ -54,15 +54,12 @@ COEF_LABELS = {
     "C(agegroup_lab, Treatment('<25'))[T.65+]": "Age: 65+",
 }
 
-# Published Table 5 benchmarks (ms/blacklight.pdf, rate regressions) used as
-# a replication gate before any new scenario is interpreted.
-TABLE5_BENCHMARKS = {
-    ("bl_ddg_join_ads_rate", "Age: 65+"): 2.81,
-    ("bl_third_party_cookies_rate", "Age: 65+"): 3.07,
-    ("bl_ddg_join_ads_rate", "Race: Asian"): -1.20,
-    ("bl_third_party_cookies_rate", "Race: Asian"): -1.49,
-}
-GATE_TOLERANCE = 0.02  # published values are rounded to 2 decimals
+# Replication gate. 07_demo_differences.py writes this file from the same fitted
+# models it renders into Table 5, so the gate compares the scenario refit against
+# the table the manuscript actually inputs. It used to compare against four
+# coefficients transcribed out of the PDF, which tested whether someone had
+# remembered to retype them rather than whether the code reproduced the table.
+GATE_TOLERANCE = 5e-6  # both sides are the same estimator; only I/O rounding differs
 
 # --------------------------------------------------------------------------- #
 # Paths (resolved from this file's location)
@@ -86,3 +83,6 @@ FP_AUDIT_JSON_DIR = os.path.join(DATA_DIR, "blacklight_json_audit")
 FP_AUDIT_SAMPLE = os.path.join(DATA_DIR, "selection_audit", "audit_sample.csv")
 
 FP_USER_RATES = os.path.join(IMPL_DATA_DIR, "user_scenario_rates.csv")
+FP_TABLE5_COEFS = os.path.join(
+    IMPL_DATA_DIR, "demo_differences_exposure_rate_coefficients.csv"
+)

@@ -23,7 +23,7 @@ weights.
 Standard errors come from resampling panelists.
 
 Two things bound the exercise. Categories are read per visit, which restricts it
-to the 29.5% of panel visits carrying device-file labels; a gate first checks the
+to the 94.0% of panel visit mass carrying device-file labels; a gate first checks the
 age gap on that subsample resembles the published full-sample gap, so the
 decomposition is explaining the same phenomenon. And because visits carry
 several labels, each visit is split fractionally across its labels so shares sum

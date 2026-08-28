@@ -16,10 +16,15 @@ scripts/privacy_scraper/blacklight_json.tar.gz
 data/blacklight_json.tar.gz
 scripts/blacklight_db.ipynb
 /data/whotracksme_jsons
+# The loose corpus is a working copy; data/whotracksme_json.zip is the tracked
+# one (64,072 records, 23 MB against 261 MB expanded) and 03_import.R expands it
+# on demand. Do not delete the zip thinking it duplicates this directory -- it
+# is the only copy in the repository.
 /data/website_trackers
 data/yg/realityMine_app_visits_2022-06-01_2022-06-30.csv
 data/yg/realityMine_media_play_2022-06-01_2022-06-31.csv
 data/yg/realityMine_web_2022-06-01_2022-06-30.csv
+data/yg/realityMine_web_2022-06-01_2022-06-30.parquet
 data/yg/realityMine_web_desktop_2022-06-01_2022-06-30.csv
 data/yg/realityMine_web_mobile_2022-06-01_2022-06-30.csv
 data/tracker-radar/

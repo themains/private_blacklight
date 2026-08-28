@@ -44,6 +44,7 @@ _HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, _HERE)
 
 import constants  # noqa: E402
+from utilities import stars  # noqa: E402
 
 REPO = os.path.abspath(os.path.join(_HERE, ".."))
 FP_COMBINED = os.path.join(REPO, "data", "combined_yg_bl_who_derived_hist_tracking.csv")
@@ -214,10 +215,6 @@ def estimate(yvar, label, data):
             f"missing {sorted(want - got)}; unexpected {sorted(got - want)}"
         )
     return out
-
-
-def stars(p):
-    return "***" if p < 0.01 else "**" if p < 0.05 else "*" if p < 0.1 else ""
 
 
 def cell(row):

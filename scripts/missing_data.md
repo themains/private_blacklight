@@ -15,16 +15,39 @@ that understates exposure and says so here. Two zero-fill bugs -- the HTTP
 Archive cookie cap and the WhoTracksMe drop -- were found one at a time
 precisely because that reasoning had never been written down.
 
-Panel: 1,134 panelists, 6,236,834 visits to 64,074 domains, 34,078 of them scanned.
+Panel: 1,134 panelists, 4,398,822 visits to 64,074 domains, 34,078 of them scanned.
+
+## Visit counting: page records versus sessions
+
+- **Means**: `realityMine_web` records one row per page load; the desktop and
+  mobile files record one row per session, with a `page_views` count
+- **Code does**: the visit panel is now built from `realityMine_web` alone, one
+  visit per page record  
+  `03_import: build_visit_panel`
+- **Scale**: 4,398,822 visits, against the 6,236,834 previously published
+- **Direction**: the old count overstated the denominator, understating rates
+- **Verdict**: **tested** — The committed `yg_ind_domain.csv` summed all three
+  RealityMine files. `realityMine_web` is a strict superset of the other two
+  (all 167,894 of their person-domain pairs appear in it, with identical
+  durations, and it is never short on page records), so that sum counted the
+  same browsing twice under two different units. The identities
+  `yg_visits == web_page_records + device_sessions` and
+  `yg_duration == web_duration + device_duration` each hold for 100.00% of
+  pairs. Correcting it leaves the analytic universe untouched -- the same
+  186,400 pairs, 1,134 panelists and 64,074 domains -- and lowers levels about
+  2% (ad trackers 4.98 to 4.89). The demographic gaps widen slightly rather
+  than narrowing: the 65+ gap goes from 79-91% to 85-94%, because the
+  double-count was proportionally larger for younger, higher-education
+  panelists.
 
 ## Unscanned domains
 
 - **Means**: Blacklight never returned a scan for the domain
 - **Code does**: contributes zero to the numerator, stays in the denominator  
   `02_combine_yg_blacklight: left merge then groupby.sum()`
-- **Scale**: 23.6% of visits
+- **Scale**: 23.9% of visits
 - **Direction**: understates
-- **Verdict**: **conservative** — Bounded by strand B: the published 4.98 ad trackers per visit becomes [6.20, 8.27] under calibrated fills. Directly measured, a rescanned sample of these domains carries MORE tracking than the scanned population (8.45 vs 6.52), so the floor is real. Alternative (mean fill) would give 6.66.
+- **Verdict**: **conservative** — Bounded by strand B: the published 4.89 ad trackers per visit becomes [6.08, 8.10] under calibrated fills. Directly measured, a rescanned sample of these domains carries MORE tracking than the scanned population (8.2 vs 6.5), so the floor is real. Alternative (mean fill) would give 6.55.
 
 ## Scans returning zero on all seven measures
 
@@ -71,7 +94,7 @@ Panel: 1,134 panelists, 6,236,834 visits to 64,074 domains, 34,078 of them scann
 - **Direction**: understates blocking, overstates residual
 - **Verdict**: **conservative** — Every residual carries an identification bound: block only what a domain rule certainly stops, versus credit every host the list names. The Facebook pixel is the clean case -- EasyPrivacy stops it only with path rules. Kept separate from sampling uncertainty throughout.
 
-## Facebook Pixel and Google Analytics attribution
+## Facebook Pixel and Google Analytics (Remarketing) attribution
 
 - **Means**: these cards name no responsible domain, so the third party is assumed
 - **Code does**: assigned a fixed host set, flagged, excluded from every headline  

@@ -9,7 +9,7 @@
 # Every successful scan puts all seven measure cards in groups[[1]]; group 2,
 # where present, only ever holds `reported_alphabet`. Verified across all
 # 34,078 scans, so the first group is taken rather than searched.
-parse_blacklight <- function(json_dir = FP_BL_JSON_DIR) {
+parse_blacklight <- function(json_dir = bl_corpus()) {
     files <- sort(list.files(json_dir, pattern = "\\.json$", full.names = FALSE))
     message(sprintf("Parsing %s Blacklight scans", format(length(files), big.mark = ",")))
 
@@ -46,7 +46,39 @@ parse_blacklight <- function(json_dir = FP_BL_JSON_DIR) {
 # documented policy -- WTM never reports below 1.02 trackers per page load, so
 # its process cannot emit "measured none". 02_join.R decides what absence means:
 # a domain with no telemetry at all is dropped, and remaining NAs become 0.
-parse_whotracksme <- function(json_dir = FP_WTM_JSON_DIR) {
+# ---------------------------------------------------------------------------
+# Scan corpora, stored as archives
+# ---------------------------------------------------------------------------
+# The two scan corpora are tens of thousands of small JSON files, which is a
+# wasteful way to keep them: 64,072 WhoTracksMe records are 261 MB loose and
+# 23 MB zipped. They are stored as archives and expanded into a per-session
+# temporary directory on first use -- about ten seconds for either corpus,
+# against a pipeline that runs in minutes.
+#
+# A loose directory, if one is present, wins: that keeps a working copy usable
+# and lets the archive be the distribution format rather than a second thing to
+# keep in step.
+.corpus_cache <- new.env(parent = emptyenv())
+
+corpus_dir <- function(dir, archive, label) {
+    if (dir.exists(dir)) return(dir)
+    key <- basename(archive)
+    if (!is.null(.corpus_cache[[key]])) return(.corpus_cache[[key]])
+    if (!file.exists(archive))
+        stop("neither ", basename(dir), "/ nor ", key, " is present; ",
+             "one of them carries the ", label, " scans", call. = FALSE)
+    dest <- file.path(tempdir(), sub("\\.(zip|tar\\.gz)$", "", key))
+    message(sprintf("Expanding %s", key))
+    if (grepl("\\.zip$", key)) unzip(archive, exdir = dest)
+    else untar(archive, exdir = dest)
+    # Archives may or may not carry a top-level folder; find where the JSON went.
+    hits <- list.files(dest, pattern = "\\.json$", recursive = TRUE, full.names = TRUE)
+    if (!length(hits)) stop("no JSON found inside ", key, call. = FALSE)
+    .corpus_cache[[key]] <- unique(dirname(hits))[1]
+    .corpus_cache[[key]]
+}
+
+parse_whotracksme <- function(json_dir = wtm_corpus()) {
     files <- sort(list.files(json_dir, pattern = "\\.json$", full.names = FALSE))
     message(sprintf("Parsing %s WhoTracksMe records", format(length(files), big.mark = ",")))
 
@@ -181,20 +213,27 @@ make_clean <- function(x) {
 # against the true 4,398,822) and mixing pages with sessions. Levels were
 # therefore ~2% low; the demographic gaps are unaffected because the inflation
 # is close to proportional within a person.
+# Stored as parquet rather than the 2 GB CSV Dataverse ships: 183 MB for
+# identical content, and because parquet is columnar the pipeline reads only the
+# three or four columns it wants instead of parsing 27. Convert once with
+# scripts/R/tools/csv_to_parquet.R if you have re-downloaded the CSV.
 FP_WEB_VISITS <- file.path(DATA_DIR, "yg",
-                           "realityMine_web_2022-06-01_2022-06-30.csv")
+                           "realityMine_web_2022-06-01_2022-06-30.parquet")
+
+# One place that knows how the visit source is stored, so switching formats does
+# not mean editing every consumer.
+read_web_visits <- function(cols) {
+    if (!file.exists(FP_WEB_VISITS))
+        stop("missing ", basename(FP_WEB_VISITS), ".\n",
+             "  It is built from the restricted RealityMine visit file",
+             " (doi:10.7910/DVN/VIV4TS, file 6797139):\n",
+             "    Rscript scripts/R/tools/csv_to_parquet.R", call. = FALSE)
+    as.data.table(arrow::read_parquet(FP_WEB_VISITS, col_select = all_of(cols)))
+}
 
 build_visit_panel <- function() {
-    if (!file.exists(FP_WEB_VISITS))
-        stop("missing ", basename(FP_WEB_VISITS), " -- the visit panel is built ",
-             "from it.\n  It is restricted on Dataverse (doi:10.7910/DVN/VIV4TS):\n",
-             "    curl -L -H \"X-Dataverse-key: $DATAVERSE_KEY\" \\\n",
-             "      https://dataverse.harvard.edu/api/access/datafile/6797139 \\\n",
-             "      -o ", FP_WEB_VISITS, call. = FALSE)
     message("Building visit panel from realityMine_web")
-    v <- fread(FP_WEB_VISITS,
-               select = c("caseid", "private_domain", "page_duration"),
-               showProgress = FALSE)
+    v <- read_web_visits(c("caseid", "private_domain", "page_duration"))
     v <- v[!is.na(private_domain) & nzchar(private_domain)]
     v[, .(visits = .N, duration = sum(page_duration, na.rm = TRUE)),
       by = .(caseid, private_domain)]

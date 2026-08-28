@@ -253,8 +253,7 @@ CUM_EXPECTED <- c(0.067, 0.501, 0.714, 0.745, 0.791)
 
 build_cum_exposure <- function(bl, table_path, figure_path) {
     b <- as.data.table(bl)[, private_domain := gsub("_", ".", filename, fixed = TRUE)]
-    v <- fread(FP_WEB_VISITS, select = c("caseid", "private_domain",
-                                         "session_start_time"), showProgress = FALSE)
+    v <- read_web_visits(c("caseid", "private_domain", "session_start_time"))
     v <- v[!is.na(private_domain) & nzchar(private_domain)]
     v[, t := as.POSIXct(session_start_time, tz = "UTC")]
 

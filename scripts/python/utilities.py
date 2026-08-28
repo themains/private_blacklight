@@ -102,8 +102,18 @@ def save_mpl_fig(
     return None
 
 
+def stars(p: float) -> str:
+    """Significance markers at the .01/.05/.10 thresholds used across the tables."""
+    return "***" if p < 0.01 else "**" if p < 0.05 else "*" if p < 0.1 else ""
+
+
 def pandas_to_tex(
-    df: pd.DataFrame, texfile: str, index: bool = False, escape=False, **kwargs: Any
+    df: pd.DataFrame,
+    texfile: str,
+    index: bool = False,
+    escape=False,
+    group_breaks: Optional[Iterable[int]] = None,
+    **kwargs: Any,
 ) -> None:
     """Save a Pandas dataframe to a LaTeX table fragment.
 
@@ -129,7 +139,15 @@ def pandas_to_tex(
         texfile += ".tex"
 
     tex_table = df.to_latex(index=index, header=False, escape=escape, **kwargs)
-    tex_table_fragment = "\n".join(tex_table.split("\n")[3:-3])
+    rows = tex_table.split("\n")[3:-3]
+    # group_breaks: 0-based row indices to follow with an \addlinespace, so a
+    # table with labelled blocks keeps its spacing without the caller
+    # hand-assembling the fragment.
+    if group_breaks:
+        for i in sorted(set(group_breaks), reverse=True):
+            if 0 <= i < len(rows):
+                rows.insert(i + 1, "\\addlinespace")
+    tex_table_fragment = "\n".join(rows)
     # Remove the last \\ in the tex fragment to prevent the annoying
     # "Misplaced \noalign" LaTeX error when I use \bottomrule
     # tex_table_fragment = tex_table_fragment[:-2]

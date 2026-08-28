@@ -63,6 +63,10 @@ REPO = os.path.abspath(os.path.join(_HERE, ".."))
 FP_COMBINED = os.path.join(REPO, "data", "combined_yg_bl_who_derived_hist_tracking.csv")
 FP_RATE = os.path.join(REPO, "tables", "demo_differences_exposure_rate")
 FP_CUM = os.path.join(REPO, "tables", "demo_differences_cum_exposure")
+# Machine-readable twin of each table, written from the same fitted models.
+# implications/02_demo_robustness.py gates against these instead of against
+# coefficients transcribed out of the PDF.
+DIR_COEFS = os.path.join(REPO, "data", "implications")
 
 # Cumulative outcomes rescaled by 100 so the columns stay narrow.
 RESCALE_100 = ["bl_ddg_join_ads", "bl_third_party_cookies", "top_org_visits"]
@@ -125,9 +129,10 @@ def cell(row, digits):
 def build(data, yvars, headers, digits, fp, label):
     """One table: coefficients, stars, SEs, and the fitstat block beneath."""
     print(f"\n--- {label} ---")
-    coefs, ses, stats = {}, {}, {}
+    coefs, ses, stats, models = {}, {}, {}, {}
     for y, head in zip(yvars, headers):
         res = _load_demo().fit(y, data)
+        models[head] = res
         coefs[head] = res.apply(lambda r: cell(r, digits), axis=1)
         ses[head] = res.apply(
             lambda r: f"({fmt(r.se, digits)})" if pd.notna(r.se) else "", axis=1
@@ -150,7 +155,19 @@ def build(data, yvars, headers, digits, fp, label):
     out = pd.concat([body, pd.DataFrame(stats)])
     pandas_to_tex(out.reset_index(), fp)
     print(f"  Saved: tables/{os.path.basename(fp)}.tex")
-    return {h: _load_demo().fit(y, data) for y, h in zip(yvars, headers)}
+
+    os.makedirs(DIR_COEFS, exist_ok=True)
+    fp_coefs = os.path.join(DIR_COEFS, f"{os.path.basename(fp)}_coefficients.csv")
+    (
+        pd.concat(
+            [models[h].assign(outcome=y) for y, h in zip(yvars, headers)]
+        )
+        .rename_axis("term")
+        .reset_index()[["outcome", "term", "b", "se", "p"]]
+        .to_csv(fp_coefs, index=False)
+    )
+    print(f"  Saved: data/implications/{os.path.basename(fp_coefs)}")
+    return models
 
 
 def bonferroni(models, label):

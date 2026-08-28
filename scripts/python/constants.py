@@ -1,5 +1,7 @@
 import os
 
+import pandas as pd
+
 
 FP_WEB_MOBILE = "../data/yg/realityMine_web_mobile_2022-06-01_2022-06-30.csv"
 FP_WEB_DESKTOP = "../data/yg/realityMine_web_desktop_2022-06-01_2022-06-30.csv"
@@ -19,6 +21,84 @@ filepaths = dict(
 
 print("Checking that all paths exist:")
 print({key: os.path.exists(path) for key, path in filepaths.items()})
+
+
+# The panel was fielded June 2022 and profile.csv carries birthyr but no birth
+# month, so age is accurate to +/-1 year: someone born 1957 is 65 if their
+# birthday fell in Jan-Jun and 64 otherwise. Edges are set so each label's
+# boundary cohort *can* be that age. pd.cut is right-closed, so "65+" is
+# birthyr <= 1957 (65 for roughly half that cohort); the earlier edge of 1958
+# admitted a cohort that was 63 or 64 in June 2022 and never 65.
+#
+# The result is that all five groups are their nominal age brackets: "<25" is
+# birthyr 1998-2003, i.e. ages 18-24, since the youngest panelists (born 2003)
+# turn 19 during the field period. 08_cps_benchmark.py cuts the CPS side to match.
+AGE_BINS = [1929, 1957, 1972, 1987, 1997, 2003]
+AGE_LABELS = ["65+", "50-64", "35-49", "25-34", "<25"]
+AGE_ORDER = ["<25", "25-34", "35-49", "50-64", "65+"]
+
+
+def agegroup_from_birthyr(birthyr):
+    """Age group as of the June 2022 field period, from birth year."""
+    return pd.Categorical(
+        pd.cut(birthyr, bins=AGE_BINS, labels=AGE_LABELS),
+        categories=AGE_ORDER,
+        ordered=True,
+    )
+
+
+# Table 1's demographic categories: display order, and the long labels used in
+# the manuscript floats. 08_cps_benchmark.py and 02_combine_yg_blacklight.ipynb
+# both build Panel B, so these live here rather than in either of them.
+DEMO_CAT_ORDER = [
+    "Female",
+    "Male",
+    "White",
+    "Hispanic",
+    "Black",
+    "Other",
+    "Asian",
+    "HS or Below",
+    "Some college",
+    "College",
+    "Postgrad",
+    "<25",
+    "25-34",
+    "35-49",
+    "50-64",
+    "65+",
+]
+
+DEMO_CAT_LABELS = {
+    "<25": "$<$ 25 years old",
+    "25-34": "25--34 years old",
+    "35-49": "35--49 years old",
+    "50-64": "50--64 years old",
+    "65+": "65+ years old",
+    "HS or Below": "High school diploma or below",
+    "Some college": "Some college",
+    "College": "College graduate",
+    "Postgrad": "Postgraduate",
+}
+
+DEMO_VARS = ["gender_lab", "race_lab", "educ_lab", "agegroup_lab"]
+
+
+def demo_counts(df_ind):
+    """Table 1 Panel B: one row per demographic category with n and percent."""
+    return (
+        pd.concat([df_ind[v].value_counts() for v in DEMO_VARS])
+        .reset_index(name="n")
+        .rename(columns={"index": "cat"})
+        .assign(
+            cat=lambda df_: pd.Categorical(
+                df_["cat"], categories=DEMO_CAT_ORDER, ordered=True
+            )
+        )
+        .sort_values("cat")
+        .reset_index(drop=True)
+        .assign(perc=lambda df_: 100 * df_["n"] / len(df_ind))
+    )
 
 
 # also implies order
@@ -52,14 +132,14 @@ var_labels = {
     "bl_session_recording_rate": "Session Recording",
     "bl_canvas_fingerprinting_rate": "Canvas Fingerprinting",
     "bl_fb_pixel_rate": "Facebook Pixel",
-    "bl_google_analytics_rate": "Google Analytics",
+    "bl_google_analytics_rate": "Google Analytics (Remarketing)",
     "bl_third_party_cookies": "Third-Party Cookies",
     "bl_ddg_join_ads": "Ad Trackers",
     "bl_key_logging": "Keylogging",
     "bl_session_recording": "Session Recording",
     "bl_canvas_fingerprinting": "Canvas Fingerprinting",
     "bl_fb_pixel": "Facebook Pixel",
-    "bl_google_analytics": "Google Analytics",
+    "bl_google_analytics": "Google Analytics (Remarketing)",
     # whotracksme
     "who_trackers_per_page_load": "Trackers/Page Load",
     "who_tracking_requests_per_page_load": "Tracking Requests/Page Load",

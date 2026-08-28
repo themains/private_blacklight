@@ -193,8 +193,7 @@ decompose <- function(w_old, wt_old, w_young, wt_young) {
 # The source file is 2 GB, so it is read once and the exploded table reused for
 # every measure.
 decomp_labels <- function() {
-    v <- fread(FP_WEB_VISITS, select = c("caseid", "private_domain", "category"),
-               showProgress = FALSE)
+    v <- read_web_visits(c("caseid", "private_domain", "category"))
     v <- v[!is.na(private_domain) & nzchar(private_domain)]
     v[!nzchar(category) | is.na(category), category := UNCATEGORISED]
     v[, vid := .I]
@@ -349,8 +348,7 @@ DEVICE_MEASURES <- c("ddg_join_ads", "third_party_cookies", "canvas_fingerprinti
                      "session_recording", "key_logging")
 
 person_device <- function() {
-    v <- fread(FP_WEB_VISITS, select = c("caseid", "device_type", "page_duration"),
-               showProgress = FALSE)
+    v <- read_web_visits(c("caseid", "device_type", "page_duration"))
     v <- v[nzchar(device_type)]
     v[, dev := fifelse(device_type == "Laptop/Desktop", "Desktop", "Mobile")]
     # A handful of panelists straddle; assign each to where they spent most of

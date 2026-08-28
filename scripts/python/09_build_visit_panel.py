@@ -14,10 +14,10 @@ carried: at domain level all 986,722 google.com visits look "Job Related",
 while at visit level 0.02% of them are. The domain-level map
 (data/yg/domain_categories.csv) is kept only for reference.
 
-Coverage: the two device files together cover all 1,134 panelists but 29.5% of
-their visits, the rest sitting in a third RealityMine file that is restricted on
-Dataverse. Category results are therefore about the visits that can be
-categorised, and say so.
+Coverage: the two device files together cover all 1,134 panelists, 90.1% of
+their person-domain pairs and 94.0% of visit mass. They are strict subsets of
+realityMine_web, which carries the same browsing plus survey-platform domains
+they miss. Category results are about the visits that can be categorised.
 
 Device is a person-level attribute in this panel. The desktop and mobile files
 partition the sample -- 695 and 454 panelists, only 15 in both -- so there is no

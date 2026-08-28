@@ -88,8 +88,6 @@ cell = _demo.cell
 # extend the specification rather than reuse it as-is.
 FORMULA_RHS = _demo.config.FORMULA_RHS
 COEF_LABELS = _demo.config.COEF_LABELS
-TABLE5_BENCHMARKS = _demo.config.TABLE5_BENCHMARKS
-GATE_TOLERANCE = _demo.config.GATE_TOLERANCE
 
 # --------------------------------------------------------------------------- #
 # Measures and tiers

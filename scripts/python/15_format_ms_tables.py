@@ -76,7 +76,7 @@ BARE = {
         # and Session before FB and GA, mislabelling four of the seven columns.
         # The first column holds a rank, not a domain name.
         header=(
-            r"Rank & Ad trackers & Cookies & FB Pixel & GA & "
+            r"Rank & Ad trackers & Cookies & FB Pixel & GA Remkt. & "
             r"Session rec & Keylogger & Canvas FP \\"
         ),
         caption=(
@@ -89,14 +89,14 @@ BARE = {
 # Both regression tables are bare rows since 07_demo_differences.py replaced
 # the fixest version, which used to emit its own adjustbox tabular.
 REG_HEAD = (
-    r"Ad & Cookies & FB Pixel & GA & Keylogger & Session rec & Canvas FP & Top org share"
+    r"Ad & Cookies & FB Pixel & GA Remkt. & Keylogger & Session rec & Canvas FP & Top org share"
 )
 BARE["tab5_formatted"] = dict(
     fragment="demo_differences_cum_exposure.tex",
     label="tab:demo_differences_cum_exposure",
     align="l" + "c" * 8,
     header=(
-        r"Measure & Ad (00s) & Cookies (00s) & FB Pixel & GA & Keylogger & "
+        r"Measure & Ad (00s) & Cookies (00s) & FB Pixel & GA Remkt. & Keylogger & "
         r"Session rec & Canvas FP & Top org visits (00s) \\"
     ),
     caption=(

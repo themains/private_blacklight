@@ -33,7 +33,7 @@ _HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, _HERE)
 sys.path.insert(0, os.path.join(_HERE, "implications"))
 
-from utilities import pandas_to_tex  # noqa: E402
+from utilities import pandas_to_tex, stars  # noqa: E402
 
 REPO = os.path.abspath(os.path.join(_HERE, ".."))
 FP_COMBINED = os.path.join(REPO, "data", "combined_yg_bl_who_derived_hist_tracking.csv")
@@ -63,10 +63,6 @@ def _config():
 
 config = _config()
 AGE_TERM = "C(agegroup_lab, Treatment('<25'))[T.65+]"
-
-
-def stars(p):
-    return "***" if p < 0.01 else "**" if p < 0.05 else "*" if p < 0.1 else ""
 
 
 def age_gap(yvar, data, weights=None):

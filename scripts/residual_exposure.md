@@ -108,7 +108,7 @@ direction still unknown.
   excluded from every headline.
 - **Cookies are attributed per domain, not per cookie.**
 - **Category coverage.** Categories are read per visit, which covers all 1,134
-  panelists but 29.5% of their visits; the rest sit in a RealityMine file that is
+  panelists and 94.0% of their visit mass; the remainder sits in a RealityMine file that is
   restricted on Dataverse. `11` gates on the subsample gap tracking the published
   full-sample gap before decomposing.
 - **No within-person device comparison exists.** The device files partition the

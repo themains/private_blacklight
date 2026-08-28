@@ -33,7 +33,7 @@ import statsmodels.formula.api as smf
 import config
 
 sys.path.insert(0, os.path.abspath(".."))
-from utilities import pandas_to_tex, save_mpl_fig  # noqa: E402
+from utilities import pandas_to_tex, save_mpl_fig, stars  # noqa: E402
 
 LABELS = list(config.COEF_LABELS.values())
 
@@ -48,35 +48,57 @@ def fit(yvar, data):
     return coefs
 
 
-def stars(p):
-    return "***" if p < 0.01 else "**" if p < 0.05 else "*" if p < 0.1 else ""
-
-
 def cell(row):
     return f"{row.b:.2f}{stars(row.p)} ({row.se:.2f})"
 
 
 def run_gate(data):
+    """Refit Table 5 here and require it to match what 07_demo_differences wrote.
+
+    Both sides run the same estimator on the same data, so any disagreement means
+    this module's spec has drifted from the table's -- which is the failure worth
+    catching before any scenario below is interpreted.
+    """
     print("=== Replication gate vs ms Table 5 ===")
-    ok = True
-    fitted = {}
-    for yvar in ["bl_ddg_join_ads_rate", "bl_third_party_cookies_rate"]:
-        fitted[yvar] = fit(yvar, data)
-    for (yvar, label), target in config.TABLE5_BENCHMARKS.items():
-        got = fitted[yvar].loc[label, "b"]
-        match = abs(got - target) <= config.GATE_TOLERANCE
-        ok &= match
-        print(
-            f"{yvar:32} {label:18} published {target:+.2f}  "
-            f"replicated {got:+.2f}  {'OK' if match else 'MISMATCH'}"
-        )
-    n = fitted["bl_ddg_join_ads_rate"].attrs["n"]
-    print(f"n = {n}")
-    if not ok:
+    if not os.path.exists(config.FP_TABLE5_COEFS):
         raise SystemExit(
-            "Replication gate FAILED: statsmodels spec does not reproduce "
-            "ms Table 5. Investigate before interpreting scenarios."
+            f"{config.FP_TABLE5_COEFS} is missing. Run 07_demo_differences.py first."
         )
+    published = pd.read_csv(config.FP_TABLE5_COEFS)
+    # Table 5 carries all seven measures plus top_org_share; this module only
+    # builds the two headline rates, so gate the outcomes it actually fits.
+    published = published[published["outcome"].isin(data.columns)]
+    assert not published.empty, "no Table 5 outcome present in the scenario frame"
+
+    rows = []
+    for yvar, grp in published.groupby("outcome", sort=False):
+        got = fit(yvar, data)
+        for _, r in grp.iterrows():
+            rows.append(
+                {
+                    "outcome": yvar,
+                    "term": r["term"],
+                    "published": r["b"],
+                    "replicated": got.loc[r["term"], "b"],
+                }
+            )
+    check = pd.DataFrame(rows)
+    check["delta"] = (check["published"] - check["replicated"]).abs()
+    bad = check[check["delta"] > config.GATE_TOLERANCE]
+
+    print(f"compared {len(check)} coefficients across {check.outcome.nunique()} outcomes")
+    if len(bad):
+        print(bad.to_string(index=False))
+        raise SystemExit(
+            "Replication gate FAILED: this module's spec does not reproduce "
+            "tables/demo_differences_exposure_rate.tex. Investigate before "
+            "interpreting scenarios."
+        )
+    print(
+        f"  all match within {config.GATE_TOLERANCE:g}  "
+        f"(max delta {check.delta.max():.2e})"
+    )
+    print(f"n = {fit('bl_ddg_join_ads_rate', data).attrs['n']}")
 
 
 def run_coverage(data):

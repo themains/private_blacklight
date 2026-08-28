@@ -33,6 +33,7 @@ import pandas as pd
 _HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, _HERE)
 
+import constants  # noqa: E402
 from utilities import pandas_to_tex  # noqa: E402
 
 REPO = os.path.abspath(os.path.join(_HERE, ".."))
@@ -235,7 +236,10 @@ def rows(f):
             ),
         ),
         dict(
-            where="Facebook Pixel and Google Analytics attribution",
+            where=(
+                f"Facebook Pixel and {constants.var_labels['bl_google_analytics']}"
+                " attribution"
+            ),
             code="blocking/config.ASSUMED_ATTRIBUTION",
             means="these cards name no responsible domain, so the third party is assumed",
             scale="2 of 7 measures",
