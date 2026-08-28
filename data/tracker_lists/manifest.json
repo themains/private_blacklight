@@ -1,0 +1,42 @@
+{
+  "pin_date": "2026-08-27",
+  "note": "Reference lists that decide organization attribution. These are terminal inputs -- no further Tracker Radar collection is planned -- so the checksums guard against accidental corruption or a stray re-fetch, not against a moving upstream.",
+  "lists": {
+    "ddg_domain_map": {
+      "what": "DuckDuckGo Tracker Radar: third-party domain -> parent entity",
+      "source": "https://github.com/duckduckgo/tracker-radar (entities/)",
+      "commit": null,
+      "commit_note": "UNRECOVERABLE. This file predates the pin; the checkout that produced it was gitignored and is gone. It differs from the vintage behind the published numbers (38,267 domains against 38,210), which moves n_orgs by mean 0.6, max 4.",
+      "file": "ddg_domain_map.json",
+      "sha256": "94bf7ec00c9a3f5fd939323eab3ee6c0bad4fc83c6417cb6b75368e733243bda",
+      "bytes": 10353523
+    },
+    "public_suffix_list": {
+      "what": "Public Suffix List, ICANN section only (6,949 rules)",
+      "source": "https://publicsuffix.org/list/public_suffix_list.dat",
+      "commit": null,
+      "commit_note": "Extracted 2026-08-26 from tldextract 5.3.2's resolved rule set with include_psl_private_domains=False, which is why blogspot.com and rsc.cdn77.org are registrable rather than suffixes. tldextract fetches this at run time and pins nothing.",
+      "file": "public_suffix_list.dat",
+      "sha256": "cae740f7381991ffe98aa9ad09b257fa3f1d7dfb2dabc373741e9d966211d742",
+      "bytes": 75975
+    },
+    "ddg_categories": {
+      "what": "DuckDuckGo tracker category vocabulary",
+      "source": "https://github.com/duckduckgo/tracker-radar",
+      "commit": null,
+      "commit_note": "UNRECOVERABLE, as above.",
+      "file": "ddg_categories.csv",
+      "sha256": "48d203a1c74f0bf4ded03c8ed7a6606888b81d9298305e2916c19d495246992e",
+      "bytes": 935962
+    },
+    "ddg_domain_summary": {
+      "what": "Tracker Radar per-domain summary",
+      "source": "https://github.com/duckduckgo/tracker-radar",
+      "commit": null,
+      "commit_note": "UNRECOVERABLE, as above.",
+      "file": "ddg_domain_summary.json",
+      "sha256": "b785f24ed1e51becc981ec7f5b2e9c8cb3a1376088ec11c1bddb80e43ebfa977",
+      "bytes": 16699894
+    }
+  }
+}

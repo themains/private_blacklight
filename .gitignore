@@ -1,3 +1,6 @@
+# Everything above the gitignore.io banner is hand-maintained.
+# `make giti` regenerates this file from gitignore.io and will drop it --
+# copy this section back if you run that target.
 !.gitignore
 html/
 *.pyc
@@ -30,6 +33,13 @@ data/blocking/bl_domain_scripts.csv
 data/blocking/blocked_pairs.csv
 data/blocking/blacklight_domain_residual.csv
 data/blocking/visit_panel.parquet
+
+# Run logs: one per `make analysis`, regenerated every run.
+logs/
+
+# texcount scratch, written beside the manuscript and at root.
+paper-words.sum
+ms/paper-words.sum
 
 # Created by https://www.toptal.com/developers/gitignore/api/python
 # Edit at https://www.toptal.com/developers/gitignore?templates=python

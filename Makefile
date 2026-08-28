@@ -4,6 +4,9 @@
 Make gitignore file
 ########################################################################
 .PHONY: giti
+# WARNING: this rewrites .gitignore from scratch and drops the hand-maintained
+# section at the top of the file (raw data paths, logs/, texcount scratch).
+# Restore that section from git after running this.
 giti: ## Make .gitignore from gitignore.io
 	@echo "==> $@"
 	rm -rf .gitignore
@@ -71,124 +74,20 @@ jn: ## Launch jupyter notebook in venv
 
 
 ########################################################################
-# HTTP Archive validity checks (see scripts/httparchive/README.md)
-# Runs the free steps and stops at the cost gate. BigQuery extraction is
-# billed and run manually after you review the dry-run estimate:
-#     python 03_ha_extract.py --confirm
-# Requires: gcloud auth application-default login; export BQ_BILLING_PROJECT=...
-########################################################################
-.PHONY: httparchive
-httparchive: ## Build HA targets + print BigQuery cost estimate (no billed queries)
-	@echo "==> $@"
-	cd scripts/httparchive && \
-		$(abspath $(VENVPATH))/bin/python 01_build_ha_targets.py && \
-		$(abspath $(VENVPATH))/bin/python 02_ha_dryrun.py
-	@echo "==> Review the estimate, then: cd scripts/httparchive && python 03_ha_extract.py --confirm"
-
-
-########################################################################
-# Wayback validity checks (see scripts/wayback/README.md)
-# Step 2 fetches ~3k snapshots from archive.org (~2h, resumable).
-########################################################################
-.PHONY: wayback
-wayback: ## Build WB targets, fetch June-2022 snapshots, parse static measures
-	@echo "==> $@"
-	cd scripts/wayback && \
-		$(abspath $(VENVPATH))/bin/python 01_build_wb_targets.py && \
-		$(abspath $(VENVPATH))/bin/python 02_fetch_snapshots.py --preflight && \
-		$(abspath $(VENVPATH))/bin/python 02_fetch_snapshots.py && \
-		$(abspath $(VENVPATH))/bin/python 03_parse_static_requests.py
-
-.PHONY: selection-audit
-selection-audit: ## Parse scan failures, draw audit sample, probe + rescan, validate codes
-	@echo "==> $@"
-	cd scripts/selection_audit && \
-		$(abspath $(VENVPATH))/bin/python 01_parse_scan_errors.py && \
-		$(abspath $(VENVPATH))/bin/python 02_draw_audit_sample.py && \
-		$(abspath $(VENVPATH))/bin/python 03_probe_and_rescan.py && \
-		$(abspath $(VENVPATH))/bin/python 04_code_sample.py
-
-.PHONY: implications
-implications: ## Demographic robustness to coverage/timing threats + Google reach on unscanned
-	@echo "==> $@"
-	cd scripts/implications && \
-		$(abspath $(VENVPATH))/bin/python 01_build_user_scenario_rates.py && \
-		$(abspath $(VENVPATH))/bin/python 02_demo_robustness.py && \
-		$(abspath $(VENVPATH))/bin/python 03_google_reach_audit.py && \
-		$(abspath $(VENVPATH))/bin/python 04_gap_benchmarks.py
-
-
-########################################################################
-# Demographic differences: Tables 5-6, Figures 4-5, and the age-gradient
-# diagnostic. All three fit through implications/config.py, so the tables and
-# the coefficient plots cannot report different estimates.
-########################################################################
-.PHONY: regressions
-regressions: ## Tables 5-6, the two coefficient plots, and the age-spline check
-	@echo "==> $@"
-	cd scripts && \
-		$(abspath $(VENVPATH))/bin/python 07_demo_differences.py && \
-		$(abspath $(VENVPATH))/bin/python 07b_coefplot.py && \
-		$(abspath $(VENVPATH))/bin/python 18_age_spline.py && \
-		$(abspath $(VENVPATH))/bin/python 19_presence_adjusted.py && \
-		$(abspath $(VENVPATH))/bin/python 21_robustness_denominator.py
-
-
-########################################################################
-# Residual exposure under best-available defenses
-# (see scripts/blocking/README.md and scripts/residual_exposure.md)
-# Step 02 fetches EasyList/EasyPrivacy/Disconnect from GitHub, pinned to the
-# commit nearest the Blacklight scan window.
-########################################################################
-.PHONY: blocking
-blocking: ## Attribute behaviors to third parties, apply blocklists, recompute exposure
-	@echo "==> $@"
-	cd scripts/blocking && \
-		$(abspath $(VENVPATH))/bin/python 01_extract_attribution.py && \
-		$(abspath $(VENVPATH))/bin/python 02_fetch_blocklists.py && \
-		$(abspath $(VENVPATH))/bin/python 03_apply_blocklists.py && \
-		$(abspath $(VENVPATH))/bin/python 04_residual_measures.py && \
-		$(abspath $(VENVPATH))/bin/python 05_residual_analysis.py && \
-		$(abspath $(VENVPATH))/bin/python 06_robustness.py && \
-		$(abspath $(VENVPATH))/bin/python 07_placebo.py
-
-# Needs data/yg/realityMine_web_desktop_2022-06-01_2022-06-30.csv (287 MB,
-# public on Harvard Dataverse). 09 prints the download command if it is absent.
-.PHONY: residual
-residual: ## Category, device, projection and security analyses on the residual measures
-	@echo "==> $@"
-	cd scripts && \
-		$(abspath $(VENVPATH))/bin/python 20_org_share_denominator.py && \
-		$(abspath $(VENVPATH))/bin/python 09_build_visit_panel.py && \
-		$(abspath $(VENVPATH))/bin/python 10_sensitive_categories.py && \
-		$(abspath $(VENVPATH))/bin/python 11_age_gap_decomposition.py && \
-		$(abspath $(VENVPATH))/bin/python 12_device_age_gradient.py && \
-		$(abspath $(VENVPATH))/bin/python 13_security_privacy_link.py && \
-		$(abspath $(VENVPATH))/bin/python 14_poststrat_weights.py && \
-		$(abspath $(VENVPATH))/bin/python 16_who_coverage.py && \
-		$(abspath $(VENVPATH))/bin/python 17_missing_data_taxonomy.py
-	cd scripts/blocking && \
-		$(abspath $(VENVPATH))/bin/python 09_allzero_sensitivity.py && \
-		$(abspath $(VENVPATH))/bin/python 08_figures.py
-
-
-########################################################################
-# Manuscript
+# Analysis
 #
-# Compiled from the REPO ROOT, not from ms/: \input{tables/...} and
-# \includegraphics{figures/...} are root-relative while \bibliography is
-# ms-relative, so BIBINPUTS/TEXINPUTS reconcile the two without editing the
-# .tex. -shell-escape is required by the \quickwordcount macro, which shells
-# out to texcount.
+# One command runs everything: scripts/R/99_run_all.R sources 00-08 in order
+# and writes every table and figure the manuscript inputs. Data collection is
+# separate and stays in Python (scripts/privacy_scraper, scripts/python).
 ########################################################################
-.PHONY: tables-ms
-tables-ms: ## Wrap pipeline fragments into the tab*_formatted files the ms inputs
+.PHONY: analysis
+analysis: ## Run the full R analysis pipeline (all tables and figures)
 	@echo "==> $@"
-	cd scripts && $(abspath $(VENVPATH))/bin/python 15_format_ms_tables.py
+	Rscript scripts/R/99_run_all.R
 
 .PHONY: paper
-paper: ## Compile ms/blacklight.pdf (runs tables-ms first)
-paper: tables-ms
+paper: ## Compile ms/blacklight.pdf (runs the analysis first)
+paper: analysis
 	@echo "==> $@"
 	BIBINPUTS="ms:" TEXINPUTS=".:ms:" latexmk -pdf -shell-escape \
 		-interaction=nonstopmode -outdir=ms ms/blacklight.tex

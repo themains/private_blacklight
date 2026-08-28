@@ -10,8 +10,8 @@ educ,HS or Below,38.754
 educ,Some college,26.439
 educ,College,22.076
 educ,Postgrad,12.731
-agegroup,<25,9.685
-agegroup,25-34,17.424
-agegroup,35-49,24.806
-agegroup,50-64,24.475
-agegroup,65+,23.61
+agegroup,<25,11.354
+agegroup,25-34,17.466
+agegroup,35-49,24.532
+agegroup,50-64,24.634
+agegroup,65+,22.014
