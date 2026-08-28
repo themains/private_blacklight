@@ -1,0 +1,46 @@
+[project]
+name = "private-blacklight"
+version = "0.1.0"
+description = "Who is the most surveilled online? Browsing behaviour joined to Blacklight privacy audits."
+requires-python = ">=3.10"
+
+# The analysis is R (scripts/R/, run by `make analysis`). Python remains for
+# data collection and for the one analysis step R cannot do: matching third
+# parties against blocklist rules, which needs adblock-rust.
+#
+# Only pandas and requests are needed by everything; the rest belongs to
+# whichever collection step uses it, so nobody installs a BigQuery client to
+# re-derive the blocklist attribution.
+dependencies = [
+    "pandas",
+    "requests",
+]
+
+[project.optional-dependencies]
+# Blocklist matching: blocking/01_extract_attribution.py, 03_apply_blocklists.py.
+# adblock wraps adblock-rust, the engine Brave ships, so filter syntax behaves
+# as the lists' authors intended. Pinned: 0.6.0 reproduces the committed
+# blocked_pairs.csv byte-for-byte, and a different engine would silently move
+# every residual number in the paper.
+blocking = ["adblock==0.6.0"]
+
+# HTTP Archive extraction (billed BigQuery); db-dtypes and pyarrow are what let
+# the client hand results to pandas.
+bigquery = ["google-cloud-bigquery", "db-dtypes", "pyarrow"]
+
+# Wayback Machine snapshot fetching.
+wayback = ["wayback", "numpy"]
+
+# Scan scraping and the rescan probe.
+scraping = ["beautifulsoup4", "tldextract"]
+
+# The superseded Python analysis kept under scripts/python/. The R pipeline
+# replaced it; these are here so it can still be run for comparison, not
+# because anything depends on it.
+legacy = [
+    "matplotlib", "numpy", "scipy", "statsmodels", "patsy",
+    "pyjanitor", "seaborn", "adjustText", "inequality",
+]
+
+[tool.setuptools]
+packages = []

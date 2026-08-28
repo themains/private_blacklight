@@ -24,54 +24,23 @@ giti: ## Make .gitignore from gitignore.io
 
 
 # ============================================================================
-# Set up the Python virtual environment and prepare the Jupyter distribution
-# Installs packages from requirements.txt
+# Environments
+#
+# The analysis is R; Python remains for collection and for blocklist matching.
+# Both are locked: renv.lock records the R closure, uv.lock the Python one.
 # ============================================================================
 .PHONY: setup
-VENVPATH ?= bl_venv
-ifeq ($(OS),Windows_NT)
-	VENVPATH :=  c:/users/admin/$(VENVPATH)
-	ACTIVATE_PATH := $(VENVPATH)/Scripts/activate
-else
-	ACTIVATE_PATH := $(VENVPATH)/bin/activate
-endif
-REQUIREMENTS := requirements.txt
-setup: ## Set up venv	
-setup: $(REQUIREMENTS)
+setup: ## Install both environments from their lockfiles
 	@echo "==> $@"
-	@echo "==> Creating and initializing virtual environment..."
-	rm -rf $(VENVPATH)
-	python -m venv $(VENVPATH)
-	. $(ACTIVATE_PATH) && \
-		pip install --upgrade pip && \
-		which pip && \
-		pip list && \
-		echo "==> Installing requirements" && \
-		pip install -r $< && \
-		jupyter contrib nbextensions install --sys-prefix --skip-running-check && \
-		python -m ipykernel install --user --name=$(VENVPATH) --display-name "Python ($(VENVPATH))" && \
-		echo "==> Packages available:" && \
-		which pip && \
-		pip list && \
-		which jupyter && \
-		deactivate
-	@echo "==> Setup complete."
+	uv sync --all-extras
+	Rscript -e 'renv::restore(prompt = FALSE)'
+	@echo "==> setup complete"
 
-
-# ============================================================================
-# Open Jupyter notebook in the venv
-# ============================================================================
-.PHONY: jn
-jn: ## Launch jupyter notebook in venv
+.PHONY: lock
+lock: ## Refresh both lockfiles from what is installed now
 	@echo "==> $@"
-	if [ -f $(VENVPATH)/Scripts/activate ]; then \
-		. $(VENVPATH)/Scripts/activate && jupyter notebook; \
-	elif [ -f $(VENVPATH)/bin/activate ]; then \
-		. $(VENVPATH)/bin/activate && jupyter notebook; \
-	else \
-		@echo "No venv found"; \
-	fi
-
+	uv lock
+	Rscript -e 'renv::snapshot(packages = renv::dependencies("scripts/R")$$Package, prompt = FALSE)'
 
 ########################################################################
 # Analysis
