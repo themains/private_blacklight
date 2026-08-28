@@ -183,3 +183,12 @@ FLOATS <- list(
         )
     )
 )
+
+# The Table 5 right-hand side without the age bins, for specifications that put
+# birth year in continuously instead.
+FORMULA_RHS_NOAGE <- paste(
+    "relevel(factor(gender_lab), ref = 'Male')",
+    "relevel(factor(race_lab), ref = 'White')",
+    "relevel(factor(educ_lab), ref = 'HS or Below')",
+    sep = " + "
+)

@@ -555,5 +555,68 @@ emit_blocking <- function(bl, person, visits) {
     build_population_projection(user, file.path(TABLES_DIR, "population_projection"))
     build_allzero_sensitivity(resid, bl, visits, user,
                               file.path(TABLES_DIR, "allzero_sensitivity"))
+    build_robustness_age_coding(user, file.path(TABLES_DIR, "robustness_age_coding"))
     invisible(user)
+}
+
+# ---------------------------------------------------------------------------
+# Does the blocking result depend on how age is coded?
+# ---------------------------------------------------------------------------
+# The residual age effect is reported for one age coding -- 65+ against under-25
+# in binned form. If the conclusion turned on that choice it would not be much of
+# a conclusion, so the same quantity is recomputed four ways: the paper's bins,
+# 65+ against everyone else, a continuous per-decade gradient, and a binary
+# "encountered it at all" outcome restricted to the two end groups.
+#
+# Cells are the residual effect as a percentage of the unblocked one. Near 100
+# means a blocklist leaves the age gap where it found it; near 0 means it closes
+# it. The binary column reads differently from the other three by construction:
+# where a measure reaches nearly everyone before and after blocking, a
+# whether-at-all outcome has almost no variation left to explain.
+AGE_CODINGS <- c("bins", "vs_rest", "continuous", "binary")
+CONTROLS_NOAGE <- FORMULA_RHS_NOAGE
+
+age_effect <- function(yvar, data, spec) {
+    d <- as.data.frame(data)
+    d$agegroup_lab <- factor(as.character(d$agegroup_lab), levels = AGE_ORDER)
+    grab <- function(m, term, scale = 1) {
+        ct <- lmtest::coeftest(m, vcov. = sandwich::vcovHC(m, type = "HC1"))
+        c(b = scale * ct[term, 1], p = ct[term, 4])
+    }
+    if (spec == "bins") {
+        co <- fit_demo(yvar, d)
+        a <- co[co$term == AGE_TERM_LABEL, ]
+        return(c(b = a$b, p = a$p))
+    }
+    if (spec == "vs_rest") {
+        d$age65 <- as.integer(d$agegroup_lab == OLD_GROUP)
+        return(grab(lm(as.formula(paste(yvar, "~ age65 +", CONTROLS_NOAGE)), d), "age65"))
+    }
+    if (spec == "continuous") {
+        # birthyr runs backwards against age, so negate to read as "per decade
+        # older" and keep the sign comparable with the other codings.
+        return(grab(lm(as.formula(paste(yvar, "~ birthyr +", CONTROLS_NOAGE)), d),
+                    "birthyr", scale = -10))
+    }
+    d <- d[d$agegroup_lab %in% c(OLD_GROUP, YOUNG_GROUP), ]
+    d$any_exposure <- as.integer(d[[yvar]] > 0)
+    d$age65 <- as.integer(d$agegroup_lab == OLD_GROUP)
+    grab(lm(as.formula(paste("any_exposure ~ age65 +", CONTROLS_NOAGE)), d), "age65")
+}
+
+build_robustness_age_coding <- function(user, path) {
+    rows <- lapply(GAP_MEASURES, function(m) {
+        pre <- if (m == "third_party_cookies") "bl_third_party_cookie_domains_rate"
+               else paste0("bl_", m, "_rate")
+        post <- sprintf("bl_%s_resid_%s_rate", m, HEADLINE_TIER)
+        lab <- if (m == "third_party_cookies") "Third-Party Cookie Domains" else VAR_LABELS[[m]]
+        c(lab, vapply(AGE_CODINGS, function(s) {
+            a <- age_effect(pre, user, s); b <- age_effect(post, user, s)
+            sprintf("%.0f", 100 * b[["b"]] / a[["b"]])
+        }, character(1)))
+    })
+    out <- as.data.frame(do.call(rbind, rows), stringsAsFactors = FALSE)
+    out <- out[order(out[[1]]), ]
+    write_tex(out, path)
+    invisible(out)
 }

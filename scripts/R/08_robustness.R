@@ -261,6 +261,12 @@ emit_all <- function(data) {
         file.path(TABLES_DIR, "bl_top_contributors_domain")), "tab4")
 
     build_risk_divergence(data, file.path(TABLES_DIR, "risk_divergence_by_age"))
+
+    # Why the age gap exists, and whether it survives the obvious alternatives.
+    build_age_gap_decomposition(BL_DOMAIN, data,
+        file.path(TABLES_DIR, "age_gap_decomposition"))
+    build_age_spline_tests(data, file.path(TABLES_DIR, "age_spline_tests"))
+    build_device_age_gradient(data, file.path(TABLES_DIR, "device_age_gradient"))
     build_cum_exposure(BL_DOMAIN, file.path(TABLES_DIR, "cum_exposure_by_hour"),
                        file.path(FIGURES_DIR, "cum_exposure_by_hour"))
 
