@@ -12,6 +12,11 @@ env/
 /scripts/blacklight_json
 /scripts/privacy_scraper/blacklight_json
 /data/blacklight_json_requests
+# As with WhoTracksMe: the loose corpus is a working copy, and the tracked one is
+# data/blacklight_json.tar.gz.part-* (34,078 scans, 119 MB against 838 MB
+# expanded, split because GitHub rejects blobs over 100 MB). 03_import.R rejoins
+# and expands them on demand.
+/data/blacklight_json
 scripts/privacy_scraper/blacklight_json.tar.gz
 data/blacklight_json.tar.gz
 scripts/blacklight_db.ipynb

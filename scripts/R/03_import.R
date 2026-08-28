@@ -64,13 +64,26 @@ corpus_dir <- function(dir, archive, label) {
     if (dir.exists(dir)) return(dir)
     key <- basename(archive)
     if (!is.null(.corpus_cache[[key]])) return(.corpus_cache[[key]])
-    if (!file.exists(archive))
+    # GitHub rejects blobs over 100 MB, so an archive larger than that is
+    # committed as `.part-aa`, `.part-ab`, ... and rejoined here. Splitting is
+    # plain concatenation: the parts carry no headers of their own.
+    parts <- sort(Sys.glob(paste0(archive, ".part-*")))
+    if (!file.exists(archive) && !length(parts))
         stop("neither ", basename(dir), "/ nor ", key, " is present; ",
              "one of them carries the ", label, " scans", call. = FALSE)
     dest <- file.path(tempdir(), sub("\\.(zip|tar\\.gz)$", "", key))
     message(sprintf("Expanding %s", key))
-    if (grepl("\\.zip$", key)) unzip(archive, exdir = dest)
-    else untar(archive, exdir = dest)
+    src <- archive
+    if (!file.exists(archive)) {
+        src <- file.path(tempdir(), key)
+        if (!file.exists(src)) {
+            con <- file(src, "wb")
+            for (p in parts) writeBin(readBin(p, "raw", file.size(p)), con)
+            close(con)   # must be flushed before untar reads it
+        }
+    }
+    if (grepl("\\.zip$", key)) unzip(src, exdir = dest)
+    else untar(src, exdir = dest)
     # Archives may or may not carry a top-level folder; find where the JSON went.
     hits <- list.files(dest, pattern = "\\.json$", recursive = TRUE, full.names = TRUE)
     if (!length(hits)) stop("no JSON found inside ", key, call. = FALSE)
