@@ -12,7 +12,7 @@ little else. Neither survives intact. Tracking is close to universal, so there
 is little room for a vulnerability gap on *whether* you are tracked; gaps by
 gender and education close once browsing volume is accounted for, as the
 opportunity account predicts. But the age gap does not close. Users 65 and older
-meet 85–94% more trackers per visit than users under 25 — a difference in *where*
+meet 76–87% more trackers per visit than users under 25 — a difference in *where*
 people browse, not only how much.
 
 ### What we find
@@ -23,9 +23,9 @@ people browse, not only how much.
   two days.
 - **Concentration.** One organization — Google, for nine users in ten — observes
   a median 54% of a person's browsing.
-- **The age gap is about site choice.** Unadjusted, panelists 65+ meet 1.97×
+- **The age gap is about site choice.** Unadjusted, panelists 65+ meet 1.90×
   the ad-tracker exposure of under-25s; adjusted for gender, race and education
-  the gap is 85–94%. It survives controlling for device, and decomposes to 87%
+  the gap is 76–87%. It survives controlling for device, and decomposes to 87%
   *within* content categories — older panelists visit more heavily tracked sites
   inside the same categories, not different categories.
 - **Every estimate is a lower bound.** Visits to domains Blacklight could not
@@ -63,8 +63,8 @@ is the visit-weighted sum of the tracking on the domains they actually visited,
 so it reflects browsing composition rather than a domain-level average.
 
 **What could go wrong, and what we did about it.** Browsing was observed in June
-2022 but Blacklight scanned in ~January 2025, and scans completed for ~53% of
-unique domains (~76% of visits). Rather than assume either problem away, we
+2022 but Blacklight scanned in ~January 2025, and scans completed for ~54% of
+unique domains (~79% of visits). Rather than assume either problem away, we
 measured both against independent instruments — HTTP Archive's monthly crawls
 and Wayback Machine snapshots — and re-audited a coded random sample of the
 unscanned domains. Both point the same direction: the published numbers
@@ -175,8 +175,8 @@ ordering the demographic analyses depend on is strongly preserved (*r* =
 tracking, so published rates are lower bounds by design. Replacing that
 assumption with measurement — June-2022 HTTP Archive request maps cover 62.7% of
 the missing visit mass, Wayback another 3.2%, calibrated to Blacklight's scale on
-jointly measured domains — narrows the ad-tracker interval from [4.89, 11.37] to
-[6.08, 8.10] per visit, against 4.89 published. Third-party cookies: 6.02
+jointly measured domains — narrows the ad-tracker interval from [5.19, 10.83] to
+[6.17, 8.13] per visit, against 5.19 published. Third-party cookies: 6.32
 published, [7.02, 10.72] measured. Accounting for unscanned domains *raises*
 exposure.
 
@@ -209,14 +209,14 @@ rather than simulation. Map in
 [`scripts/blocking/README.md`](scripts/blocking/README.md).
 
 Blocking removes most ad-tracker (77%) and third-party-cookie (84%) exposure and
-narrows the unadjusted 65+ gap from 1.97× to 1.28× on ad trackers. A placebo of random
+narrows the unadjusted 65+ gap from 1.90× to 1.26× on ad trackers. A placebo of random
 blocklists removing the same amount shows that narrowing is not merely
-arithmetic (*p* = .06, *p* = .002). It barely touches canvas fingerprinting — 93%
+arithmetic (*p* = .05, *p* = .001). It barely touches canvas fingerprinting — 93%
 survives and the age coefficient does not move — which is the most robust result
 here. The apparent *widening* for session recording does not survive its own
-placebo (*p* = .19) and is not reported as evidence of regressive protection.
-Projected onto CPS 2022 margins, 216M US adults [211, 222] met a keylogging
-script in the month and 191M [184, 197] would still have behind a blocker.
+placebo (*p* = .18) and is not reported as evidence of regressive protection.
+Projected onto CPS 2022 margins, 217M US adults [212, 223] met a keylogging
+script in the month and 192M [185, 198] would still have behind a blocker.
 
 ## Data
 

@@ -247,9 +247,11 @@ build_risk_divergence <- function(data, path) {
 # is not committed.
 CUM_HOUR_MARKS <- c(0, 12, 24, 36, 48)
 CUM_START <- "2022-05-31 18:00:00"
-# What the published figure reports, so a change in the curve is caught rather
-# than quietly published.
-CUM_EXPECTED <- c(0.067, 0.501, 0.714, 0.745, 0.791)
+# What the figure reports, so a change in the curve is caught rather than
+# quietly published. Last moved when 434 retried scans joined the corpus, which
+# let first encounters register on domains previously counted as tracker-free:
+# 0.501 -> 0.504 at twelve hours, 0.791 -> 0.793 at forty-eight.
+CUM_EXPECTED <- c(0.067, 0.504, 0.717, 0.747, 0.793)
 
 build_cum_exposure <- function(bl, table_path, figure_path) {
     b <- as.data.table(bl)[, private_domain := gsub("_", ".", filename, fixed = TRUE)]

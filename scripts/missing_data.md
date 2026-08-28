@@ -15,7 +15,7 @@ that understates exposure and says so here. Two zero-fill bugs -- the HTTP
 Archive cookie cap and the WhoTracksMe drop -- were found one at a time
 precisely because that reasoning had never been written down.
 
-Panel: 1,134 panelists, 4,398,822 visits to 64,074 domains, 34,078 of them scanned.
+Panel: 1,134 panelists, 4,398,822 visits to 64,074 domains, 34,512 of them scanned.
 
 ## Visit counting: page records versus sessions
 
@@ -45,16 +45,16 @@ Panel: 1,134 panelists, 4,398,822 visits to 64,074 domains, 34,078 of them scann
 - **Means**: Blacklight never returned a scan for the domain
 - **Code does**: contributes zero to the numerator, stays in the denominator  
   `02_combine_yg_blacklight: left merge then groupby.sum()`
-- **Scale**: 23.9% of visits
+- **Scale**: 21.0% of visits
 - **Direction**: understates
-- **Verdict**: **conservative** — Bounded by strand B: the published 4.89 ad trackers per visit becomes [6.08, 8.10] under calibrated fills. Directly measured, a rescanned sample of these domains carries MORE tracking than the scanned population (8.2 vs 6.5), so the floor is real. Alternative (mean fill) would give 6.55.
+- **Verdict**: **conservative** — Bounded by strand B: the published 5.19 ad trackers per visit becomes [6.17, 8.13] under calibrated fills. Directly measured, a rescanned sample of these domains carries MORE tracking than the scanned population (8.2 vs 6.5), so the floor is real. Alternative (mean fill) would give 6.55.
 
 ## Scans returning zero on all seven measures
 
 - **Means**: a logged-out landing page showed nothing; the site may still track behind a login
 - **Code does**: treated as a genuine zero, indistinguishable from a measured absence  
   `01_combine_blacklight: measures initialised to 0 per card`
-- **Scale**: 19.5% of visits, 8,097 domains
+- **Scale**: 20.2% of visits, 8,186 domains
 - **Direction**: understates
 - **Verdict**: **tested** — facebook.com alone is 7.2% of panel visits and scores zero on all seven. blocking/09_allzero_sensitivity re-runs the headline excluding these visits and imputing them at the mean of domains that did show tracking: the age gap holds in sign and significance under all three, and the residual share moves 0.1-2.4 pp for four of five measures. No conclusion depends on the zero. The level does: exposure is understated.
 

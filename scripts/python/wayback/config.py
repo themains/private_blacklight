@@ -44,7 +44,9 @@ SAMPLE_SEED = 20220615  # deterministic sampling
 # Paths (resolved from this file's location)
 # --------------------------------------------------------------------------- #
 _HERE = os.path.dirname(os.path.abspath(__file__))
-REPO_ROOT = os.path.abspath(os.path.join(_HERE, "..", ".."))
+# These modules moved from scripts/<mod>/ to scripts/python/<mod>/, so the
+# repository root is three levels up, not two.
+REPO_ROOT = os.path.abspath(os.path.join(_HERE, "..", "..", ".."))
 
 DATA_DIR = os.path.join(REPO_ROOT, "data")
 WB_DATA_DIR = os.path.join(DATA_DIR, "wayback")

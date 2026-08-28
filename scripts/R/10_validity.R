@@ -298,7 +298,15 @@ build_selection_audit_tracking <- function(coded, visits, bl, path,
     })
     names(fills) <- keys
 
-    pool <- dom[!(private_domain %chin% pop$private_domain)]
+    # The pool is the frame the sample was actually drawn from -- the domains
+    # unscanned when the draw happened -- not whatever is unscanned today. A
+    # later retry pass recovered scans for 11 of the 200 drawn domains, and
+    # taking today's unscanned set would drop them out of a design whose
+    # inclusion probabilities are defined on the frame they were drawn from.
+    # What we now know about those 11 does not change what the population was.
+    pool <- fread(file.path(AUDIT_DIR, "failure_reasons.csv"),
+                  select = c("private_domain", "visits"), showProgress = FALSE)
+    pool <- pool[, .(visits = sum(visits)), by = private_domain]
     pi <- simulate_inclusion(pool, reps = reps)
     pv <- setNames(pool$visits, pool$private_domain)
 
