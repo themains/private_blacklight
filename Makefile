@@ -54,13 +54,19 @@ analysis: ## Run the full R analysis pipeline (all tables and figures)
 	@echo "==> $@"
 	Rscript scripts/R/99_run_all.R
 
-.PHONY: paper
-paper: ## Compile ms/blacklight.pdf (runs the analysis first)
-paper: analysis
+# Tables and figures are committed, so `pdf` builds the manuscript from a clone
+# without the raw data. `paper` regenerates them first. -shell-escape is needed:
+# the word count runs texcount at compile time.
+.PHONY: pdf
+pdf: ## Compile ms/blacklight.pdf from the committed tables and figures
 	@echo "==> $@"
 	BIBINPUTS="ms:" TEXINPUTS=".:ms:" latexmk -pdf -shell-escape \
 		-interaction=nonstopmode -outdir=ms ms/blacklight.tex
 	@echo "==> wrote ms/blacklight.pdf"
+
+.PHONY: paper
+paper: ## Run the analysis, then compile ms/blacklight.pdf
+paper: analysis pdf
 
 .PHONY: paper-clean
 paper-clean: ## Remove LaTeX build artifacts

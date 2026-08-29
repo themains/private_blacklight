@@ -187,7 +187,7 @@ against the pipeline by recomputing it. Anything beyond these is worth chasing.
 The two scan corpora are stored as archives rather than loose files, since
 34,512 Blacklight payloads cost 119 MB packed against 838 MB expanded.
 `03_import.R` expands them on demand, and a loose directory wins if one is
-present. Tables and figures are committed, so the manuscript compiles from a
+present. Tables and figures are committed, so `make pdf` compiles the manuscript from a
 fresh clone without running the pipeline or holding the raw data.
 
 ## Validity
