@@ -70,6 +70,72 @@ parse_scan_errors <- function() {
     unique(d, by = "private_domain", fromLast = TRUE)
 }
 
+# Scan success against domain reach. This lived as a hand-typed table in the
+# manuscript and silently kept its pre-correction numbers through both the
+# visit-panel fix and the 434-scan recovery, so it is generated here now.
+REACH_THRESHOLDS <- c(1L, 2L, 5L, 10L, 50L, 100L)
+
+# The April 2026 rescan of the 500 widest-reach domains. Hand-typed in the
+# manuscript until now; it reproduced exactly when checked, but so should have
+# the reach table next to it.
+FP_BL_JSON_2026 <- file.path(DATA_DIR, "blacklight_json_2026")
+RESCAN_ORDER <- c("ddg_join_ads", "third_party_cookies", "fb_pixel",
+                  "session_recording", "key_logging", "canvas_fingerprinting",
+                  "google_analytics")
+RESCAN_LABELS <- c("Ad trackers", "Third-party cookies", "Facebook Pixel",
+                   "Session recording", "Key logging", "Canvas fingerprinting",
+                   "Google Analytics")
+
+build_rescan_drift <- function(bl, path) {
+    n26 <- parse_blacklight(FP_BL_JSON_2026)
+    m <- merge(bl, n26, by = "filename", suffixes = c("_25", "_26"))
+    if (nrow(m) != nrow(n26))
+        stop("rescan drift: ", nrow(n26) - nrow(m), " rescanned domains are ",
+             "absent from the January corpus", call. = FALSE)
+    cat(sprintf("  rescan drift: %d domains matched in both scans\n", nrow(m)))
+
+    rows <- lapply(seq_along(RESCAN_ORDER), function(i) {
+        a <- m[[paste0(RESCAN_ORDER[i], "_25")]] > 0
+        b <- m[[paste0(RESCAN_ORDER[i], "_26")]] > 0
+        data.frame(measure = RESCAN_LABELS[i],
+                   jan = sprintf("%.1f", 100 * mean(a)),
+                   apr = sprintf("%.1f", 100 * mean(b)),
+                   chg = sprintf("$%+.1f$", 100 * (mean(b) - mean(a))),
+                   agree = sprintf("%.1f", 100 * mean(a == b)),
+                   persist = sprintf("%.1f", 100 * mean(b[a])),
+                   stringsAsFactors = FALSE)
+    })
+    write_tex(do.call(rbind, rows), path)
+    invisible(m)
+}
+
+build_scan_by_reach <- function(visits, path) {
+    dom <- as.data.table(visits)[, .(reach = uniqueN(caseid), visits = sum(visits)),
+                                 by = private_domain]
+    scanned <- sub("\\.json$", "", list.files(FP_BL_JSON, pattern = "\\.json$"))
+    dom[, scanned := gsub(".", "_", private_domain, fixed = TRUE) %chin% scanned]
+
+    rows <- lapply(REACH_THRESHOLDS, function(t) {
+        s <- dom[reach >= t]
+        data.frame(threshold = sprintf("$\\geq %d$ panelist%s", t,
+                                       if (t == 1L) "" else "s"),
+                   n = formatC(nrow(s), format = "d", big.mark = ","),
+                   pct = sprintf("%.1f\\%%", 100 * mean(s$scanned)),
+                   stringsAsFactors = FALSE)
+    })
+    write_tex(do.call(rbind, rows), path)
+
+    # The surrounding prose quotes these, so report them where they are computed.
+    cat(sprintf("  scan-by-reach: %s of %s domains scanned (%.1f%%); ",
+                format(sum(dom$scanned), big.mark = ","),
+                format(nrow(dom), big.mark = ","), 100 * mean(dom$scanned)))
+    cat(sprintf("visit coverage %s of %s (%.1f%%)\n",
+                format(dom[scanned == TRUE, sum(visits)], big.mark = ","),
+                format(sum(dom$visits), big.mark = ","),
+                100 * dom[scanned == TRUE, sum(visits)] / sum(dom$visits)))
+    invisible(dom)
+}
+
 build_scan_failure_reasons <- function(visits, path) {
     dom <- as.data.table(visits)[, .(reach = uniqueN(caseid), visits = sum(visits)),
                                  by = private_domain]
@@ -921,6 +987,8 @@ build_scenarios_figure <- function(person, rates, path) {
 emit_validity <- function(bl, person, visits, third_parties) {
     coded <- fread(file.path(AUDIT_DIR, "audit_sample_coded.csv"), showProgress = FALSE)
 
+    build_scan_by_reach(visits, file.path(TABLES_DIR, "scan_by_reach"))
+    build_rescan_drift(bl, file.path(TABLES_DIR, "rescan_drift"))
     build_scan_failure_reasons(visits, file.path(TABLES_DIR, "scan_failure_reasons"))
     build_wb_liveness(visits, bl, file.path(TABLES_DIR, "wb_liveness"))
     build_selection_audit_composition(coded,

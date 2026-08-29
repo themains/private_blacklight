@@ -218,8 +218,11 @@ build_missing_data_doc <- function(bl, wtm, person, path) {
     sat <- fread(file.path(TABLES_DIR, "selection_audit_tracking.tex"), sep = "&",
                  header = FALSE, showProgress = FALSE)
     num <- function(x) trimws(gsub("\\\\\\\\", "", x))
+    # Columns 7 and 9 are the HA+Wayback zero and p90 fills. The manuscript
+    # headlines that pair, so quoting the HA-only one here would give two
+    # different intervals the same name.
     cov <- list(published = num(cbw$V2[1]), mean_fill = num(cbw$V3[1]),
-                lo = num(cbw$V5[1]), hi = num(cbw$V6[1]),
+                lo = num(cbw$V7[1]), hi = num(cbw$V9[1]),
                 pop = num(sat$V2[1]), rescan = num(sat$V3[1]))
 
     e <- missing_data_entries(f, cov)

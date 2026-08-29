@@ -31,7 +31,7 @@ Panel: 1,134 panelists, 4,398,822 visits to 64,074 domains, 34,512 of them scann
   `03_import + 05_person: left join, unmatched measures scored zero`
 - **Scale**: 21.0% of visits
 - **Direction**: understates
-- **Verdict**: **conservative** - Bounded by strand B: the published 5.186 ad trackers per visit becomes [6.172, 8.13] under calibrated fills. Directly measured, a rescanned sample of these domains carries MORE tracking than the scanned population (8.11 against 6.43), so the floor is real. Alternative (mean fill) would give 6.638.
+- **Verdict**: **conservative** - Bounded by strand B: the published 5.186 ad trackers per visit becomes [6.193, 8.042] under calibrated fills. Directly measured, a rescanned sample of these domains carries MORE tracking than the scanned population (8.11 against 6.43), so the floor is real. Alternative (mean fill) would give 6.638.
 
 ## Scans returning zero on all seven measures
 

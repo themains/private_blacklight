@@ -158,7 +158,7 @@ frozen alongside the lists they came from.
 data/           panel, Blacklight scans, WhoTracksMe, blocklists, CPS margins
 scripts/
   R/            the analysis pipeline; 99_run_all.R runs it end to end
-  python/       data collection, and the superseded analysis it replaced
+  collect/      data collection: the Blacklight spider, HTTP Archive, Wayback
 tables/         .tex; tab2_formatted to tab6_formatted are the manuscript floats
 figures/        .pdf
 ms/             manuscript source
@@ -166,6 +166,23 @@ lit/            background reading
 archive/        superseded outputs; see archive/README.md
 logs/           one run log per `make analysis`, not tracked
 ```
+
+### Checking the prose against the tables
+
+Numbers in the text drift when a table is regenerated and the sentence citing it
+is not. The check for this compares every number in a paragraph against the
+tables that paragraph cites:
+
+```
+python audit_provenance.py ms/blacklight.tex tables
+```
+
+It currently reports sixteen near-misses, and all sixteen are known and benign.
+Six are honest rounding, where the prose gives 5.19 for a table's 5.186. Three
+are an artifact of the parser, which splits LaTeX thin-space commas so that
+`4{,}398{,}822` reads as 398. The remaining seven are numbers that happen to sit
+near a value in some other table the same paragraph cites, and each was checked
+against the pipeline by recomputing it. Anything beyond these is worth chasing.
 
 The two scan corpora are stored as archives rather than loose files, since
 34,512 Blacklight payloads cost 119 MB packed against 838 MB expanded.
@@ -191,8 +208,8 @@ Archive queried for cookies at both dates.
 
 **B. Coverage.** The construction counts unscanned visits as zero tracking, so
 published rates are lower bounds by design. Replacing that assumption with
-measurement narrows the ad-tracker interval from 5.19 to 10.83 down to 6.17 to
-8.13 per visit, against 5.19 published. June-2022 HTTP Archive request maps cover
+measurement narrows the ad-tracker interval from 5.19 to 10.83 down to 6.19 to
+8.04 per visit, against 5.19 published. June-2022 HTTP Archive request maps cover
 63.3 percent of the missing visit mass and Wayback another 2.4, each calibrated
 to Blacklight's scale on jointly measured domains. Third-party cookies: 6.32
 published, 7.09 to 10.51 measured. Accounting for unscanned domains raises
@@ -220,7 +237,7 @@ bounds in strand B.
 
 A retry pass later recovered 434 of the domains the first scrape failed on, and
 they are in the estimates above. They carry 3.0 percent of panel visit mass and
-are more heavily tracked than the domains the first pass reached, 10.8 ad
+are more heavily tracked than the domains the first pass reached, 11.1 ad
 trackers per domain against 6.9, which is again the same direction.
 
 ## Residual exposure under best-available defenses
