@@ -183,8 +183,10 @@ dates, visit-weighted ad-tracker prevalence moved from 98.1 to 95.2 percent
 between June 2022 and June 2025, and any known tracker barely moved, 99.9 to
 98.1. Recomputing user-level exposure under June-2022 against January-2025
 measurements shifts the means modestly while the cross-user ordering the
-demographic analyses depend on is strongly preserved. If anything, 2025-era
-scans understate June-2022 exposure.
+demographic analyses depend on is strongly preserved. Three of the four measures
+are lower under 2025 measurement, so those scans understate June-2022 exposure;
+header-set cookies are the exception and read higher, on the domains HTTP
+Archive queried for cookies at both dates.
 
 **B. Coverage.** The construction counts unscanned visits as zero tracking, so
 published rates are lower bounds by design. Replacing that assumption with

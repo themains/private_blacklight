@@ -19,7 +19,7 @@ its own clearly named script/notebook and emits its own table/figure fragments.
 | **C. Instrument** | Are the auxiliary instruments valid stand-ins where strands A and B use them? | Contemporaneous cross-instrument agreement: HA vs Blacklight (Jan 2025, mobile both sides); Wayback vs HA (June 2022, same crawl month). Construct-honest labels. | `httparchive/08_instrument_agreement_ha_bl.ipynb` → `tables/ha_bl_agreement.tex`; `wayback/04_wb_ha_agreement.ipynb` → `tables/wb_ha_agreement.tex` |
 | **D. Missingness mechanism** | Why did scans fail — dead domains or blocking domains? (Interprets strand B; dead-by-2025 also compounds T1.) | Wayback CDX liveness in June 2022 for Blacklight-unscanned domains. **Deepened by a direct audit**: the scraper's error log parsed into per-domain failure causes; a seeded 2×100 sample of unscanned domains (∝ visits + uniform) hand-coded against `selection_audit/CODING_RUBRIC.md`, probed, and freshly Blacklight-scanned (July 2026) — direct tracking measurements checked against strand B's calibrated fills. | `wayback/05_liveness_2022.ipynb` → `tables/wb_liveness.tex`; `selection_audit/01–04_*.py`, `selection_audit/05_selection_audit.ipynb` → `tables/scan_failure_reasons.tex`, `tables/selection_audit_composition.tex`, `tables/selection_audit_tracking.tex`, `figures/selection_audit_tracking` |
 
-**Implications for the paper's conclusions** (`scripts/collect/implications/`,
+**Implications for the paper's conclusions** (`scripts/R/10_validity.R`,
 write-up in `scripts/paper_implications.md`): the strands above bound the
 *levels*; a final module tests whether the threats move the paper's
 *comparisons* — per-user scan coverage regressed on demographics

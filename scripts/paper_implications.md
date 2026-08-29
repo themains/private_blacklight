@@ -1,7 +1,7 @@
 # What the validity work implies for the paper — and proposed text
 
 Every number below is produced by the pipelines in `scripts/collect/httparchive/`,
-`scripts/collect/wayback/`, `scripts/collect/selection_audit/`, and `scripts/collect/implications/`
+`scripts/collect/wayback/`, `scripts/collect/selection_audit/`
 (provenance in each section). Part 1 maps each of the paper's claims to what
 the evidence says. Part 2 is proposed text for the manuscript, ready to
 adapt on Overleaf. Framing throughout: we investigated whether the two

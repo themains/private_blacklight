@@ -573,7 +573,7 @@ TEMPORAL_MEASURES <- list(
 build_temporal_user_exposure <- function(visits, person, table_path, figure_path) {
     keys <- vapply(TEMPORAL_MEASURES, `[`, character(1), 1)
     ha <- fread(FP_HA_MEASURES, showProgress = FALSE)
-    agg <- function(cr) ha_by_domain(ha[crawl == cr], keys, cr)
+    agg <- function(cr) ha_by_domain(ha[crawl == cr], c(keys, "cookies_queried"), cr)
     h22 <- agg("panel"); h25 <- agg("blacklight_match")
     matched <- intersect(h22$private_domain, h25$private_domain)
     cat(sprintf("  HA domains: %s in 2022, %s in 2025, %s matched\n",
@@ -581,20 +581,48 @@ build_temporal_user_exposure <- function(visits, person, table_path, figure_path
                 format(length(matched), big.mark = ",")))
 
     yg <- as.data.table(visits)
-    tt <- yg[, .(tt = sum(visits)), by = caseid]
-    rate <- function(h) {
-        d <- merge(yg, h[private_domain %chin% matched], by = "private_domain",
-                   all.x = TRUE)
-        r <- d[, lapply(.SD, function(x) sum(ifelse(is.na(x), 0, x) * visits)),
-               by = caseid, .SDcols = keys]
-        r <- merge(r, tt, by = "caseid")
-        for (k in keys) set(r, NULL, k, r[[k]] / r$tt)
-        r[match(person$caseid, caseid)]   # the paper's analytical sample
-    }
-    r22 <- rate(h22); r25 <- rate(h25)
+    setnames(h22, setdiff(names(h22), "private_domain"),
+             paste0("a_", setdiff(names(h22), "private_domain")))
+    setnames(h25, setdiff(names(h25), "private_domain"),
+             paste0("b_", setdiff(names(h25), "private_domain")))
+    d <- merge(yg, h22[private_domain %chin% matched], by = "private_domain", all.x = TRUE)
+    d <- merge(d, h25[private_domain %chin% matched], by = "private_domain", all.x = TRUE)
 
+    # Matching on the domain is not enough for cookies. A domain can sit inside
+    # the rank cap at one date and outside it at the other, and the capped share
+    # grows over time, so scoring the unasked side as zero reads a change in what
+    # was queried as a change in what sites do. Restrict each measure to the
+    # domains carrying it at both dates, and zero the weight elsewhere so the
+    # denominator follows the numerator.
+    both_of <- function(k) if (k == "third_party_cookies")
+        !is.na(d$a_cookies_queried) & d$a_cookies_queried > 0 &
+        !is.na(d$b_cookies_queried) & d$b_cookies_queried > 0
+    else !is.na(d[[paste0("a_", k)]]) & !is.na(d[[paste0("b_", k)]])
+
+    rate <- function(pre) {
+        r <- data.table(caseid = person$caseid)
+        for (k in keys) {
+            w <- fifelse(both_of(k), as.numeric(d$visits), 0)
+            x <- d[[paste0(pre, "_", k)]]
+            a <- data.table(caseid = d$caseid, n = ifelse(is.na(x), 0, x) * w,
+                            den = w)[, lapply(.SD, sum), by = caseid]
+            a[den == 0, den := NA_real_]
+            i <- match(person$caseid, a$caseid)
+            set(r, NULL, k, a$n[i] / a$den[i])
+        }
+        r
+    }
+    r22 <- rate("a"); r25 <- rate("b")
+
+    # Restricting to domains measured at both dates leaves some panelists with no
+    # qualifying visits for a measure. They drop from that row rather than being
+    # scored as zero, and the count is reported so the base is visible.
     rows <- lapply(TEMPORAL_MEASURES, function(p) {
         a <- r22[[p[1]]]; b <- r25[[p[1]]]
+        ok <- !is.na(a) & !is.na(b)
+        cat(sprintf("  %-32s %d of %d panelists have qualifying visits\n",
+                    p[1], sum(ok), length(ok)))
+        a <- a[ok]; b <- b[ok]
         c(p[2], sprintf("%.3f", mean(a)), sprintf("%.3f", mean(b)),
           sprintf("%+.1f", 100 * (mean(b) - mean(a)) / mean(a)),
           sprintf("%.2f", cor(a, b)))
@@ -607,6 +635,7 @@ build_temporal_user_exposure <- function(visits, person, table_path, figure_path
     # than the 2022 crawl would have.
     pl <- rbindlist(lapply(TEMPORAL_MEASURES[1:2], function(p) data.table(
         panel = p[2], x = r25[[p[1]]], y = r22[[p[1]]])))
+    pl <- pl[!is.na(x) & !is.na(y)]
     pl[, panel := factor(panel, levels = vapply(TEMPORAL_MEASURES[1:2], `[`,
                                                 character(1), 2))]
     g <- ggplot(pl, aes(x, y)) +
@@ -618,6 +647,97 @@ build_temporal_user_exposure <- function(visits, person, table_path, figure_path
         theme_blacklight(grid = "both")
     save_fig(g, figure_path, width = FIG_FULL_W, height = 3.1)
     invisible(out)
+}
+
+# ---------------------------------------------------------------------------
+# The calibrated fill, in one place
+# ---------------------------------------------------------------------------
+# Two things need it: the coverage-bounds table, which reports what the zero-fill
+# costs in aggregate, and the per-panelist scenario rates the demographic
+# robustness checks regress on. It used to exist twice, once here and once in a
+# Python script, which is two implementations of one method free to drift apart.
+
+# The visit table joined to Blacklight, HTTP Archive June 2022 and Wayback, with
+# the three "was this domain measured" masks every fill depends on.
+coverage_frame <- function(visits, bl) {
+    keys <- vapply(COVERAGE_MEASURES, `[`, character(1), 1)
+    ha <- fread(FP_HA_MEASURES, showProgress = FALSE)[crawl == "panel"]
+    ha22 <- ha_by_domain(ha, c(keys, "cookies_queried"), "coverage")
+    setnames(ha22, setdiff(names(ha22), "private_domain"),
+             paste0("ha_", setdiff(names(ha22), "private_domain")))
+    wb <- fread(FP_WB_MEASURES, showProgress = FALSE)[, c("private_domain", WB_FILL_KEYS),
+                                                      with = FALSE]
+    wb <- unique(wb, by = "private_domain")
+    setnames(wb, WB_FILL_KEYS, paste0("wb_", WB_FILL_KEYS))
+
+    m <- as.data.table(visits)
+    m[, filename := gsub(".", "_", private_domain, fixed = TRUE)]
+    b <- as.data.table(bl); setnames(b, setdiff(names(b), "filename"),
+                                     paste0("bl_", setdiff(names(b), "filename")))
+    m <- merge(m, b, by = "filename", all.x = TRUE)
+    m <- merge(m, ha22, by = "private_domain", all.x = TRUE)
+    m <- merge(m, wb, by = "private_domain", all.x = TRUE)
+    list(m = m,
+         scanned = !is.na(m$bl_ddg_join_ads),
+         ha_meas = !is.na(m$ha_ddg_join_ads),
+         wb_meas = !is.na(m$wb_ddg_join_ads))
+}
+
+wmean0 <- function(v, w) if (!length(v)) 0 else weighted.mean(v, w)
+
+# Per measure: what to fill an unmeasured visit with, and which visits each
+# auxiliary instrument can actually speak to.
+measure_fills <- function(f, k) {
+    m <- f$m; w <- m$visits
+    cbl <- m[[paste0("bl_", k)]]
+    ha_pres <- !is.na(m[[paste0("ha_", k)]]) & m[[paste0("ha_", k)]] > 0
+
+    # The HTTP Archive cookie extract is rank-capped while its request extract is
+    # not, so a domain can be present and never have been asked about cookies.
+    # Letting "not asked" join the "asked, found none" arm inverts the
+    # calibration -- absent would predict more tracking than present -- so the
+    # gate below refuses to continue if it does.
+    k_meas <- if (k == "third_party_cookies")
+        f$ha_meas & !is.na(m$ha_cookies_queried) & m$ha_cookies_queried > 0 else f$ha_meas
+    cal <- f$scanned & k_meas
+    m1 <- wmean0(cbl[cal & ha_pres], w[cal & ha_pres])
+    m0 <- wmean0(cbl[cal & !ha_pres], w[cal & !ha_pres])
+    if (!(m1 > m0)) stop(sprintf(
+        "%s: calibration inverted -- HA-present predicts %.3f but HA-absent %.3f",
+        k, m1, m0))
+
+    wb_fill <- NULL
+    if (k %in% WB_FILL_KEYS) {
+        wp <- !is.na(m[[paste0("wb_", k)]]) & m[[paste0("wb_", k)]] > 0
+        cw <- f$scanned & f$wb_meas
+        wb_fill <- ifelse(wp, wmean0(cbl[cw & wp], w[cw & wp]),
+                          wmean0(cbl[cw & !wp], w[cw & !wp]))
+    }
+    list(cbl = cbl, k_meas = k_meas, ha_fill = ifelse(ha_pres, m1, m0), wb_fill = wb_fill,
+         fill_mean = wmean0(cbl[f$scanned], w[f$scanned]),
+         fill_p90 = wquantile(cbl[f$scanned], w[f$scanned], 0.90))
+}
+
+# One scenario: which auxiliary layers to apply, and what to assume for the
+# visits no instrument reached.
+fill_counts <- function(f, fl, ha_layer, wb_layer, unmeasured) {
+    cc <- fl$cbl
+    rest <- !f$scanned
+    if (ha_layer) { cc[rest & fl$k_meas] <- fl$ha_fill[rest & fl$k_meas]
+                    rest <- rest & !fl$k_meas }
+    if (wb_layer && !is.null(fl$wb_fill)) {
+        cc[rest & f$wb_meas] <- fl$wb_fill[rest & f$wb_meas]
+        rest <- rest & !f$wb_meas }
+    cc[rest] <- unmeasured
+    cc
+}
+
+# Visit-weighted per-panelist rate for a filled count vector.
+per_user_rate <- function(m, counts, ids) {
+    r <- data.table(caseid = m$caseid, num = counts * m$visits,
+                    den = m$visits)[, .(num = sum(num), den = sum(den)), by = caseid]
+    i <- match(ids, r$caseid)
+    r$num[i] / r$den[i]
 }
 
 # ---------------------------------------------------------------------------
@@ -653,26 +773,8 @@ searchsorted <- function(sorted, x) sum(sorted < x) + 1L
 
 build_coverage_bounds <- function(visits, bl, person, table_path, figure_path) {
     keys <- vapply(COVERAGE_MEASURES, `[`, character(1), 1)
-    ha <- fread(FP_HA_MEASURES, showProgress = FALSE)[crawl == "panel"]
-    ha22 <- ha_by_domain(ha, c(keys, "cookies_queried"), "coverage")
-    setnames(ha22, setdiff(names(ha22), "private_domain"),
-             paste0("ha_", setdiff(names(ha22), "private_domain")))
-    wb <- fread(FP_WB_MEASURES, showProgress = FALSE)[, c("private_domain", WB_FILL_KEYS),
-                                                      with = FALSE]
-    setnames(wb, WB_FILL_KEYS, paste0("wb_", WB_FILL_KEYS))
-
-    m <- as.data.table(visits)
-    m[, filename := gsub(".", "_", private_domain, fixed = TRUE)]
-    b <- as.data.table(bl); setnames(b, setdiff(names(b), "filename"),
-                                     paste0("bl_", setdiff(names(b), "filename")))
-    m <- merge(m, b, by = "filename", all.x = TRUE)
-    m <- merge(m, ha22, by = "private_domain", all.x = TRUE)
-    m <- merge(m, wb, by = "private_domain", all.x = TRUE)
-
-    scanned <- !is.na(m$bl_ddg_join_ads)
-    ha_meas <- !is.na(m$ha_ddg_join_ads)
-    wb_meas <- !is.na(m$wb_ddg_join_ads)
-    tt <- m[, .(tt = sum(visits)), by = caseid]
+    f <- coverage_frame(visits, bl)
+    m <- f$m; scanned <- f$scanned; ha_meas <- f$ha_meas; wb_meas <- f$wb_meas
 
     cat(sprintf("  unscanned visits %.1f%%; of those HA covers %.1f%%, WB adds %.1f%%, %.1f%% never measured\n",
         100 * sum(m$visits[!scanned]) / sum(m$visits),
@@ -680,60 +782,15 @@ build_coverage_bounds <- function(visits, bl, person, table_path, figure_path) {
         100 * sum(m$visits[!scanned & !ha_meas & wb_meas]) / sum(m$visits[!scanned]),
         100 * sum(m$visits[!scanned & !ha_meas & !wb_meas]) / sum(m$visits[!scanned])))
 
-    wmean <- function(v, w) if (!length(v)) 0 else weighted.mean(v, w)
-
     scenario_rates <- function(k) {
-        cbl <- m[[paste0("bl_", k)]]; w <- m$visits
-        ha_pres <- !is.na(m[[paste0("ha_", k)]]) & m[[paste0("ha_", k)]] > 0
-        fill_mean <- wmean(cbl[scanned], w[scanned])
-        fill_p90 <- wquantile(cbl[scanned], w[scanned], 0.90)
-
-        # The HTTP Archive cookie extract is rank-capped while its request
-        # extract is not, so a domain can be present and never have been asked
-        # about cookies. Letting "not asked" join the "asked, found none" arm
-        # inverts the calibration -- absent would predict more tracking than
-        # present -- so the gate below refuses to continue if it does.
-        k_meas <- if (k == "third_party_cookies")
-            ha_meas & !is.na(m$ha_cookies_queried) & m$ha_cookies_queried > 0 else ha_meas
-        cal <- scanned & k_meas
-        m1 <- wmean(cbl[cal & ha_pres], w[cal & ha_pres])
-        m0 <- wmean(cbl[cal & !ha_pres], w[cal & !ha_pres])
-        if (!(m1 > m0)) stop(sprintf(
-            "%s: calibration inverted -- HA-present predicts %.3f but HA-absent %.3f",
-            k, m1, m0))
-        ha_fill <- ifelse(ha_pres, m1, m0)
-
-        wb_fill <- NULL
-        if (k %in% WB_FILL_KEYS) {
-            wp <- !is.na(m[[paste0("wb_", k)]]) & m[[paste0("wb_", k)]] > 0
-            cw <- scanned & wb_meas
-            wb_fill <- ifelse(wp, wmean(cbl[cw & wp], w[cw & wp]),
-                              wmean(cbl[cw & !wp], w[cw & !wp]))
-        }
-        build <- function(ha_layer, wb_layer, unmeasured) {
-            cc <- cbl
-            rest <- !scanned
-            if (ha_layer) { cc[rest & k_meas] <- ha_fill[rest & k_meas]
-                            rest <- rest & !k_meas }
-            if (wb_layer && !is.null(wb_fill)) {
-                cc[rest & wb_meas] <- wb_fill[rest & wb_meas]
-                rest <- rest & !wb_meas }
-            cc[rest] <- unmeasured
-            cc
-        }
-        cfg <- list(zero = list(FALSE, FALSE, 0), mean = list(FALSE, FALSE, fill_mean),
-                    p90 = list(FALSE, FALSE, fill_p90), ha_zero = list(TRUE, FALSE, 0),
-                    ha_p90 = list(TRUE, FALSE, fill_p90),
-                    hawb_zero = list(TRUE, TRUE, 0), hawb_mean = list(TRUE, TRUE, fill_mean),
-                    hawb_p90 = list(TRUE, TRUE, fill_p90))
-        vapply(cfg, function(s) {
-            cc <- build(s[[1]], s[[2]], s[[3]])
-            r <- data.table(caseid = m$caseid, num = cc * m$visits)[
-                , .(num = sum(num)), by = caseid]
-            r <- merge(r, tt, by = "caseid")
-            mean(r$num[match(person$caseid, r$caseid)] /
-                 r$tt[match(person$caseid, r$caseid)])
-        }, numeric(1))
+        fl <- measure_fills(f, k)
+        cfg <- list(zero = list(FALSE, FALSE, 0), mean = list(FALSE, FALSE, fl$fill_mean),
+                    p90 = list(FALSE, FALSE, fl$fill_p90), ha_zero = list(TRUE, FALSE, 0),
+                    ha_p90 = list(TRUE, FALSE, fl$fill_p90),
+                    hawb_zero = list(TRUE, TRUE, 0), hawb_mean = list(TRUE, TRUE, fl$fill_mean),
+                    hawb_p90 = list(TRUE, TRUE, fl$fill_p90))
+        vapply(cfg, function(s) mean(per_user_rate(
+            m, fill_counts(f, fl, s[[1]], s[[2]], s[[3]]), person$caseid)), numeric(1))
     }
     res <- vapply(keys, scenario_rates, numeric(length(COVERAGE_SCENARIOS)))
     out <- cbind(
@@ -766,6 +823,98 @@ build_coverage_bounds <- function(visits, bl, person, table_path, figure_path) {
     invisible(out)
 }
 
+# Does the missingness fall unevenly across people? The coverage-bounds table
+# answers what the zero-fill costs on average; these ask whether it could be
+# manufacturing the demographic gaps, which only per-panelist rates can settle.
+# Display names match the column headers the manuscript table uses.
+# A legend has to stand alone, so these spell out the fill rather than reusing
+# the table's column abbreviations (HA, HA+WB).
+SCENARIO_LABELS <- c(
+    zero      = "Counted as zero",
+    mean      = "Scanned average",
+    ha_mean   = "HTTP Archive",
+    hawb_mean = "Archive + Wayback"
+)
+cell_be <- function(r) sprintf("%.2f%s (%.2f)", r[1], stars(r[3]), r[2])
+
+fit_terms <- function(yvar, data) {
+    r <- fit_demo(yvar, data)
+    stats::setNames(lapply(seq_len(nrow(r)), function(i)
+        c(r$b[i], r$se[i], r$p[i])), r$term)
+}
+
+build_implications_tables <- function(person, rates) {
+    d <- merge(person, as.data.frame(rates), by = "caseid")
+
+    # Per-user scan coverage, in percentage points, on the demographic spec.
+    d$coverage_pct <- 100 * d$coverage
+    cov <- fit_terms("coverage_pct", d)
+    write_tex(data.frame(term = names(cov),
+                         v = vapply(cov, cell_be, character(1))),
+              file.path(TABLES_DIR, "implications_coverage_by_demo"))
+
+    # Each fill scenario re-estimates the published spec.
+    cols <- unlist(lapply(IMPL_MEASURES, function(k) paste0(k, "_", SCENARIOS)))
+    fills <- lapply(cols, fit_terms, data = d)
+    write_tex(data.frame(term = names(fills[[1]]),
+                         do.call(cbind, lapply(fills, vapply, cell_be, character(1)))),
+              file.path(TABLES_DIR, "implications_demo_fill_scenarios"))
+
+    # Same instrument at each date, and their difference.
+    stems <- unlist(lapply(IMPL_MEASURES, function(k)
+        c(paste0("ha22_", k), paste0("ha25_", k), paste0("drift_", k))))
+    drift <- lapply(stems, fit_terms, data = d)
+    write_tex(data.frame(term = names(drift[[1]]),
+                         do.call(cbind, lapply(drift, vapply, cell_be, character(1)))),
+              file.path(TABLES_DIR, "implications_drift_by_demo"))
+    invisible(NULL)
+}
+
+# Coefficients under each unscanned-visit fill, dodged so the four scenarios sit
+# side by side for each term. Shape carries the scenario, which is a stable and
+# necessary distinction; nothing else varies by shape in the paper.
+build_scenarios_figure <- function(person, rates, path) {
+    # The four scenarios are dodged within each term. DODGE is the share of the
+    # one-unit term slot they occupy, so raising it separates the four lines and
+    # narrows the gap between terms; the taller canvas buys back both.
+    DODGE <- 0.85
+    d <- merge(person, as.data.frame(rates), by = "caseid")
+    rows <- list()
+    for (k in IMPL_MEASURES) for (s in SCENARIOS) {
+        r <- fit_demo(paste0(k, "_", s), d)
+        r$measure <- if (k == "ddg_join_ads") "Ad trackers / visit" else "Third-party cookies / visit"
+        r$scenario <- s
+        rows[[length(rows) + 1]] <- r
+    }
+    df <- do.call(rbind, rows)
+    df$scenario <- factor(SCENARIO_LABELS[df$scenario], levels = SCENARIO_LABELS)
+    df$term <- factor(gsub("--", "–", df$term, fixed = TRUE),
+                      levels = rev(gsub("--", "–", COEF_ORDER, fixed = TRUE)))
+    df$lo <- df$b - 1.96 * df$se; df$hi <- df$b + 1.96 * df$se
+
+    p <- ggplot(df, aes(b, term, shape = scenario, colour = scenario)) +
+        geom_reference() +
+        geom_errorbar(aes(xmin = lo, xmax = hi), width = 0, linewidth = 0.35,
+                      position = position_dodge(width = DODGE)) +
+        geom_point(size = 1.0, position = position_dodge(width = DODGE)) +
+        scale_colour_manual(values = c("#000000", "#4d4d4d", "#8a8a8a", "#b3b3b3")) +
+        scale_shape_manual(values = c(16, 15, 17, 18)) +
+        facet_wrap(~measure, ncol = 2, scales = "free_x") +
+        scale_x_continuous(n.breaks = 5) +
+        labs(x = "Estimate and 95% conf. int.", y = NULL) +
+        theme_blacklight(grid = "x") +
+        theme(panel.spacing.x = unit(1.2, "lines"))
+    # 12 terms x 4 scenarios: smaller markers on a taller canvas so the dodged
+    # groups keep clear air between them.
+    save_fig(p, path, width = FIG_FULL_W, height = 5.0)
+}
+
+# ---------------------------------------------------------------------------
+# Everything this pipeline emits
+# ---------------------------------------------------------------------------
+# One entry point so 99_run_all.R stays a runner rather than a second place
+# where the list of outputs lives.
+
 # ---------------------------------------------------------------------------
 # Everything this module writes, in one place.
 # ---------------------------------------------------------------------------
@@ -791,5 +940,103 @@ emit_validity <- function(bl, person, visits, third_parties) {
     build_coverage_bounds(visits, bl, person,
         file.path(TABLES_DIR, "coverage_bounds_wayback"),
         file.path(FIGURES_DIR, "coverage_bounds_wayback"))
+
+    # Per-panelist coverage and fills, derived here rather than read from a file
+    # a separate pipeline had to remember to rebuild.
+    rates <- build_user_scenario_rates(visits, bl, person)
+    build_implications_tables(person, rates)
+    build_scenarios_figure(person, rates,
+                           file.path(FIGURES_DIR, "implications_demo_scenarios"))
     invisible(NULL)
+}
+
+# ---------------------------------------------------------------------------
+# Per-panelist coverage, fill scenarios, and drift
+# ---------------------------------------------------------------------------
+# The coverage-bounds table above asks what the zero-fill costs on average. The
+# demographic robustness checks ask something the average cannot answer: whether
+# the missingness is patterned across people in a way that could manufacture the
+# demographic gaps. That needs the same fills carried down to the individual, so
+# the same calibration serves both.
+#
+# This was a Python script until it went stale: it was built before 434 recovered
+# scans entered the corpus, so three tables and a figure were regressing on a
+# coverage of 76.4% that had since become 79.0%. Deriving it here means it cannot
+# fall behind the corpus again.
+IMPL_MEASURES <- c("ddg_join_ads", "third_party_cookies")
+SCENARIOS <- c("zero", "mean", "ha_mean", "hawb_mean")
+
+build_user_scenario_rates <- function(visits, bl, person) {
+    f <- coverage_frame(visits, bl)
+    m <- f$m
+    ids <- person$caseid
+    out <- data.table(caseid = ids)
+
+    # Share of a panelist's visits that landed on a domain Blacklight reached.
+    cov <- m[, .(sc = sum(visits[f$scanned[.I]]), tt = sum(visits)), by = caseid]
+    out[, coverage := cov$sc[match(ids, cov$caseid)] / cov$tt[match(ids, cov$caseid)]]
+
+    for (k in IMPL_MEASURES) {
+        fl <- measure_fills(f, k)
+        cfg <- list(zero = list(FALSE, FALSE, 0),
+                    mean = list(FALSE, FALSE, fl$fill_mean),
+                    ha_mean = list(TRUE, FALSE, fl$fill_mean),
+                    hawb_mean = list(TRUE, TRUE, fl$fill_mean))
+        for (s in names(cfg)) {
+            cc <- fill_counts(f, fl, cfg[[s]][[1]], cfg[[s]][[2]], cfg[[s]][[3]])
+            set(out, NULL, paste0(k, "_", s), per_user_rate(m, cc, ids))
+        }
+    }
+
+    d <- ha_same_instrument(visits, ids)
+    for (k in IMPL_MEASURES) {
+        set(out, NULL, paste0("ha22_", k), d[[paste0("r22_", k)]])
+        set(out, NULL, paste0("ha25_", k), d[[paste0("r25_", k)]])
+        set(out, NULL, paste0("drift_", k), d[[paste0("r25_", k)]] - d[[paste0("r22_", k)]])
+    }
+    out[]
+}
+
+# Per-panelist exposure with domain-level tracking measured by HTTP Archive at
+# each date, on the domains it saw at both.
+#
+# Matching on the domain is not enough for cookies. A domain can sit inside the
+# rank cap at one date and outside it at the other, and the capped share grows
+# over time, so scoring the unasked side as zero would read a change in what was
+# queried as a change in what sites do. That is the artifact the cookie cap
+# already produced once in this project; here the comparison is restricted to
+# domains queried at both dates, and the weight goes to zero elsewhere so the
+# denominator matches the numerator.
+ha_same_instrument <- function(visits, ids) {
+    keys <- IMPL_MEASURES
+    ha <- fread(FP_HA_MEASURES, showProgress = FALSE)
+    agg <- function(cr) ha_by_domain(ha[crawl == cr], c(keys, "cookies_queried"))
+    h22 <- agg("panel"); h25 <- agg("blacklight_match")
+    matched <- intersect(h22$private_domain, h25$private_domain)
+    setnames(h22, setdiff(names(h22), "private_domain"),
+             paste0("h22_", setdiff(names(h22), "private_domain")))
+    setnames(h25, setdiff(names(h25), "private_domain"),
+             paste0("h25_", setdiff(names(h25), "private_domain")))
+    m <- merge(as.data.table(visits), h22[private_domain %chin% matched],
+               by = "private_domain", all.x = TRUE)
+    m <- merge(m, h25[private_domain %chin% matched], by = "private_domain", all.x = TRUE)
+
+    out <- data.table(caseid = ids)
+    for (k in keys) {
+        a <- m[[paste0("h22_", k)]]; b <- m[[paste0("h25_", k)]]
+        both <- if (k == "third_party_cookies")
+            !is.na(m$h22_cookies_queried) & m$h22_cookies_queried > 0 &
+            !is.na(m$h25_cookies_queried) & m$h25_cookies_queried > 0
+        else !is.na(a) & !is.na(b)
+        w <- fifelse(both, as.numeric(m$visits), 0)
+        r <- data.table(caseid = m$caseid,
+                        n22 = ifelse(is.na(a), 0, a) * w,
+                        n25 = ifelse(is.na(b), 0, b) * w, den = w)[
+            , lapply(.SD, sum), by = caseid]
+        r[den == 0, den := NA_real_]
+        i <- match(ids, r$caseid)
+        set(out, NULL, paste0("r22_", k), r$n22[i] / r$den[i])
+        set(out, NULL, paste0("r25_", k), r$n25[i] / r$den[i])
+    }
+    out
 }

@@ -130,103 +130,6 @@ build_coefplot <- function(data, yvars, titles, path) {
 # ---------------------------------------------------------------------------
 # Do the coverage and timing threats move the demographic comparisons?
 # ---------------------------------------------------------------------------
-# data/implications/user_scenario_rates.csv carries, per panelist: scan coverage,
-# the exposure rate under each unscanned-visit fill, and same-instrument HTTP
-# Archive rates at June 2022 and June 2025 with their difference.
-FP_USER_RATES <- file.path(DATA_DIR, "implications", "user_scenario_rates.csv")
-SCENARIOS <- c("zero", "mean", "ha_mean", "hawb_mean")
-# Display names match the column headers the manuscript table uses.
-# A legend has to stand alone, so these spell out the fill rather than reusing
-# the table's column abbreviations (HA, HA+WB).
-SCENARIO_LABELS <- c(
-    zero      = "Counted as zero",
-    mean      = "Scanned average",
-    ha_mean   = "HTTP Archive",
-    hawb_mean = "Archive + Wayback"
-)
-IMPL_MEASURES <- c("ddg_join_ads", "third_party_cookies")
-
-cell_be <- function(r) sprintf("%.2f%s (%.2f)", r[1], stars(r[3]), r[2])
-
-fit_terms <- function(yvar, data) {
-    r <- fit_demo(yvar, data)
-    stats::setNames(lapply(seq_len(nrow(r)), function(i)
-        c(r$b[i], r$se[i], r$p[i])), r$term)
-}
-
-build_implications_tables <- function(person) {
-    rates <- as.data.frame(data.table::fread(FP_USER_RATES))
-    d <- merge(person, rates, by = "caseid")
-
-    # Per-user scan coverage, in percentage points, on the demographic spec.
-    d$coverage_pct <- 100 * d$coverage
-    cov <- fit_terms("coverage_pct", d)
-    write_tex(data.frame(term = names(cov),
-                         v = vapply(cov, cell_be, character(1))),
-              file.path(TABLES_DIR, "implications_coverage_by_demo"))
-
-    # Each fill scenario re-estimates the published spec.
-    cols <- unlist(lapply(IMPL_MEASURES, function(k) paste0(k, "_", SCENARIOS)))
-    fills <- lapply(cols, fit_terms, data = d)
-    write_tex(data.frame(term = names(fills[[1]]),
-                         do.call(cbind, lapply(fills, vapply, cell_be, character(1)))),
-              file.path(TABLES_DIR, "implications_demo_fill_scenarios"))
-
-    # Same instrument at each date, and their difference.
-    stems <- unlist(lapply(IMPL_MEASURES, function(k)
-        c(paste0("ha22_", k), paste0("ha25_", k), paste0("drift_", k))))
-    drift <- lapply(stems, fit_terms, data = d)
-    write_tex(data.frame(term = names(drift[[1]]),
-                         do.call(cbind, lapply(drift, vapply, cell_be, character(1)))),
-              file.path(TABLES_DIR, "implications_drift_by_demo"))
-    invisible(NULL)
-}
-
-# Coefficients under each unscanned-visit fill, dodged so the four scenarios sit
-# side by side for each term. Shape carries the scenario, which is a stable and
-# necessary distinction; nothing else varies by shape in the paper.
-build_scenarios_figure <- function(person, path) {
-    # The four scenarios are dodged within each term. DODGE is the share of the
-    # one-unit term slot they occupy, so raising it separates the four lines and
-    # narrows the gap between terms; the taller canvas buys back both.
-    DODGE <- 0.85
-    rates <- as.data.frame(data.table::fread(FP_USER_RATES))
-    d <- merge(person, rates, by = "caseid")
-    rows <- list()
-    for (k in IMPL_MEASURES) for (s in SCENARIOS) {
-        r <- fit_demo(paste0(k, "_", s), d)
-        r$measure <- if (k == "ddg_join_ads") "Ad trackers / visit" else "Third-party cookies / visit"
-        r$scenario <- s
-        rows[[length(rows) + 1]] <- r
-    }
-    df <- do.call(rbind, rows)
-    df$scenario <- factor(SCENARIO_LABELS[df$scenario], levels = SCENARIO_LABELS)
-    df$term <- factor(gsub("--", "–", df$term, fixed = TRUE),
-                      levels = rev(gsub("--", "–", COEF_ORDER, fixed = TRUE)))
-    df$lo <- df$b - 1.96 * df$se; df$hi <- df$b + 1.96 * df$se
-
-    p <- ggplot(df, aes(b, term, shape = scenario, colour = scenario)) +
-        geom_reference() +
-        geom_errorbar(aes(xmin = lo, xmax = hi), width = 0, linewidth = 0.35,
-                      position = position_dodge(width = DODGE)) +
-        geom_point(size = 1.0, position = position_dodge(width = DODGE)) +
-        scale_colour_manual(values = c("#000000", "#4d4d4d", "#8a8a8a", "#b3b3b3")) +
-        scale_shape_manual(values = c(16, 15, 17, 18)) +
-        facet_wrap(~measure, ncol = 2, scales = "free_x") +
-        scale_x_continuous(n.breaks = 5) +
-        labs(x = "Estimate and 95% conf. int.", y = NULL) +
-        theme_blacklight(grid = "x") +
-        theme(panel.spacing.x = unit(1.2, "lines"))
-    # 12 terms x 4 scenarios: smaller markers on a taller canvas so the dodged
-    # groups keep clear air between them.
-    save_fig(p, path, width = FIG_FULL_W, height = 5.0)
-}
-
-# ---------------------------------------------------------------------------
-# Everything this pipeline emits
-# ---------------------------------------------------------------------------
-# One entry point so 99_run_all.R stays a runner rather than a second place
-# where the list of outputs lives.
 emit_all <- function(data) {
     cum <- data
     for (c_ in RESCALE_100) cum[[c_]] <- cum[[c_]] / 100
@@ -251,7 +154,6 @@ emit_all <- function(data) {
     suppressWarnings(build_presence_adjusted(
         data, file.path(TABLES_DIR, "presence_adjusted_median")))
     build_gap_benchmarks(data, file.path(TABLES_DIR, "implications_gap_benchmarks"))
-    build_implications_tables(data)
 
     # Descriptive exhibits
     d <- build_demo_summary(data, file.path(TABLES_DIR, "demo_summary"))
@@ -292,7 +194,6 @@ emit_all <- function(data) {
                    c(VAR_LABELS[MEASURES], "Top organization visits (00s)"),
                    file.path(FIGURES_DIR, "coefplot_demo_differences_cumulative"))
     build_lowess_age(data, file.path(FIGURES_DIR, "lowess_age_bl"))
-    build_scenarios_figure(data, file.path(FIGURES_DIR, "implications_demo_scenarios"))
     invisible(NULL)
 }
 
