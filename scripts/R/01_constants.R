@@ -61,6 +61,18 @@ AGE_BINS   <- c(1929, 1957, 1972, 1987, 1997, 2003)
 AGE_LABELS <- c("65+", "50-64", "35-49", "25-34", "<25")
 AGE_ORDER  <- c("<25", "25-34", "35-49", "50-64", "65+")
 
+# The CPS side is cut on nominal age, not birth year, and the two are not the
+# same cut written twice. AGE_BINS above splits panelists by birth year against
+# a June 2022 field period; those edges land on these nominal brackets, so
+# cutting CPS at 18-24, 25-34, 35-49, 50-64 and 65+ compares like with like
+# without a cohort adjustment.
+CPS_AGE_BINS <- c(17, 24, 34, 49, 64, 200)
+
+# ASEC 2022 data dictionary, A_HGA: 31-38 less than high school, 39 high school
+# graduate, 40-42 some college or associate, 43 bachelor's, 44-46 postgraduate.
+CPS_EDUC_BINS <- c(30, 39, 42, 43, 46)
+CPS_EDUC_LABELS <- c("HS or Below", "Some college", "College", "Postgrad")
+
 agegroup_from_birthyr <- function(birthyr) {
     factor(cut(birthyr, breaks = AGE_BINS, labels = AGE_LABELS),
            levels = AGE_ORDER, ordered = TRUE)

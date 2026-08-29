@@ -19,7 +19,8 @@ STEPS <- c(
     "07_demography.R",  # Tables 5-6, coefficient plots, birth-year curve
     "08_robustness.R",  # denominator, fills, drift
     "09_blocking.R",    # residual exposure, placebo, projection
-    "10_validity.R"     # coverage bounds, drift, selection audit
+    "10_validity.R",    # coverage bounds, drift, selection audit
+    "11_missing_data.R" # the missing-data taxonomy document
 )
 
 dir.create(here("logs"), showWarnings = FALSE)
@@ -47,7 +48,8 @@ for (s in STEPS) {
 # --- run the pipeline -------------------------------------------------------
 t0 <- Sys.time()
 BL_DOMAIN <<- parse_blacklight()
-person <- build_person_level(BL_DOMAIN, parse_whotracksme())
+WTM_DOMAIN <<- parse_whotracksme()
+person <- build_person_level(BL_DOMAIN, WTM_DOMAIN)
 THIRD_PARTIES <<- extract_third_parties()
 PAIRS      <- domain_org_pairs(THIRD_PARTIES)
 orgs       <- build_org_measures(PAIRS)
@@ -62,6 +64,8 @@ emit_all(data)
 VISITS <- visit_panel()
 emit_blocking(BL_DOMAIN, person, VISITS)
 emit_validity(BL_DOMAIN, person, VISITS, THIRD_PARTIES)
+build_missing_data_doc(BL_DOMAIN, WTM_DOMAIN, person,
+                       here("scripts", "missing_data.md"))
 
 say(sprintf("wrote %d tables, %d figures",
             length(list.files(TABLES_DIR, "\\.tex$")),

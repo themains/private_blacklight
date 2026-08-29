@@ -87,7 +87,7 @@ build_demo_table <- function(data, yvars, headers, digits, path) {
 # ---------------------------------------------------------------------------
 # Each measure winsorized at the 95th percentile, z-standardized, then LOWESS
 # smoothed, so seven measures on different scales share one axis. Reference
-# lines sit at 2022 - age, the same convention constants.AGE_BINS uses.
+# lines sit at 2022 - age, the same convention AGE_BINS uses.
 #
 # Sized at \textwidth (6.5in) rather than the 11.2in the matplotlib version
 # used: at .55\textwidth that canvas scaled to 0.33 and put the legend on the

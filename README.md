@@ -123,6 +123,7 @@ a second instead of surfacing as a quietly different number three tables later.
 | `08_robustness` | denominator, fill scenarios, drift, median regression |
 | `09_blocking` | residual exposure, placebo, population projection |
 | `10_validity` | coverage bounds, temporal drift, selection audit |
+| `11_missing_data` | recomputes the missing-data taxonomy and regenerates `scripts/missing_data.md` |
 
 Every stochastic step takes an explicit seed, so repeated runs agree.
 

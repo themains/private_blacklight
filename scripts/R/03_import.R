@@ -259,3 +259,61 @@ visit_panel <- function() {
     if (is.null(.panel_cache$d)) .panel_cache$d <- build_visit_panel()
     copy(.panel_cache$d)
 }
+
+# ---------------------------------------------------------------------------
+# The CPS benchmark
+# ---------------------------------------------------------------------------
+# Table 1 compares the panel against the population, and the projection rakes
+# onto the same margins, so both need the ASEC. Deriving it here rather than
+# reading a committed CSV means the margins cannot fall behind the category
+# definitions they are supposed to share with the panel: the age and education
+# cuts live in 01_constants.R next to the panel's own.
+FP_ASEC_ZIP <- file.path(DATA_DIR, "cps", "asecpub22csv.zip")
+
+.asec_cache <- new.env(parent = emptyenv())
+cps_asec <- function() {
+    if (!is.null(.asec_cache$d)) return(copy(.asec_cache$d))
+    if (!file.exists(FP_ASEC_ZIP))
+        stop("missing ", basename(FP_ASEC_ZIP), "; download the 2022 ASEC person ",
+             "file from census.gov and place it there", call. = FALSE)
+    d <- fread(cmd = sprintf("unzip -p %s pppub22.csv", shQuote(FP_ASEC_ZIP)),
+               select = c("A_AGE", "A_SEX", "PEHSPNON", "PRDTRACE", "A_HGA", "MARSUPWT"),
+               showProgress = FALSE)
+    d <- d[A_AGE >= 18]
+
+    # Some vintages carry two implied decimals on the weight. The weighted count
+    # of adults has to land near the 2022 population, which is what says which
+    # vintage this is.
+    if (sum(d$MARSUPWT) > 1e9) d[, MARSUPWT := MARSUPWT / 100]
+    stopifnot(sum(d$MARSUPWT) > 2.3e8, sum(d$MARSUPWT) < 2.8e8)
+
+    d[, gender_lab := fifelse(A_SEX == 1, "Male", "Female")]
+    # Hispanic takes precedence, matching Table 1's mutually exclusive races.
+    d[, race_lab := fcase(PEHSPNON == 1, "Hispanic",
+                          PRDTRACE == 1, "White",
+                          PRDTRACE == 2, "Black",
+                          PRDTRACE == 4, "Asian",
+                          default = "Other")]
+    stopifnot(all(d$A_HGA >= 31 & d$A_HGA <= 46))
+    d[, educ_lab := as.character(cut(A_HGA, CPS_EDUC_BINS, labels = CPS_EDUC_LABELS))]
+    d[, agegroup_lab := as.character(cut(A_AGE, CPS_AGE_BINS, labels = AGE_ORDER))]
+    .asec_cache$d <- d
+    copy(d)
+}
+
+# Weighted share of US adults in each category of the four Table 1 variables.
+cps_margins <- function() {
+    d <- cps_asec()
+    tot <- sum(d$MARSUPWT)
+    out <- rbindlist(lapply(c("gender", "race", "educ", "agegroup"), function(v) {
+        col <- paste0(v, "_lab")
+        s <- d[, .(cps_perc = 100 * sum(MARSUPWT) / tot), by = c(col)]
+        setnames(s, col, "cat")
+        stopifnot(abs(sum(s$cps_perc) - 100) < 0.1)
+        s[, variable := v][, .(variable, cat, cps_perc)]
+    }))
+    out[, cps_perc := round(cps_perc, 3)][]
+}
+
+# The denominator the projection multiplies its shares by.
+cps_adult_population <- function() sum(cps_asec()$MARSUPWT)

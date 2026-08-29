@@ -387,18 +387,10 @@ weights_for <- function(data, targets) {
     list(w = w * nrow(data) / sum(w), lo = b[1], hi = b[2])
 }
 
-adult_population <- function(fp_zip) {
-    d <- fread(cmd = sprintf("unzip -p %s pppub22.csv", shQuote(fp_zip)),
-               select = c("A_AGE", "MARSUPWT"), showProgress = FALSE)
-    total <- sum(d[A_AGE >= 18, MARSUPWT])
-    if (total > 1e9) total <- total / 100   # some vintages carry two implied decimals
-    stopifnot(total > 2.3e8, total < 2.8e8)
-    total
-}
 
 build_population_projection <- function(user, path, reps = PROJ_REPS,
                                         seed = BOOTSTRAP_SEED) {
-    targets <- read.csv(file.path(DATA_DIR, "cps", "cps_asec_2022_margins.csv"))
+    targets <- as.data.frame(cps_margins())
     d <- as.data.frame(user)
     w0 <- rake(d, targets)
 
@@ -413,7 +405,7 @@ build_population_projection <- function(user, path, reps = PROJ_REPS,
 
     tw <- weights_for(d, targets)
     deff <- 1 + var(tw$w) / mean(tw$w)^2
-    pop <- adult_population(file.path(DATA_DIR, "cps", "asecpub22csv.zip"))
+    pop <- cps_adult_population()
     cat(sprintf("  design effect %.2f, effective n %.0f; CPS adults %.0fM\n",
                 deff, nrow(d) / deff, pop / 1e6))
 

@@ -24,7 +24,6 @@ FIGURES_DIR <- here("figures")
 FP_BL_JSON_DIR <- file.path(DATA_DIR, "blacklight_json")
 FP_WTM_JSON_DIR <- file.path(DATA_DIR, "website_trackers")
 FP_YG_PROFILE    <- file.path(DATA_DIR, "yg", "profile.csv")
-FP_CPS_MARGINS   <- file.path(DATA_DIR, "cps", "cps_asec_2022_margins.csv")
 
 
 FP_WTM_ZIP     <- file.path(DATA_DIR, "whotracksme_json.zip")
