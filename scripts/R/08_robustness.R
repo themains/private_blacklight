@@ -167,6 +167,16 @@ emit_all <- function(data) {
         data, file.path(TABLES_DIR, "presence_adjusted_median")))
     build_gap_benchmarks(data, file.path(TABLES_DIR, "implications_gap_benchmarks"))
 
+    # The Bonferroni footnote is a claim about this table, so count it here
+    # rather than asserting it. Stars mark p < .01; the corrected threshold is
+    # .05/12 = .00417, and the two are not the same set.
+    bonf_p <- unlist(lapply(c(paste0("bl_", MEASURES, "_rate"), "top_org_share"),
+                            function(y) fit_demo(y, data)$p))
+    num("BonfPredictors", tex_num(length(COEF_ORDER)))
+    num("BonfThreshold", sprintf("%.5f", 0.05 / length(COEF_ORDER)))
+    num("BonfAtOnePct", tex_num(sum(bonf_p < 0.01, na.rm = TRUE)))
+    num("BonfSurviving", tex_num(sum(bonf_p < 0.05 / length(COEF_ORDER), na.rm = TRUE)))
+
     # Descriptive exhibits
     d <- build_demo_summary(data, file.path(TABLES_DIR, "demo_summary"))
     build_demo_summary_n(file.path(TABLES_DIR, "demo_summary_n"))

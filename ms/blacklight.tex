@@ -472,7 +472,7 @@ Expressing exposure per visit changes which of these gaps remain (\cref{fig:coef
 The age gap persists. Users 65 and above continue to meet higher per-visit rates of ad trackers, third-party cookies, session recording, keylogging, and canvas fingerprinting, and the gradient runs smoothly across birth cohorts rather than resting on where the age bins were cut (\cref{fig:lowess_age_bl}). The gap is $76$ to $87\%$ of the under-25 mean depending on the method, a standardized effect of $0.6$ to $0.8$ (\cref{sm:implications}). The gender gap in canvas fingerprinting also survives, at one additional fingerprinting script per $100$ visits ($\widehat{\mathrm{SE}} = 0.005$, $p < .05$).%
 \footnote{
     \label{fn:bonferroni}
-    Applying a Bonferroni correction for the $12$ demographic predictors tested ($p < .00417$), all coefficients with unadjusted $p < .01$ in \cref{tab:demo_differences_exposure_rate} remain significant.
+    Applying a Bonferroni correction for the $\BonfPredictors$ demographic predictors tested ($p < \BonfThreshold$), $\BonfSurviving$ of the $\BonfAtOnePct$ coefficients with unadjusted $p < .01$ in \cref{tab:demo_differences_exposure_rate} remain significant. The age coefficients the paper rests on are far below the corrected threshold; the three that do not survive it sit between $p = .004$ and $p = .008$.
 }
 
 Older panelists visit more heavily tracked sites, not different kinds of site. Decomposing the gap over the content categories the meter assigns, site choice accounts for $3.00$ of the $3.66$ ad-tracker gap and category mix for $0.26$; for third-party cookies the figures are $3.20$ of $\DecompCookiesGap$ and $0.30$ (\cref{sm:decomposition}).
