@@ -242,3 +242,8 @@ ms/*.fls
 ms/*.out
 ms/*.log
 *-words.sum
+
+# Corpus extractions, rebuilt on demand from the committed archives
+data/.*_cache/
+data/.*.tar.gz
+data/.*.zip

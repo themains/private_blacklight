@@ -51,6 +51,18 @@ build_exposure_summary <- function(data, kind = c("cumulative", "rate"), path) {
             data$bl_key_logging_al10 > 0 &
             data$bl_canvas_fingerprinting_al10 > 0))
     } else {
+        # Narrow browsers: their rate is a domain measurement wearing a person's
+        # label, and they hold the maxima of the binary columns.
+        narrow <- data$tt_domains <= NARROW_DOMAIN_MAX
+        num("NarrowBrowsers", tex_num(sum(narrow)))
+        num("NarrowBrowserPct", 100 * mean(narrow))
+        num("NarrowDomainMax", tex_num(NARROW_DOMAIN_MAX))
+        num("MedianDomains", tex_num(median(data$tt_domains)))
+        num("RateAdExclNarrow", mean(data$bl_ddg_join_ads_rate[!narrow]), "%.2f")
+        # The panelist the footnote names: holder of the binary maxima.
+        ex <- which.max(data$bl_fb_pixel_rate)
+        num("NarrowExampleVisits", tex_num(data$tt_visits[ex]))
+        num("NarrowExampleDomains", tex_num(data$tt_domains[ex]))
         num("RateAdMean",   mean(data$bl_ddg_join_ads_rate), "%.2f")
         num("RateCookieMean", mean(data$bl_third_party_cookies_rate), "%.2f")
     }
@@ -314,6 +326,21 @@ build_cum_exposure <- function(bl, table_path, figure_path) {
     for (h in c(12, 48))
         num(sprintf("EverAnyBy%s", c("12" = "Twelve", "48" = "FortyEight")[as.character(h)]),
             100 * sum(fe_any$fh <= start + h * 3600) / n)
+
+    # The x axis is calendar time from a fixed start, not time since each
+    # panelist's own first visit, so the curve's early shape is largely who had
+    # begun browsing rather than how fast trackers arrive. Register the onset
+    # share and the conditional, which is the quantity that actually speaks to
+    # pervasiveness.
+    onset <- v[, .(fh = as.POSIXct(trunc(min(t), "hours"))), by = caseid]
+    for (h in c(12, 48)) {
+        lab <- c("12" = "Twelve", "48" = "FortyEight")[as.character(h)]
+        br <- sum(onset$fh <= start + h * 3600)
+        num(paste0("BrowsedBy", lab), 100 * br / uniqueN(v$caseid))
+        num(paste0("MetGivenBrowsed", lab),
+            100 * sum(fe_any$fh <= start + h * 3600) / br)
+    }
+    num("CumExposureN", tex_num(n))
 
     got <- round(res[, "ddg_join_ads"], 3)
     if (!isTRUE(all.equal(unname(got), CUM_EXPECTED)))

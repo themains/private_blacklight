@@ -121,11 +121,30 @@ corpus_dir <- function(dir, archive, label) {
     if (!file.exists(archive) && !length(parts))
         stop("neither ", basename(dir), "/ nor ", key, " is present; ",
              "one of them carries the ", label, " scans", call. = FALSE)
-    dest <- file.path(tempdir(), sub("\\.(zip|tar\\.gz)$", "", key))
+    # A cache beside the archive rather than in tempdir(). tempdir() is
+    # per-process, so every script that touched the corpus re-extracted 838 MB
+    # and left it behind when it exited; 145 such directories had accumulated to
+    # 6.6 GB and were filling the disk, which killed pipeline runs partway with
+    # no error. Extract once, reuse, and let a stale cache be detected by count.
+    dest <- file.path(dirname(archive),
+                      paste0(".", sub("\\.(zip|tar\\.gz)$", "", key), "_cache"))
+    if (dir.exists(dest)) {
+        have <- length(list.files(dest, pattern = "\\.json$", recursive = TRUE))
+        want <- .archive_count(archive)
+        if (is.na(want) || have >= want) {
+            hits <- list.files(dest, pattern = "\\.json$", recursive = TRUE,
+                               full.names = TRUE)
+            if (length(hits)) {
+                .corpus_cache[[key]] <- unique(dirname(hits))[1]
+                return(.corpus_cache[[key]])
+            }
+        }
+        unlink(dest, recursive = TRUE)
+    }
     message(sprintf("Expanding %s", key))
     src <- archive
     if (!file.exists(archive)) {
-        src <- file.path(tempdir(), key)
+        src <- file.path(dirname(archive), paste0(".", key))
         if (!file.exists(src)) {
             con <- file(src, "wb")
             for (p in parts) writeBin(readBin(p, "raw", file.size(p)), con)

@@ -126,6 +126,12 @@ PLACEBO_DRAWS  <- 10000
 # sit near 5 to 6, where two decimals already carry three significant figures.
 # The binary measures sit near 0.01 to 0.07 and need three, or they collapse:
 # at two decimals 108 values in these tables round to 0.00.
+# A panelist who visits two domains has a per-visit rate that is one site's
+# tracking profile repeated, not a person-level measure. Appendix F tests thin
+# denominators by visit count, which does not catch this: the panelist holding
+# three of Table 3's maxima has 370 visits across 2 domains.
+NARROW_DOMAIN_MAX <- 10L
+
 MEASURE_DIGITS <- c(ddg_join_ads = 2, third_party_cookies = 2,
                     third_party_cookie_domains = 2, fb_pixel = 3,
                     google_analytics = 3, session_recording = 3,
