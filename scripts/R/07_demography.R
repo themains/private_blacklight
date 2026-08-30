@@ -92,49 +92,60 @@ build_demo_table <- function(data, yvars, headers, digits, path) {
 # Sized at \textwidth (6.5in) rather than the 11.2in the matplotlib version
 # used: at .55\textwidth that canvas scaled to 0.33 and put the legend on the
 # page at about 3pt.
-build_lowess_age <- function(data, path, width = FIG_FULL_W, height = 3.8) {
-    grid <- seq(min(data$birthyr), max(data$birthyr), length.out = 200)
-    curves <- do.call(rbind, lapply(seq_along(MEASURES), function(i) {
-        v <- data[[paste0("bl_", MEASURES[i], "_rate")]]
-        v <- pmin(v, quantile(v, 0.95, na.rm = TRUE))
-        v <- (v - mean(v, na.rm = TRUE)) / sd(v, na.rm = TRUE)
-        lo <- stats::lowess(data$birthyr, v, f = 0.5, iter = 3)
-        data.frame(birthyr = grid,
-                   value = stats::approx(lo$x, lo$y, xout = grid, rule = 2)$y,
-                   measure = VAR_LABELS[MEASURES[i]])
+build_lowess_age <- function(data, path, width = FIG_FULL_W, height = 5.6) {
+    # Small multiples with bootstrap bands, not seven curves in one panel.
+    #
+    # The single panel could not show uncertainty for seven overlapping curves,
+    # and it read as one story: every measure sloping down together. Two of them
+    # do not. Google Analytics is flat and keylogging nearly so, which is what
+    # \cref{tab:demo_differences_exposure_rate} says too, where the 65+
+    # coefficient is null for Google Analytics and Facebook Pixel. Separating
+    # the panels makes the figure agree with the table.
+    #
+    # The drawn range stops at the 2.5th and 97.5th percentiles of birth year.
+    # Beyond them a decade rests on a few dozen panelists, and lowess with
+    # f = 0.5 will happily extend a confident-looking line over them.
+    lo_yr <- unname(stats::quantile(data$birthyr, LOWESS_TRIM))
+    hi_yr <- unname(stats::quantile(data$birthyr, 1 - LOWESS_TRIM))
+    # Years take no thousands separator.
+    num("LowessTrimLo", sprintf("%.0f", lo_yr))
+    num("LowessTrimHi", sprintf("%.0f", hi_yr))
+    num("LowessTrimmed", tex_num(sum(data$birthyr < lo_yr | data$birthyr > hi_yr)))
+    num("LowessBootDraws", tex_num(LOWESS_BOOT))
+    grid <- seq(lo_yr, hi_yr, length.out = 200)
+
+    one <- function(v, x, g) {
+        v <- pmin(v, stats::quantile(v, 0.95, na.rm = TRUE))
+        v <- (v - mean(v, na.rm = TRUE)) / stats::sd(v, na.rm = TRUE)
+        l <- stats::lowess(x, v, f = 0.5, iter = 3)
+        stats::approx(l$x, l$y, xout = g, rule = 2)$y
+    }
+    set.seed(BOOTSTRAP_SEED)
+    curves <- do.call(rbind, lapply(MEASURES, function(m) {
+        v <- data[[paste0("bl_", m, "_rate")]]
+        bs <- replicate(LOWESS_BOOT, {
+            i <- sample.int(nrow(data), replace = TRUE)
+            one(v[i], data$birthyr[i], grid)
+        })
+        data.frame(birthyr = grid, value = one(v, data$birthyr, grid),
+                   lo = apply(bs, 1, stats::quantile, 0.025),
+                   hi = apply(bs, 1, stats::quantile, 0.975),
+                   measure = VAR_LABELS[[m]])
     }))
     curves$measure <- factor(curves$measure, levels = VAR_LABELS[MEASURES])
-    refs <- data.frame(age = c(25, 35, 50, 65), birthyr = 2022 - c(25, 35, 50, 65))
-    ends <- curves[curves$birthyr == min(curves$birthyr), ]
-    ends$lab <- sub(" \\(Remarketing\\)$", "", as.character(ends$measure))
+    refs <- data.frame(birthyr = 2022 - c(25, 35, 50, 65))
+    refs <- refs[refs$birthyr >= lo_yr & refs$birthyr <= hi_yr, , drop = FALSE]
 
-    p <- ggplot(curves, aes(birthyr, value, colour = measure, linetype = measure)) +
+    p <- ggplot(curves, aes(birthyr, value)) +
         geom_vline(data = refs, aes(xintercept = birthyr), linetype = "dashed",
-                   colour = "grey50", linewidth = 0.3, alpha = 0.8) +
-        geom_text(data = refs, aes(x = birthyr, y = Inf, label = paste("Age", age)),
-                  inherit.aes = FALSE, angle = 90, hjust = 1.1, vjust = -0.4,
-                  size = 2.4, colour = "grey30") +
-        geom_line(linewidth = 0.7) +
-        scale_colour_manual(values = setNames(PALETTE7, VAR_LABELS[MEASURES])) +
-        scale_linetype_manual(values = setNames(LINETYPES7, VAR_LABELS[MEASURES])) +
-        # Labelled at the left edge, not the right. The curves converge with
-        # birth year: at 2003 all seven sit between -0.41 and -0.69 with two of
-        # them 0.005 apart, where labels would need a fan of leader lines. At
-        # 1930 they span 0.51 to -0.37, three quarters of the panel.
-        ggrepel::geom_text_repel(
-            data = ends, aes(label = lab), hjust = 1, size = 2.2,
-            colour = "grey15", direction = "y", nudge_x = -1.5,
-            min.segment.length = 0, segment.size = 0.2,
-            segment.colour = "#9a9a9a", box.padding = 0.12,
-            max.overlaps = Inf, seed = CUM_LABEL_SEED) +
-        # Breaks stay inside the data. The left margin exists to hold the
-        # labels, and a tick out there would advertise cohorts we do not have.
-        scale_x_continuous(limits = c(min(grid) - 26, max(grid)),
-                           breaks = seq(1940, 2000, by = 20)) +
+                   colour = "grey70", linewidth = 0.25) +
+        geom_hline(yintercept = 0, linetype = "dashed", colour = "grey55",
+                   linewidth = 0.3) +
+        geom_ribbon(aes(ymin = lo, ymax = hi), fill = "grey75", alpha = 0.55) +
+        geom_line(linewidth = 0.55) +
+        facet_wrap(~measure, ncol = 2) +
         labs(x = "Birth year", y = "Exposure rate (z-scores)") +
-        theme_blacklight(grid = "both") +
-        guides(colour = "none", linetype = "none")
-
+        theme_blacklight(grid = "both")
     save_fig(p, path, width = width, height = height)
     invisible(curves)
 }

@@ -456,10 +456,15 @@ Expressing exposure per visit changes which of these gaps remain (\cref{fig:coef
 \begin{figure}[ht]
   \centering
   \includegraphics[width=\textwidth]{figures/lowess_age_bl.pdf}
-  \caption{
-    Exposure rate by birth year.
-    Lines are LOWESS-smoothed standardized rates (z-scores) for the seven tracking methods, winsorized at the 95th percentile.
+    \caption{
+    Exposure rate by birth year, one panel per tracking method.
+    Lines are LOWESS-smoothed standardized rates (z-scores), winsorized at the
+    95th percentile; shaded bands are $95\%$ percentile intervals over
+    $\LowessBootDraws$ bootstrap resamples of panelists.
     Vertical dashed lines mark the age-group boundaries.
+    The drawn range is $\LowessTrimLo$ to $\LowessTrimHi$, the middle
+    $95\%$ of birth years; $\LowessTrimmed$ panelists fall outside it, too few
+    to support a curve over the decades they span.
   }
   \label{fig:lowess_age_bl}
 \end{figure}

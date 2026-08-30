@@ -132,6 +132,11 @@ PLACEBO_DRAWS  <- 10000
 # three of Table 3's maxima has 370 visits across 2 domains.
 NARROW_DOMAIN_MAX <- 10L
 
+# Figure 4: bootstrap draws for the band, and the tail trimmed off the drawn
+# range. Below 1939 a decade of the curve rests on a few dozen panelists.
+LOWESS_BOOT <- 200L
+LOWESS_TRIM <- 0.025
+
 MEASURE_DIGITS <- c(ddg_join_ads = 2, third_party_cookies = 2,
                     third_party_cookie_domains = 2, fb_pixel = 3,
                     google_analytics = 3, session_recording = 3,
