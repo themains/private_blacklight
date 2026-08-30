@@ -204,6 +204,10 @@ emit_all <- function(data) {
     build_distribution(data$gini_exposure[!is.na(data$gini_exposure)],
                        "Gini across organizations", digits = 2,
                        file.path(FIGURES_DIR, "dist_tracking_concentration_per_user_summtable"))
+    # The results text quotes these three; Figure 5d is where they live.
+    num("TopOrgMean",   mean(100 * data$top_org_share))
+    num("TopOrgSD",     sd(100 * data$top_org_share))
+    num("TopOrgMedian", median(100 * data$top_org_share))
     build_distribution(100 * data$top_org_share,
                        "Share of visits seen by the top organization (%)",
                        file.path(FIGURES_DIR, "dist_maxshare_hist_summtable"))
