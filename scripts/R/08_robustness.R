@@ -204,8 +204,15 @@ emit_all <- function(data) {
     build_coefplot(data, c(paste0("bl_", MEASURES, "_rate"), "top_org_share"),
                    c(VAR_LABELS[MEASURES], "Top organization share"),
                    file.path(FIGURES_DIR, "coefplot_demo_differences_rate"))
+    # Panel titles carry the units the panel is drawn in. This figure plots
+    # `cum`, where RESCALE_100 measures are in hundreds, and only the top-org
+    # panel used to say so; a reader took the 65+ ad-tracker point for 205
+    # trackers when it is 20,500. Derived from RESCALE_100 so it cannot drift
+    # from \cref{tab:demo_differences_cum_exposure}, which labels them the same way.
+    cum_titles <- ifelse(paste0("bl_", MEASURES) %in% RESCALE_100,
+                         paste0(VAR_LABELS[MEASURES], " (00s)"), VAR_LABELS[MEASURES])
     build_coefplot(cum, c(paste0("bl_", MEASURES), "top_org_visits"),
-                   c(VAR_LABELS[MEASURES], "Top organization visits (00s)"),
+                   c(cum_titles, "Top organization visits (00s)"),
                    file.path(FIGURES_DIR, "coefplot_demo_differences_cumulative"))
     build_lowess_age(data, file.path(FIGURES_DIR, "lowess_age_bl"))
     invisible(NULL)
