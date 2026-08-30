@@ -179,6 +179,8 @@ emit_all <- function(data) {
         file.path(TABLES_DIR, "age_gap_decomposition"))
     build_age_spline_tests(data, file.path(TABLES_DIR, "age_spline_tests"))
     build_device_age_gradient(data, file.path(TABLES_DIR, "device_age_gradient"))
+    build_desktop_only(BL_DOMAIN, data, visit_panel(),
+                       file.path(TABLES_DIR, "desktop_only"))
     build_cum_exposure(BL_DOMAIN, file.path(TABLES_DIR, "cum_exposure_by_hour"),
                        file.path(FIGURES_DIR, "cum_exposure_by_hour"))
 

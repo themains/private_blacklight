@@ -297,6 +297,14 @@ build_cum_exposure <- function(bl, table_path, figure_path) {
     res <- vapply(MEASURES_DESC, share_by, numeric(length(CUM_HOUR_MARKS)),
                   hours = CUM_HOUR_MARKS)
 
+    # The text quotes the share meeting an ad tracker *or* a third-party cookie,
+    # which is a union and so not a row of this table. Registering it here stops
+    # the sentence being served by whatever macro happens to share its value.
+    fe_any <- m[ddg_join_ads > 0 | third_party_cookies > 0, .(fh = min(vh)), by = caseid]
+    for (h in c(12, 48))
+        num(sprintf("EverAnyBy%s", c("12" = "Twelve", "48" = "FortyEight")[as.character(h)]),
+            100 * sum(fe_any$fh <= start + h * 3600) / n)
+
     got <- round(res[, "ddg_join_ads"], 3)
     if (!isTRUE(all.equal(unname(got), CUM_EXPECTED)))
         stop("cumulative exposure curve moved: ad trackers ",

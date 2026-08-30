@@ -368,6 +368,56 @@ person_device <- function() {
     d[!duplicated(caseid), .(caseid, device = dev)]
 }
 
+# Desktop-only sensitivity.
+#
+# The manuscript's answer to "a browser audit misses mobile applications" is to
+# re-estimate on panelists whose metered activity is desktop only. That check
+# was described in the text but computed nowhere, and the panelist count it
+# quoted matched no definition in the data. It is computed here.
+#
+# Rates are per *scanned* visit for both samples. The main tables divide by all
+# visits, so the two are not directly comparable and the table says so.
+DESKTOP_TERMS <- c("Woman", "Race: Asian", "Educ: College", AGE_TERM_LABEL)
+
+desktop_only_ids <- function() {
+    v <- read_web_visits(c("caseid", "device_type"))
+    v <- v[nzchar(device_type)]
+    v[, dev := fifelse(device_type == "Laptop/Desktop", "Desktop", "Mobile")]
+    v[, .(desk = all(dev == "Desktop")), by = caseid][desk == TRUE, caseid]
+}
+
+build_desktop_only <- function(bl, person, visits, path) {
+    b <- as.data.table(bl)[, private_domain := gsub("_", ".", filename, fixed = TRUE)]
+    m <- merge(as.data.table(visits), b, by = "private_domain")   # scanned only
+    agg <- m[, c(list(sv = sum(visits)),
+                 lapply(.SD, function(x) sum(x * visits))),
+             by = caseid, .SDcols = MEASURES]
+    for (k in MEASURES) set(agg, NULL, paste0("ds_", k), agg[[k]] / agg$sv)
+
+    d <- merge(as.data.table(person), agg[, c("caseid", paste0("ds_", MEASURES)),
+                                         with = FALSE], by = "caseid")
+    ids <- desktop_only_ids()
+    full <- as.data.frame(d)
+    only <- as.data.frame(d[caseid %in% ids])
+    num("DesktopOnlyN", tex_num(nrow(only)))
+    cat(sprintf("  desktop-only: %d of %d panelists\n", nrow(only), nrow(full)))
+
+    cell <- function(fit, term) {
+        a <- fit[fit$term == term, ]
+        if (!nrow(a)) return("--")
+        sprintf("%.3f%s", a$b, stars(a$p))
+    }
+    rows <- lapply(MEASURES, function(k) {
+        y <- paste0("ds_", k)
+        c(VAR_LABELS[[k]],
+          unlist(lapply(DESKTOP_TERMS, function(t) c(cell(fit_demo(y, full), t),
+                                                     cell(fit_demo(y, only), t)))))
+    })
+    out <- as.data.frame(do.call(rbind, rows), stringsAsFactors = FALSE)
+    write_tex(out, path)
+    invisible(out)
+}
+
 build_device_age_gradient <- function(data, path) {
     d <- merge(as.data.table(data), person_device(), by = "caseid", all.x = TRUE)
     d <- as.data.frame(d[!is.na(device)])
