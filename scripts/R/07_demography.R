@@ -105,6 +105,8 @@ build_lowess_age <- function(data, path, width = FIG_FULL_W, height = 3.8) {
     }))
     curves$measure <- factor(curves$measure, levels = VAR_LABELS[MEASURES])
     refs <- data.frame(age = c(25, 35, 50, 65), birthyr = 2022 - c(25, 35, 50, 65))
+    ends <- curves[curves$birthyr == min(curves$birthyr), ]
+    ends$lab <- sub(" \\(Remarketing\\)$", "", as.character(ends$measure))
 
     p <- ggplot(curves, aes(birthyr, value, colour = measure, linetype = measure)) +
         geom_vline(data = refs, aes(xintercept = birthyr), linetype = "dashed",
@@ -115,10 +117,23 @@ build_lowess_age <- function(data, path, width = FIG_FULL_W, height = 3.8) {
         geom_line(linewidth = 0.7) +
         scale_colour_manual(values = setNames(PALETTE7, VAR_LABELS[MEASURES])) +
         scale_linetype_manual(values = setNames(LINETYPES7, VAR_LABELS[MEASURES])) +
-        labs(x = "Birth year", y = "Exposure rate (z-scores)",
-             colour = NULL, linetype = NULL) +
+        # Labelled at the left edge, not the right. The curves converge with
+        # birth year: at 2003 all seven sit between -0.41 and -0.69 with two of
+        # them 0.005 apart, where labels would need a fan of leader lines. At
+        # 1930 they span 0.51 to -0.37, three quarters of the panel.
+        ggrepel::geom_text_repel(
+            data = ends, aes(label = lab), hjust = 1, size = 2.2,
+            colour = "grey15", direction = "y", nudge_x = -1.5,
+            min.segment.length = 0, segment.size = 0.2,
+            segment.colour = "#9a9a9a", box.padding = 0.12,
+            max.overlaps = Inf, seed = CUM_LABEL_SEED) +
+        # Breaks stay inside the data. The left margin exists to hold the
+        # labels, and a tick out there would advertise cohorts we do not have.
+        scale_x_continuous(limits = c(min(grid) - 26, max(grid)),
+                           breaks = seq(1940, 2000, by = 20)) +
+        labs(x = "Birth year", y = "Exposure rate (z-scores)") +
         theme_blacklight(grid = "both") +
-        guides(colour = guide_legend(nrow = 2), linetype = guide_legend(nrow = 2))
+        guides(colour = "none", linetype = "none")
 
     save_fig(p, path, width = width, height = height)
     invisible(curves)
