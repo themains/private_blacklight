@@ -20,7 +20,11 @@
 # fetch, the rescans. This module reads their outputs and does the analysis.
 
 FP_ERROR_LOG <- file.path(DATA_DIR, "blacklight_errors.log")
-FP_BL_JSON <- file.path(DATA_DIR, "blacklight_json")
+# The scan corpus normally lives in the archive, not a loose directory, so
+# resolve it through bl_corpus() rather than by path. Reading the bare path
+# returns nothing when the directory is absent, and "no scans" is
+# indistinguishable here from "no domain was scanned".
+FP_BL_JSON <- function() bl_corpus()
 AUDIT_DIR <- file.path(DATA_DIR, "selection_audit")
 HA_DIR <- file.path(DATA_DIR, "httparchive")
 WB_DIR <- file.path(DATA_DIR, "wayback")
@@ -86,13 +90,52 @@ RESCAN_LABELS <- c("Ad trackers", "Third-party cookies", "Facebook Pixel",
                    "Session recording", "Key logging", "Canvas fingerprinting",
                    "Google Analytics")
 
-build_rescan_drift <- function(bl, path) {
+# The retry pass. parse_blacklight marks these by the `domain_name` key their
+# payloads carry and the first pass's never did; it selects the same 434
+# domains as diffing the corpus against its pre-retry state in git.
+#
+# An earlier version defined them as the error log intersected with the corpus.
+# That was checked while a stray directory had reduced the corpus to exactly
+# these 434 files, so the test was circular and passed. On the whole corpus the
+# intersection is 987, because a domain can fail once and be scanned later
+# without the retry pass being what reached it.
+register_retry_pass <- function(bl, visits) {
+    rec_files <- attr(bl, "recovered")
+    if (is.null(rec_files))
+        stop("parse_blacklight did not mark the recovered scans", call. = FALSE)
+    rec <- gsub("_", ".", rec_files, fixed = TRUE)
+    bl <- copy(as.data.table(bl))
+    bl[, recovered := filename %chin% rec_files]
+    v <- as.data.table(visits)
+    num("RetryRecovered", tex_num(length(rec)))
+    num("RetryVisitShare",
+        100 * v[private_domain %chin% rec, sum(visits)] / v[, sum(visits)])
+    num("RetryAdTrackers",   bl[recovered == TRUE,  mean(ddg_join_ads)])
+    num("FirstPassAdTrackers", bl[recovered == FALSE, mean(ddg_join_ads)])
+    cat(sprintf("  retry pass: %d recovered, %.1f vs %.1f ad trackers per domain\n",
+                length(rec), bl[recovered == TRUE, mean(ddg_join_ads)],
+                bl[recovered == FALSE, mean(ddg_join_ads)]))
+    invisible(rec)
+}
+
+build_rescan_drift <- function(bl, visits, path) {
     n26 <- parse_blacklight(FP_BL_JSON_2026)
     m <- merge(bl, n26, by = "filename", suffixes = c("_25", "_26"))
     if (nrow(m) != nrow(n26))
         stop("rescan drift: ", nrow(n26) - nrow(m), " rescanned domains are ",
              "absent from the January corpus", call. = FALSE)
     cat(sprintf("  rescan drift: %d domains matched in both scans\n", nrow(m)))
+
+    # What the rescanned 500 cover, which the text reports alongside the table.
+    d500 <- gsub("_", ".", n26$filename, fixed = TRUE)
+    v <- as.data.table(visits)
+    num("RescanN", tex_num(nrow(n26)))
+    num("RescanPanelistShare",
+        100 * v[private_domain %chin% d500, uniqueN(caseid)] / v[, uniqueN(caseid)])
+    num("RescanVisitShare",
+        100 * v[private_domain %chin% d500, sum(visits)] / v[, sum(visits)])
+    num("RescanTimeShare",
+        100 * v[private_domain %chin% d500, sum(duration)] / v[, sum(duration)])
 
     rows <- lapply(seq_along(RESCAN_ORDER), function(i) {
         a <- m[[paste0(RESCAN_ORDER[i], "_25")]] > 0
@@ -112,7 +155,7 @@ build_rescan_drift <- function(bl, path) {
 build_scan_by_reach <- function(visits, path) {
     dom <- as.data.table(visits)[, .(reach = uniqueN(caseid), visits = sum(visits)),
                                  by = private_domain]
-    scanned <- sub("\\.json$", "", list.files(FP_BL_JSON, pattern = "\\.json$"))
+    scanned <- sub("\\.json$", "", list.files(FP_BL_JSON(), pattern = "\\.json$"))
     dom[, scanned := gsub(".", "_", private_domain, fixed = TRUE) %chin% scanned]
 
     rows <- lapply(REACH_THRESHOLDS, function(t) {
@@ -125,7 +168,18 @@ build_scan_by_reach <- function(visits, path) {
     })
     write_tex(do.call(rbind, rows), path)
 
-    # The surrounding prose quotes these, so report them where they are computed.
+    # The surrounding prose quotes these.
+    num("ScansCompleted", tex_num(sum(dom$scanned)))
+    num("DomainsTotal",   format(nrow(dom), big.mark = ","))
+    num("ScanDomainShare", 100 * mean(dom$scanned))
+    num("VisitsScanned",  tex_num(dom[scanned == TRUE, sum(visits)]))
+    num("VisitsTotal",    tex_num(sum(dom$visits)))
+    num("VisitsMillions", sum(dom$visits) / 1e6)
+    num("ScanVisitCoverage",
+        100 * dom[scanned == TRUE, sum(visits)] / sum(dom$visits))
+    num("ReachTopShare", 100 * mean(dom[reach >= 100]$scanned))
+    num("ReachTenShare", 100 * mean(dom[reach >= 10]$scanned))
+    num("ReachTopN", tex_num(nrow(dom[reach >= 100])))
     cat(sprintf("  scan-by-reach: %s of %s domains scanned (%.1f%%); ",
                 format(sum(dom$scanned), big.mark = ","),
                 format(nrow(dom), big.mark = ","), 100 * mean(dom$scanned)))
@@ -139,11 +193,12 @@ build_scan_by_reach <- function(visits, path) {
 build_scan_failure_reasons <- function(visits, path) {
     dom <- as.data.table(visits)[, .(reach = uniqueN(caseid), visits = sum(visits)),
                                  by = private_domain]
-    scanned <- sub("\\.json$", "", list.files(FP_BL_JSON, pattern = "\\.json$"))
+    scanned <- sub("\\.json$", "", list.files(FP_BL_JSON(), pattern = "\\.json$"))
     dom[, scanned := gsub(".", "_", private_domain, fixed = TRUE) %chin% scanned]
 
     un <- merge(dom[!(scanned)], parse_scan_errors(), by = "private_domain", all.x = TRUE)
     un[is.na(reason), reason := "not_in_error_log"]
+    num("UnscannedDomains", tex_num(nrow(un)))
     cat(sprintf("  unscanned domains: %s (%.1f%% of visits)\n",
                 format(nrow(un), big.mark = ","),
                 100 * sum(un$visits) / sum(dom$visits)))
@@ -448,7 +503,7 @@ build_google_reach_audit <- function(third_parties, visits, path) {
     cat(sprintf("  Google LLC domains in Tracker Radar: %d\n", length(goog)))
 
     scanned <- gsub("_", ".", sub("\\.json$", "",
-                    list.files(FP_BL_JSON, pattern = "\\.json$")), fixed = TRUE)
+                    list.files(FP_BL_JSON(), pattern = "\\.json$")), fixed = TRUE)
     tp <- as.data.table(third_parties)
     hit <- unique(tp[tp_domain %chin% goog, private_domain])
     v <- as.data.table(visits)[, .(visits = sum(visits)), by = private_domain]
@@ -842,6 +897,11 @@ build_coverage_bounds <- function(visits, bl, person, table_path, figure_path) {
     f <- coverage_frame(visits, bl)
     m <- f$m; scanned <- f$scanned; ha_meas <- f$ha_meas; wb_meas <- f$wb_meas
 
+    num("UnscannedVisitShare", 100 * sum(m$visits[!scanned]) / sum(m$visits))
+    num("HAMissingCoverage",
+        100 * sum(m$visits[!scanned & ha_meas]) / sum(m$visits[!scanned]))
+    num("WBMissingCoverage",
+        100 * sum(m$visits[!scanned & !ha_meas & wb_meas]) / sum(m$visits[!scanned]))
     cat(sprintf("  unscanned visits %.1f%%; of those HA covers %.1f%%, WB adds %.1f%%, %.1f%% never measured\n",
         100 * sum(m$visits[!scanned]) / sum(m$visits),
         100 * sum(m$visits[!scanned & ha_meas]) / sum(m$visits[!scanned]),
@@ -915,6 +975,11 @@ build_implications_tables <- function(person, rates) {
     # Per-user scan coverage, in percentage points, on the demographic spec.
     d$coverage_pct <- 100 * d$coverage
     cov <- fit_terms("coverage_pct", d)
+    # The text names the largest coefficient in this table.
+    big <- names(cov)[which.max(vapply(cov, function(x) abs(x[1]), numeric(1)))]
+    num("CovDemoLargestTerm", big)
+    num("CovDemoLargestB", cov[[big]][1], "%.2f")
+    num("CovDemoLargestP", fmt_p(cov[[big]][3]))
     write_tex(data.frame(term = names(cov),
                          v = vapply(cov, cell_be, character(1))),
               file.path(TABLES_DIR, "implications_coverage_by_demo"))
@@ -930,6 +995,10 @@ build_implications_tables <- function(person, rates) {
     stems <- unlist(lapply(IMPL_MEASURES, function(k)
         c(paste0("ha22_", k), paste0("ha25_", k), paste0("drift_", k))))
     drift <- lapply(stems, fit_terms, data = d)
+    names(drift) <- stems
+    # The two p-values the text quotes when saying the gaps do not drift.
+    num("DriftColAdP", fmt_p(drift[["drift_ddg_join_ads"]][["Educ: College"]][3]))
+    num("DriftAsianAdP", fmt_p(drift[["drift_ddg_join_ads"]][["Race: Asian"]][3]))
     write_tex(data.frame(term = names(drift[[1]]),
                          do.call(cbind, lapply(drift, vapply, cell_be, character(1)))),
               file.path(TABLES_DIR, "implications_drift_by_demo"))
@@ -988,7 +1057,9 @@ emit_validity <- function(bl, person, visits, third_parties) {
     coded <- fread(file.path(AUDIT_DIR, "audit_sample_coded.csv"), showProgress = FALSE)
 
     build_scan_by_reach(visits, file.path(TABLES_DIR, "scan_by_reach"))
-    build_rescan_drift(bl, file.path(TABLES_DIR, "rescan_drift"))
+    build_rescan_drift(bl, visits, file.path(TABLES_DIR, "rescan_drift"))
+    register_retry_pass(bl, visits)
+    num("AuditRescanN", tex_num(length(list.files(FP_AUDIT_JSON, pattern = "\\.json$"))))
     build_scan_failure_reasons(visits, file.path(TABLES_DIR, "scan_failure_reasons"))
     build_wb_liveness(visits, bl, file.path(TABLES_DIR, "wb_liveness"))
     build_selection_audit_composition(coded,
@@ -1012,6 +1083,18 @@ emit_validity <- function(bl, person, visits, third_parties) {
     # Per-panelist coverage and fills, derived here rather than read from a file
     # a separate pipeline had to remember to rebuild.
     rates <- build_user_scenario_rates(visits, bl, person)
+
+    # Per-panelist scan coverage. The text reports this distribution to argue
+    # the pooled coverage figure is not hiding panelists with almost none.
+    cv <- as.data.frame(rates)$coverage
+    num("CovMean",   100 * mean(cv))
+    num("CovMedian", 100 * median(cv))
+    num("CovSD",     100 * sd(cv))
+    num("CovPFive",  100 * quantile(cv, 0.05))
+    num("CovPNinetyFive", 100 * quantile(cv, 0.95))
+    num("CovHalfPlus", 100 * mean(cv >= 0.5))
+    num("CovSeventyPlus", 100 * mean(cv >= 0.7))
+
     build_implications_tables(person, rates)
     build_scenarios_figure(person, rates,
                            file.path(FIGURES_DIR, "implications_demo_scenarios"))

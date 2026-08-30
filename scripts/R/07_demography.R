@@ -196,6 +196,7 @@ decomp_labels <- function() {
     v <- read_web_visits(c("caseid", "private_domain", "category"))
     v <- v[!is.na(private_domain) & nzchar(private_domain)]
     v[!nzchar(category) | is.na(category), category := UNCATEGORISED]
+    num("UncategorisedVisitShare", 100 * mean(v$category == UNCATEGORISED))
     v[, vid := .I]
     lab <- v[, .(label = trimws(unlist(strsplit(category, ",", fixed = TRUE)))),
              by = .(vid, caseid, private_domain)]
@@ -249,6 +250,15 @@ build_age_gap_decomposition <- function(bl, person, path, reps = DECOMP_REPS,
         ci <- apply(draws, 1, quantile, c(.025, .975), na.rm = TRUE)
 
         y <- pt$young
+        # The text quotes the ad-tracker and cookie splits.
+        stem <- if (m == "ddg_join_ads") "DecompAd" else
+                if (m == "third_party_cookies") "DecompCookies" else NULL
+        if (!is.null(stem)) {
+            num(paste0(stem, "Gap"), y[["gap"]], "%.2f")
+            num(paste0(stem, "SiteChoice"), y[["site_choice"]], "%.2f")
+            num(paste0(stem, "Composition"), y[["composition"]], "%.2f")
+            num(paste0(stem, "SiteChoicePct"), 100 * y[["site_choice"]] / y[["gap"]], "%.0f")
+        }
         cat(sprintf("  %-24s gap %.3f = composition %.3f + site choice %.3f + interaction %.3f (%.0f%% site choice)\n",
                     m, y[["gap"]], y[["composition"]], y[["site_choice"]],
                     y[["interaction"]], 100 * y[["site_choice"]] / y[["gap"]]))

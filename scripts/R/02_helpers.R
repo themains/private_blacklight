@@ -21,6 +21,73 @@ write_tex <- function(df, path, group_breaks = NULL) {
 }
 
 # ---------------------------------------------------------------------------
+# Number registry
+#
+# Every quantity the manuscript quotes that no table carries is registered here
+# and written to tables/numbers.tex as a LaTeX macro, so the prose cites the
+# code that computed it rather than a digit someone typed once. Four data
+# corrections in a row moved tables and left sentences behind; this is the fix
+# for that, and 12_check_prose.R fails the build if a bare numeral appears in
+# prose where a macro belongs.
+#
+# Macro names are letters only. TeX rejects digits and underscores in control
+# sequence names, so SixtyFive rather than 65 or sixty_five.
+# ---------------------------------------------------------------------------
+.numbers <- new.env(parent = emptyenv())
+
+num <- function(name, value, fmt = "%.1f") {
+    if (!grepl("^[A-Za-z]+$", name))
+        stop("macro name must be letters only, got '", name, "'", call. = FALSE)
+    v <- if (is.character(value)) value else sprintf(fmt, value)
+    # Registering the same name twice with different values means two things in
+    # the pipeline claim to be the same quantity and are not.
+    prev <- .numbers[[name]]
+    if (!is.null(prev) && !identical(prev, v))
+        stop("number '", name, "' registered as '", prev, "' and then '", v,
+             "'", call. = FALSE)
+    .numbers[[name]] <- v
+    invisible(value)
+}
+
+# A coefficient, its standard error and its p-value taken from the same fit
+# that produced a table cell, so the macro and the cell cannot drift apart.
+# `scale` carries the table's own units: Table 5 reports in hundreds.
+num_coef <- function(stem, models, measure, term, scale = 1) {
+    m <- models[[measure]]
+    if (is.null(m)) stop("no measure '", measure, "'", call. = FALSE)
+    i <- match(term, COEF_ORDER)
+    if (is.na(i)) stop("no term '", term, "' in COEF_ORDER", call. = FALSE)
+    num(paste0(stem, "B"), tex_num(m$b[i] * scale))
+    num(paste0(stem, "SE"), tex_num(m$se[i] * scale))
+    num(paste0(stem, "P"), fmt_p(m$p[i]))
+    invisible(m$b[i] * scale)
+}
+
+# The manuscript writes p-values as ".45" and very small ones as "< .001".
+fmt_p <- function(p) {
+    if (is.na(p)) return("--")
+    if (p < 0.001) return("< .001")
+    sub("^0", "", sprintf("%.2f", p))
+}
+
+# The manuscript writes large numbers as $34{,}512$: in math mode a bare comma
+# is punctuation and takes a trailing space, while {,} is an ordinary atom and
+# does not. Macros must emit the same form or substituting one changes the
+# typography.
+tex_num <- function(x, digits = 0) {
+    formatC(x, format = "f", digits = digits, big.mark = "{,}")
+}
+
+write_numbers <- function(path) {
+    if (!grepl("\\.tex$", path)) path <- paste0(path, ".tex")
+    nm <- sort(ls(.numbers))
+    writeLines(vapply(nm, function(k)
+        sprintf("\\newcommand{\\%s}{%s}", k, .numbers[[k]]), character(1)), path)
+    cat(sprintf("  wrote %d numbers to %s\n", length(nm), basename(path)))
+    invisible(nm)
+}
+
+# ---------------------------------------------------------------------------
 # Formatting
 # ---------------------------------------------------------------------------
 stars <- function(p) {

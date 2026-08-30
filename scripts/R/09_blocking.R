@@ -48,6 +48,7 @@ CARD_MEASURES <- list(
 # domain, which is the optimistic reading of what a blocker achieves.
 build_residual_domain <- function(bl) {
     scripts <- fread(FP_DOMAIN_SCRIPTS)
+    num("DomainScriptPairs", tex_num(nrow(scripts)))
     pairs <- fread(FP_BLOCKED_PAIRS)
     d <- merge(scripts, pairs, by = c("private_domain", "script_domain"), all.x = TRUE)
     if (anyNA(d[[paste0("blocked_", names(TIERS)[1])]]))

@@ -11,12 +11,23 @@
 # 34,078 scans, so the first group is taken rather than searched.
 parse_blacklight <- function(json_dir = bl_corpus()) {
     files <- sort(list.files(json_dir, pattern = "\\.json$", full.names = FALSE))
+    # An empty corpus scores every domain as carrying no trackers, which is a
+    # valid-looking answer rather than an error.
+    if (!length(files))
+        stop("no Blacklight scans in ", json_dir, call. = FALSE)
     message(sprintf("Parsing %s Blacklight scans", format(length(files), big.mark = ",")))
 
     out <- vector("list", length(files))
+    # Scans recovered by the retry pass carry a `domain_name` key that the
+    # first pass never wrote, which is the only marker distinguishing them.
+    # Carried as an attribute rather than a column: two places build the
+    # measure list with setdiff(names(bl), ...) and would sum a flag as if it
+    # were a tracking count.
+    recovered <- logical(length(files))
     for (i in seq_along(files)) {
         payload <- fromJSON(file.path(json_dir, files[i]), simplifyVector = FALSE)
         cards <- payload$groups[[1]]$cards
+        recovered[i] <- !is.null(payload$domain_name)
         row <- list(filename = sub("\\.json$", "", files[i]))
         for (nm in c(BL_COUNT_CARDS, BL_FLAG_CARDS)) row[[nm]] <- 0L
 
@@ -31,11 +42,13 @@ parse_blacklight <- function(json_dir = bl_corpus()) {
         out[[i]] <- row
         if (i %% 5000 == 0) message(sprintf("  %s/%s", i, length(files)))
     }
-    setcolorder(
+    dt <- setcolorder(
         rbindlist(out),
         c("filename", "ddg_join_ads", "third_party_cookies", "canvas_fingerprinting",
           "session_recording", "key_logging", "fb_pixel", "google_analytics")
     )[]
+    setattr(dt, "recovered", sub("\\.json$", "", files[recovered]))
+    dt
 }
 
 # ---------------------------------------------------------------------------
@@ -60,8 +73,45 @@ parse_blacklight <- function(json_dir = bl_corpus()) {
 # keep in step.
 .corpus_cache <- new.env(parent = emptyenv())
 
+# How many payloads the archive holds, without unpacking it. Only consulted
+# when a loose directory is also present, so the usual path pays nothing.
+.archive_count <- function(archive) {
+    parts <- sort(Sys.glob(paste0(archive, ".part-*")))
+    src <- if (file.exists(archive)) shQuote(archive)
+           else if (length(parts)) paste(shQuote(parts), collapse = " ")
+           else return(NA_integer_)
+    lister <- if (grepl("\\.zip$", archive)) "funzip 2>/dev/null" else "tar -tzf -"
+    if (grepl("\\.zip$", archive)) return(NA_integer_)  # zip needs a seekable file
+    out <- suppressWarnings(try(system(
+        sprintf("cat %s | %s | grep -c '\\.json$'", src, lister),
+        intern = TRUE, ignore.stderr = TRUE), silent = TRUE))
+    n <- suppressWarnings(as.integer(out[1]))
+    if (length(n) == 1L && !is.na(n) && n > 0L) n else NA_integer_
+}
+
 corpus_dir <- function(dir, archive, label) {
-    if (dir.exists(dir)) return(dir)
+    if (dir.exists(dir)) {
+        # A loose directory wins, but only if it is actually the whole corpus.
+        # Checking out a commit that predates the archive restores the loose
+        # files as tracked content and the next checkout deletes them again,
+        # leaving whatever was untracked behind. That happened here: a stray
+        # 434-file directory silently replaced 34,512 scans and the pipeline
+        # ran to completion on 1.3% of the data, writing plausible tables.
+        # Preferring a partial directory in silence is the bug; say so instead.
+        loose <- length(list.files(dir, pattern = "\\.json$"))
+        want <- .archive_count(archive)
+        if (!is.na(want) && loose < want)
+            stop(sprintf(paste("%s corpus: %s/ holds %s scans but %s holds %s.",
+                               "Refusing to run on the smaller one. Delete the",
+                               "directory to use the archive, or extract the",
+                               "archive over it."),
+                         label, basename(dir), format(loose, big.mark = ","),
+                         basename(archive), format(want, big.mark = ",")),
+                 call. = FALSE)
+        message(sprintf("Using %s loose %s scans from %s/",
+                        format(loose, big.mark = ","), label, basename(dir)))
+        return(dir)
+    }
     key <- basename(archive)
     if (!is.null(.corpus_cache[[key]])) return(.corpus_cache[[key]])
     # GitHub rejects blobs over 100 MB, so an archive larger than that is

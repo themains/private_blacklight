@@ -144,11 +144,21 @@ emit_all <- function(data) {
     emit_float(build_demo_table(data, c(paste0("bl_", MEASURES, "_rate"), "top_org_share"),
                      c(SHORT[MEASURES], "Top org share"), 3,
                      file.path(TABLES_DIR, "demo_differences_exposure_rate")), "tab6")
-    emit_float(build_demo_table(cum, c(paste0("bl_", MEASURES), "top_org_visits"),
+    tab5 <- build_demo_table(cum, c(paste0("bl_", MEASURES), "top_org_visits"),
                      c(ifelse(paste0("bl_", MEASURES) %in% RESCALE_100,
                               paste0(SHORT[MEASURES], " (00s)"), SHORT[MEASURES]),
                        "Top org visits (00s)"), 2,
-                     file.path(TABLES_DIR, "demo_differences_cum_exposure")), "tab5")
+                     file.path(TABLES_DIR, "demo_differences_cum_exposure"))
+    emit_float(tab5, "tab5")
+
+    # Cells the results section quotes. Ad trackers, cookies and top-org visits
+    # are modelled in hundreds here, so `scale` puts them back on the raw count
+    # the prose uses. Getting that wrong is invisible when reading the table
+    # beside the sentence, which is how these drifted in the first place.
+    m5 <- attr(tab5, "models")
+    num_coef("CumColCookies", m5, "Cookies (00s)", "Educ: College", scale = 100)
+    num_coef("CumColSessionRec", m5, "Session rec", "Educ: College")
+    num_coef("CumWomanCanvas", m5, "Canvas FP", "Woman")
 
     build_robustness_denominator(data, file.path(TABLES_DIR, "robustness_denominator"))
     suppressWarnings(build_presence_adjusted(
@@ -283,6 +293,10 @@ build_presence_adjusted <- function(data, path, reps = BOOTSTRAP_REPS,
         max(abs(a - b))
     }
 
+    # The manuscript quotes individual cells of this table, so the raw
+    # estimates are kept alongside the formatted ones and registered below.
+    # Re-fitting to recover them would repeat the bootstrap.
+    raw <- new.env(parent = emptyenv())
     one <- function(yvar, presence) {
         f <- fit_median(yvar, d, presence)
         se <- presence_se(yvar, d, presence, reps, seed)
@@ -291,6 +305,10 @@ build_presence_adjusted <- function(data, path, reps = BOOTSTRAP_REPS,
         term[names(b) %in% PRESENCE_TERMS] <-
             PRESENCE_LABELS[match(names(b)[names(b) %in% PRESENCE_TERMS], PRESENCE_TERMS)]
         p <- 2 * (1 - pnorm(abs(b / se[names(b)])))
+        raw[[paste0(yvar, if (presence) ".B" else ".A")]] <-
+            data.frame(term = unname(term), b = unname(b),
+                       se = unname(se[names(b)]), p = unname(p),
+                       row.names = NULL, stringsAsFactors = FALSE)
         setNames(cell(b, se[names(b)], p), term)
     }
 
@@ -316,5 +334,20 @@ build_presence_adjusted <- function(data, path, reps = BOOTSTRAP_REPS,
                panel(TRUE, order_pres))
     if (!grepl("\\.tex$", path)) path <- paste0(path, ".tex")
     cat(paste(lines, collapse = "\n"), file = path)
+
+    # The cells the text quotes, from the same fits that filled the table.
+    pres <- function(stem, yvar, panel, term) {
+        r <- raw[[paste0(yvar, ".", panel)]]
+        i <- match(term, r$term)
+        if (is.na(i)) stop("no term '", term, "' in ", yvar, call. = FALSE)
+        num(paste0(stem, "B"), tex_num(r$b[i]))
+        num(paste0(stem, "SE"), tex_num(r$se[i]))
+        num(paste0(stem, "P"), fmt_p(r$p[i]))
+    }
+    pres("PresColAdVolFree", "bl_ddg_join_ads", "A", "Educ: College")
+    pres("PresColAdVolHeld", "bl_ddg_join_ads", "B", "Educ: College")
+    pres("PresOldAd",        "bl_ddg_join_ads", "B", "Age: 65+")
+    pres("PresOldCookies",   "bl_third_party_cookies", "B", "Age: 65+")
+    pres("PresAsianAd",      "bl_ddg_join_ads", "B", "Race: Asian")
     invisible(lines)
 }

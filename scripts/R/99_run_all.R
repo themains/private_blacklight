@@ -20,7 +20,8 @@ STEPS <- c(
     "08_robustness.R",  # denominator, fills, drift
     "09_blocking.R",    # residual exposure, placebo, projection
     "10_validity.R",    # coverage bounds, drift, selection audit
-    "11_missing_data.R" # the missing-data taxonomy document
+    "11_missing_data.R",# the missing-data taxonomy document
+    "12_check_prose.R"  # every manuscript number traces to a source
 )
 
 dir.create(here("logs"), showWarnings = FALSE)
@@ -66,6 +67,9 @@ emit_blocking(BL_DOMAIN, person, VISITS)
 emit_validity(BL_DOMAIN, person, VISITS, THIRD_PARTIES)
 build_missing_data_doc(BL_DOMAIN, WTM_DOMAIN, person,
                        here("scripts", "missing_data.md"))
+
+write_numbers(file.path(TABLES_DIR, "numbers"))
+check_prose()
 
 say(sprintf("wrote %d tables, %d figures",
             length(list.files(TABLES_DIR, "\\.tex$")),

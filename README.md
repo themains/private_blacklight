@@ -167,22 +167,29 @@ archive/        superseded outputs; see archive/README.md
 logs/           one run log per `make analysis`, not tracked
 ```
 
-### Checking the prose against the tables
+### Where the numbers in the text come from
 
-Numbers in the text drift when a table is regenerated and the sentence citing it
-is not. The check for this compares every number in a paragraph against the
-tables that paragraph cites:
+A number in the prose and the same number in a table used to have no mechanical
+relationship, so a regenerated table and a stale sentence disagreed silently.
+That happened four times: the visit-panel double-count, the 434 recovered scans,
+the cookie-drift restriction, and a hand-typed table nobody regenerated.
 
-```
-python audit_provenance.py ms/blacklight.tex tables
-```
+Now every quantity the text quotes comes from the code that computed it.
+`scripts/R/` registers it with `num()`, `99_run_all.R` writes
+`tables/numbers.tex` as LaTeX macros, and the manuscript says `\CovMean` rather
+than 77.4. `scripts/R/12_check_prose.R` runs as the last step of `make analysis`
+and fails the build if a numeral appears in the prose that is not in a table,
+not supplied by a macro, and not on an explicit allowlist of structural
+constants such as software versions and p-value thresholds.
 
-It currently reports sixteen near-misses, and all sixteen are known and benign.
-Six are honest rounding, where the prose gives 5.19 for a table's 5.186. Three
-are an artifact of the parser, which splits LaTeX thin-space commas so that
-`4{,}398{,}822` reads as 398. The remaining seven are numbers that happen to sit
-near a value in some other table the same paragraph cites, and each was checked
-against the pipeline by recomputing it. Anything beyond these is worth chasing.
+The check compares at the precision the prose actually wrote, so 6.19 in a
+sentence matches 6.193 in a table, while 19,701 against 19,702 does not.
+
+It is not airtight. A prose number that coincidentally equals some unrelated
+value in a table passes, and with roughly 1,500 artifact values small integers
+nearly always find one. The check is strong for distinctive numbers and weak for
+small ones; reading a sentence against its source is still the only complete
+answer.
 
 The two scan corpora are stored as archives rather than loose files, since
 34,512 Blacklight payloads cost 119 MB packed against 838 MB expanded.

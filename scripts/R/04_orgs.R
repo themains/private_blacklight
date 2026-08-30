@@ -69,8 +69,12 @@ registered_domain <- function(host) {
 # third parties a domain loads: organization attribution here, and the Google
 # reach check in 10_validity. Returns registrable third-party domains, so the
 # pinned public suffix list is applied once rather than per consumer.
-extract_third_parties <- function(json_dir = FP_BL_JSON_DIR) {
+# Resolve through bl_corpus(), not the bare loose-directory path: the corpus
+# normally lives in the archive, and an absent directory yields no third
+# parties rather than an error.
+extract_third_parties <- function(json_dir = bl_corpus()) {
     files <- sort(list.files(json_dir, pattern = "\\.json$"))
+    if (!length(files)) stop("no scans in ", json_dir, call. = FALSE)
     message(sprintf("Extracting third parties from %s scans",
                     format(length(files), big.mark = ",")))
     out <- vector("list", length(files))
@@ -141,12 +145,24 @@ build_org_reach <- function(pairs) {
     top <- cap[cap[, .I[which.max(captured)], by = caseid]$V1]
     dom <- top[, .(dominance = .N), by = org]
     out <- merge(reach, dom, by = "org", all.x = TRUE)
-    out[is.na(dominance), dominance := 0L][]
+    out[is.na(dominance), dominance := 0L]
+
+    # Google's reach and dominance, quoted in the abstract and the results.
+    n <- uniqueN(visits$caseid)
+    g <- out[org == "Google LLC"]
+    if (nrow(g)) {
+        num("GoogleReach",     100 * g$reach / n)
+        num("GoogleDominance", 100 * g$dominance / n)
+    }
+    out[]
 }
 
 build_org_gini <- function(pairs) {
     visits <- visit_panel()[!is.na(private_domain)]
     cap <- merge(visits, pairs, by = "private_domain", allow.cartesian = TRUE)[
         , .(captured = sum(visits)), by = .(caseid, org)]
-    cap[, .(gini_exposure = gini(captured)), by = caseid]
+    out <- cap[, .(gini_exposure = gini(captured)), by = caseid]
+    # Panelists seen by fewer than two organizations have no Gini.
+    num("GiniMedian", median(out$gini_exposure, na.rm = TRUE), "%.2f")
+    out
 }

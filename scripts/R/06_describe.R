@@ -30,6 +30,30 @@ build_exposure_summary <- function(data, kind = c("cumulative", "rate"), path) {
     })
     out <- as.data.frame(do.call(rbind, rows), stringsAsFactors = FALSE)
     write_tex(out, path)
+
+    # Quantities the text quotes that are not cells of this table: the union of
+    # two measures and the intersection of three cannot be read off rows.
+    if (kind == "cumulative") {
+        # The spread of browsing volume across panelists, which the text uses
+        # to argue the per-visit denominator is uneven.
+        num("VisitsMinPanelist", tex_num(min(data$tt_visits)))
+        num("VisitsMaxPanelist", tex_num(max(data$tt_visits)))
+        num("PanelistsUnderTen", tex_num(sum(data$tt_visits < 10)))
+        num("PanelistsUnderHundred", tex_num(sum(data$tt_visits < 100)))
+        num("PanelistsN", tex_num(nrow(data)))
+        ad <- data$bl_ddg_join_ads_al10
+        ck <- data$bl_third_party_cookies_al10
+        num("EverTenAdOrCookie", 100 * mean(ad > 0 | ck > 0))
+        num("EverOneAdTracker",  100 * mean(data$bl_ddg_join_ads_al1 > 0))
+        num("EverOneCanvas",     100 * mean(data$bl_canvas_fingerprinting_al1 > 0))
+        num("EverTenInvasive", 100 * mean(
+            data$bl_session_recording_al10 > 0 &
+            data$bl_key_logging_al10 > 0 &
+            data$bl_canvas_fingerprinting_al10 > 0))
+    } else {
+        num("RateAdMean",   mean(data$bl_ddg_join_ads_rate), "%.2f")
+        num("RateCookieMean", mean(data$bl_third_party_cookies_rate), "%.2f")
+    }
     invisible(out)
 }
 
