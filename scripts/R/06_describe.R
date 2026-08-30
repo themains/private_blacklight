@@ -183,7 +183,11 @@ summary_inset <- function(x) {
         stringsAsFactors = FALSE)
 }
 
-build_distribution <- function(x, xlab, path, bins = 50) {
+build_distribution <- function(x, xlab, path, bins = 50, wrap = 38) {
+    # These panels are 3.15in wide. An axis title longer than the panel is not
+    # shrunk by ggplot, it is drawn and then cut off at the device edge, which
+    # is how "top organization (%)" lost its closing bracket. Wrap instead.
+    xlab <- paste(strwrap(xlab, width = wrap), collapse = "\n")
     tbl <- summary_inset(x)
     lab <- paste(sprintf("%-7s %s", tbl$stat, tbl$value), collapse = "\n")
     p <- ggplot(data.frame(x = x), aes(x)) +

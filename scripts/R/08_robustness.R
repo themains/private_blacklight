@@ -31,7 +31,9 @@ build_robustness_denominator <- function(data, path) {
     rows <- lapply(specs, function(s) {
         cells <- unlist(lapply(outcomes, function(y) {
             e <- age_gap(y, s[[2]], s[[3]])
-            c(sprintf("%.3f%s", e[1], stars(e[3])), sprintf("(%.3f)", e[2]))
+            k <- sub("_rate$", "", sub("^bl_", "", y))
+            c(paste0(fmt_measure(e[1], k), stars(e[3])),
+              sprintf("(%s)", fmt_measure(e[2], k)))
         }))
         c(s[[1]], formatC(nrow(s[[2]]), format = "d", big.mark = ","), cells)
     })

@@ -168,12 +168,12 @@ build_residual_levels <- function(user, path) {
         cells <- unlist(lapply(names(TIERS), function(t) {
             hi <- mean(d[[sprintf("bl_%s_resid_%s_rate", m, t)]], na.rm = TRUE)
             lo <- mean(d[[sprintf("bl_%s_resid_%s_lo_rate", m, t)]], na.rm = TRUE)
-            c(sprintf("%.3f", hi), sprintf("%.3f", lo))
+            c(fmt_measure(hi, m), fmt_measure(lo, m))
         }))
         surv <- 100 * mean(d[[sprintf("bl_%s_resid_%s_rate", m, HEADLINE_TIER)]],
                            na.rm = TRUE) / pub
         label <- if (m == "third_party_cookies") "Third-Party Cookie Domains" else VAR_LABELS[m]
-        c(label, sprintf("%.3f", pub), cells, sprintf("%.1f", surv))
+        c(label, fmt_measure(pub, m), cells, sprintf("%.1f", surv))
     })
     out <- as.data.frame(do.call(rbind, rows), stringsAsFactors = FALSE)
     write_tex(out, path)
@@ -533,8 +533,9 @@ build_allzero_sensitivity <- function(resid, bl, visits, user, path) {
             d <- as.data.frame(fits[[s]])
             co <- fit_demo(paste0("bl_", m), d)
             a <- co[co$term == AGE_TERM_LABEL, ]
-            c(sprintf("%.3f", mean(d[[paste0("bl_", m)]])),
-              sprintf("%+.3f%s (%.3f)", a$b, stars(a$p), a$se))
+            c(fmt_measure(mean(d[[paste0("bl_", m)]]), m),
+              sprintf("%s%s (%s)", fmt_measure(a$b, m, plus = TRUE),
+                      stars(a$p), fmt_measure(a$se, m)))
         }))
         c(lab, cells)
     })

@@ -121,6 +121,25 @@ BOOTSTRAP_REPS <- 1000
 PLACEBO_DRAWS  <- 10000
 
 # Cumulative outcomes rescaled by 100 so the table columns stay narrow.
+# Decimal places by measure, so the same estimate is not printed as 2.89 in one
+# table and 2.891 in another. Ad trackers and cookies are counts per visit and
+# sit near 5 to 6, where two decimals already carry three significant figures.
+# The binary measures sit near 0.01 to 0.07 and need three, or they collapse:
+# at two decimals 108 values in these tables round to 0.00.
+MEASURE_DIGITS <- c(ddg_join_ads = 2, third_party_cookies = 2,
+                    third_party_cookie_domains = 2, fb_pixel = 3,
+                    google_analytics = 3, session_recording = 3,
+                    key_logging = 3, canvas_fingerprinting = 3)
+
+digits_for <- function(m) {
+    d <- MEASURE_DIGITS[[sub("^bl_", "", m)]]
+    if (is.null(d)) 3L else d
+}
+
+# Format a value at its measure's precision.
+fmt_measure <- function(x, m, plus = FALSE)
+    sprintf(paste0("%", if (plus) "+" else "", ".", digits_for(m), "f"), x)
+
 RESCALE_100 <- c("bl_ddg_join_ads", "bl_third_party_cookies", "top_org_visits")
 
 # The 65+ contrast is the paper's headline demographic comparison, named once

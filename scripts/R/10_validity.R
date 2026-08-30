@@ -922,8 +922,10 @@ build_coverage_bounds <- function(visits, bl, person, table_path, figure_path) {
     out <- cbind(
         data.frame(measure = vapply(COVERAGE_MEASURES, `[`, character(1), 2),
                    stringsAsFactors = FALSE),
-        as.data.frame(matrix(sprintf("%.3f", t(res[COVERAGE_SCENARIOS, ])),
-                             nrow = length(keys)), stringsAsFactors = FALSE))
+        as.data.frame(matrix(
+            mapply(fmt_measure, t(res[COVERAGE_SCENARIOS, ]),
+                   rep(keys, times = length(COVERAGE_SCENARIOS))),
+            nrow = length(keys)), stringsAsFactors = FALSE))
     write_tex(out, table_path)
 
     # Each bar is how far the estimate can move under one class of assumption.

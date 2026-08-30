@@ -405,16 +405,18 @@ build_desktop_only <- function(bl, person, visits, path) {
     num("DesktopOnlyN", tex_num(nrow(only)))
     cat(sprintf("  desktop-only: %d of %d panelists\n", nrow(only), nrow(full)))
 
-    cell <- function(fit, term) {
+    cell <- function(fit, term, k) {
         a <- fit[fit$term == term, ]
         if (!nrow(a)) return("--")
-        sprintf("%.3f%s (%.3f)", a$b, stars(a$p), a$se)
+        sprintf("%s%s (%s)", fmt_measure(a$b, k), stars(a$p),
+                fmt_measure(a$se, k))
     }
     rows <- lapply(MEASURES, function(k) {
         y <- paste0("ds_", k)
+        fa <- fit_demo(y, full); fo <- fit_demo(y, only)
         c(VAR_LABELS[[k]],
-          unlist(lapply(DESKTOP_TERMS, function(t) c(cell(fit_demo(y, full), t),
-                                                     cell(fit_demo(y, only), t)))))
+          unlist(lapply(DESKTOP_TERMS,
+                        function(t) c(cell(fa, t, k), cell(fo, t, k)))))
     })
     out <- as.data.frame(do.call(rbind, rows), stringsAsFactors = FALSE)
     write_tex(out, path)
@@ -431,17 +433,18 @@ build_device_age_gradient <- function(data, path) {
 
     # A starred coefficient with no standard error asks the reader to trust the
     # stars; parentheses carry the standard error here as everywhere else.
-    cell <- function(fit) {
+    cell <- function(fit, m) {
         a <- fit[fit$term == AGE_TERM_LABEL, ]
-        sprintf("%.3f%s (%.3f)", a$b, stars(a$p), a$se)
+        sprintf("%s%s (%s)", fmt_measure(a$b, m), stars(a$p),
+                fmt_measure(a$se, m))
     }
     rows <- lapply(DEVICE_MEASURES, function(m) {
         y <- paste0("bl_", m, "_rate")
         c(VAR_LABELS[[m]],
-          cell(fit_demo(y, d)),
-          cell(fit_demo(y, d, rhs = paste(FORMULA_RHS, "+ factor(device)"))),
-          cell(fit_demo(y, d[d$device == "Desktop", ])),
-          cell(fit_demo(y, d[d$device == "Mobile", ])))
+          cell(fit_demo(y, d), m),
+          cell(fit_demo(y, d, rhs = paste(FORMULA_RHS, "+ factor(device)")), m),
+          cell(fit_demo(y, d[d$device == "Desktop", ]), m),
+          cell(fit_demo(y, d[d$device == "Mobile", ]), m))
     })
     out <- as.data.frame(do.call(rbind, rows), stringsAsFactors = FALSE)
     write_tex(out, path)
