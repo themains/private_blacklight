@@ -455,7 +455,7 @@ Expressing exposure per visit changes which of these gaps remain (\cref{fig:coef
 
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=.55\textwidth]{figures/lowess_age_bl.pdf}
+  \includegraphics[width=\textwidth]{figures/lowess_age_bl.pdf}
   \caption{
     Exposure rate by birth year.
     Lines are LOWESS-smoothed standardized rates (z-scores) for the seven tracking methods, winsorized at the 95th percentile.
@@ -464,7 +464,7 @@ Expressing exposure per visit changes which of these gaps remain (\cref{fig:coef
   \label{fig:lowess_age_bl}
 \end{figure}
  
-The age gap persists. Users 65 and above continue to meet higher per-visit rates of ad trackers, third-party cookies, session recording, keylogging, and canvas fingerprinting, and the gradient runs smoothly across birth cohorts rather than resting on where the age bins were cut (\cref{fig:lowess_age_bl}). The gap is $79$ to $91\%$ of the under-25 mean depending on the method, a standardized effect of $0.6$ to $0.8$ (\cref{sm:implications}). The gender gap in canvas fingerprinting also survives, at one additional fingerprinting script per $100$ visits ($\widehat{\mathrm{SE}} = 0.005$, $p < .05$).%
+The age gap persists. Users 65 and above continue to meet higher per-visit rates of ad trackers, third-party cookies, session recording, keylogging, and canvas fingerprinting, and the gradient runs smoothly across birth cohorts rather than resting on where the age bins were cut (\cref{fig:lowess_age_bl}). The gap is $76$ to $87\%$ of the under-25 mean depending on the method, a standardized effect of $0.6$ to $0.8$ (\cref{sm:implications}). The gender gap in canvas fingerprinting also survives, at one additional fingerprinting script per $100$ visits ($\widehat{\mathrm{SE}} = 0.005$, $p < .05$).%
 \footnote{
     \label{fn:bonferroni}
     Applying a Bonferroni correction for the $12$ demographic predictors tested ($p < .00417$), all coefficients with unadjusted $p < .01$ in \cref{tab:demo_differences_exposure_rate} remain significant.
@@ -1449,12 +1449,16 @@ each technique in a month? It corrects demographic composition and nothing else
 
 \begin{table}[ht]
 \centering
-\caption{Exposure per visit surviving each blocklist tier. Brackets give the optimistic bound, crediting every host a list names. The final column is the share of unblocked exposure surviving all three lists.}
+\caption{Exposure per visit surviving each blocklist tier. ``Domain'' blocks only what a domain rule certainly stops; ``Optimistic'' credits every host a list names. The two bracket the residual, and the gap between them is identification, not sampling error. The final column is the share of unblocked exposure surviving all three lists.}
 \label{tab:residual_levels}
 \begin{adjustbox}{max width=\textwidth}
-\begin{tabular}{lrrrrr}
+\begin{tabular}{lrrrrrrrr}
 \toprule
-Measure & Unblocked & EasyList & EasyPrivacy & All three & Survives (\%) \\
+& & \multicolumn{2}{c}{EasyList} & \multicolumn{2}{c}{EasyPrivacy}
+& \multicolumn{2}{c}{All three} & \\
+\cmidrule(lr){3-4}\cmidrule(lr){5-6}\cmidrule(lr){7-8}
+Measure & Unblocked & Domain & Optimistic & Domain & Optimistic & Domain
+& Optimistic & Survives (\%) \\
 \midrule
 \input{tables/residual_levels}
 \bottomrule
@@ -1509,12 +1513,15 @@ Measure & $65+$ vs. $<25$ & $65+$ vs. rest & Per decade & Any exposure \\
 
 \begin{table}[ht]
 \centering
-\caption{Exposure per visit under three treatments of scans returning nothing on all seven measures, with the $65+$ coefficient from \cref{eq:demo-diff} in parentheses. *** $p<.01$, ** $p<.05$, * $p<.1$.}
+\caption{Exposure per visit under three treatments of scans returning nothing on all seven measures, each with the $65+$ coefficient from \cref{eq:demo-diff} and its standard error in parentheses. *** $p<.01$, ** $p<.05$, * $p<.1$.}
 \label{tab:allzero_sensitivity}
 \begin{adjustbox}{max width=\textwidth}
-\begin{tabular}{lrrr}
+\begin{tabular}{lrrrrrr}
 \toprule
-Measure & Published (zero) & Excluded & Imputed at mean \\
+& \multicolumn{2}{c}{Published (zero)} & \multicolumn{2}{c}{Excluded}
+& \multicolumn{2}{c}{Imputed at mean} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(lr){6-7}
+Measure & Rate & 65+ coef. & Rate & 65+ coef. & Rate & 65+ coef. \\
 \midrule
 \input{tables/allzero_sensitivity}
 \bottomrule
@@ -1543,7 +1550,7 @@ Measure & Sample (\%) & Weighted (\%) & US adults (m) & Behind a blocker (m) \\
 \label{sm:time_weighted_org_tracking}
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=.55\textwidth]{figures/dist_maxshare_hist_duration_summtable.pdf}
+  \includegraphics[width=\textwidth]{figures/dist_maxshare_hist_duration_summtable.pdf}
   \caption{
     \small
     The largest share of each user's browsing time online tracked by a single organization (\cref{eq:ind_org_share_duration}):

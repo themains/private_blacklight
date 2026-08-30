@@ -317,7 +317,10 @@ build_age_spline_tests <- function(data, path) {
     outcomes <- c(paste0("bl_", MEASURES, "_rate"), "top_org_share")
     labels <- c(VAR_LABELS[MEASURES], "Top organization share")
 
-    fmt_p <- function(p) if (p < 0.001) "< .001" else sub("^0", "", sprintf("%.3f", p))
+    # \ensuremath so the < is safe in this text-mode tabular; a bare < there
+    # sets as an inverted exclamation under OT1.
+    fmt_p <- function(p) if (p < 0.001) "\\ensuremath{<} .001"
+                         else sub("^0", "", sprintf("%.3f", p))
     rows <- lapply(seq_along(outcomes), function(i) {
         y <- outcomes[i]
         f <- as.formula(paste(y, "~ birthyr +", paste(nlc, collapse = " + "),
@@ -405,7 +408,7 @@ build_desktop_only <- function(bl, person, visits, path) {
     cell <- function(fit, term) {
         a <- fit[fit$term == term, ]
         if (!nrow(a)) return("--")
-        sprintf("%.3f%s", a$b, stars(a$p))
+        sprintf("%.3f%s (%.3f)", a$b, stars(a$p), a$se)
     }
     rows <- lapply(MEASURES, function(k) {
         y <- paste0("ds_", k)
@@ -426,9 +429,11 @@ build_device_age_gradient <- function(data, path) {
                 paste(sprintf("%s %d", names(table(d$device)), table(d$device)),
                       collapse = ", ")))
 
+    # A starred coefficient with no standard error asks the reader to trust the
+    # stars; parentheses carry the standard error here as everywhere else.
     cell <- function(fit) {
         a <- fit[fit$term == AGE_TERM_LABEL, ]
-        sprintf("%.3f%s", a$b, stars(a$p))
+        sprintf("%.3f%s (%.3f)", a$b, stars(a$p), a$se)
     }
     rows <- lapply(DEVICE_MEASURES, function(m) {
         y <- paste0("bl_", m, "_rate")

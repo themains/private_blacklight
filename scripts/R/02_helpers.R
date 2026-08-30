@@ -66,7 +66,7 @@ num_coef <- function(stem, models, measure, term, scale = 1) {
 # The manuscript writes p-values as ".45" and very small ones as "< .001".
 fmt_p <- function(p) {
     if (is.na(p)) return("--")
-    if (p < 0.001) return("< .001")
+    if (p < 0.001) return("\\ensuremath{<} .001")
     sub("^0", "", sprintf("%.2f", p))
 }
 

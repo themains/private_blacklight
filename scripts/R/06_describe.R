@@ -269,6 +269,8 @@ build_risk_divergence <- function(data, path) {
 # is not committed.
 CUM_HOUR_MARKS <- c(0, 12, 24, 36, 48)
 CUM_START <- "2022-05-31 18:00:00"
+# ggrepel places labels stochastically; pin it so the figure reproduces.
+CUM_LABEL_SEED <- 20250110L
 # What the figure reports, so a change in the curve is caught rather than
 # quietly published. Last moved when 434 retried scans joined the corpus, which
 # let first encounters register on domains previously counted as tracker-free:
@@ -325,17 +327,33 @@ build_cum_exposure <- function(bl, table_path, figure_path) {
     curve <- rbindlist(lapply(MEASURES_DESC, function(k) data.table(
         measure = VAR_LABELS[[k]], hour = hours, share = share_by(k, hours))))
     curve[, measure := factor(measure, levels = VAR_LABELS[MEASURES_DESC])]
+    # Label each curve where it ends rather than in a legend, which cost a third
+    # of the width and made the reader match a line to a key encoding the same
+    # series twice. Ad trackers and third-party cookies finish 0.6 points apart
+    # and shadow each other throughout, so repel separates that pair; the grey
+    # and dash encodings still carry the distinction the labels cannot.
+    ends <- curve[hour == max(hour)]
+    ends[, lab := sub(" \\(Remarketing\\)$", "", as.character(measure))]
     g <- ggplot(curve, aes(hour, 100 * share, group = measure, linetype = measure,
                            colour = measure)) +
         geom_line(linewidth = .5) +
-        scale_x_continuous(breaks = CUM_HOUR_MARKS) +
+        ggrepel::geom_text_repel(
+            data = ends, aes(label = lab), hjust = 0, size = 2.2,
+            # Fixed dark grey: inheriting the line colour made the four palest
+            # labels harder to read than the legend they replaced.
+            colour = "grey15",
+            direction = "y", nudge_x = 1.2, min.segment.length = 0,
+            segment.size = 0.2, segment.colour = "#9a9a9a",
+            box.padding = 0.12, max.overlaps = Inf, seed = CUM_LABEL_SEED) +
+        scale_x_continuous(breaks = CUM_HOUR_MARKS,
+                           limits = c(0, 60), expand = c(0, 0)) +
         scale_y_continuous(limits = c(0, 100)) +
-        scale_colour_grey(start = 0, end = .72, name = NULL) +
-        scale_linetype_manual(values = c(1, 2, 3, 4, 5, 6, 1), name = NULL) +
+        scale_colour_grey(start = 0, end = .72) +
+        scale_linetype_manual(values = c(1, 2, 3, 4, 5, 6, 1)) +
+        guides(colour = "none", linetype = "none") +
         labs(x = "Hours since measurement began",
              y = "Panelists who have met the technique (%)") +
-        theme_blacklight(grid = "both") +
-        theme(legend.position = "right", legend.key.width = unit(1.4, "lines"))
+        theme_blacklight(grid = "both")
     save_fig(g, figure_path, width = FIG_FULL_W, height = 3.2)
     invisible(res)
 }

@@ -161,10 +161,14 @@ build_residual_levels <- function(user, path) {
         base <- if (m == "third_party_cookies") "bl_third_party_cookie_domains_rate"
                 else paste0("bl_", m, "_rate")
         pub <- mean(d[[base]], na.rm = TRUE)
+        # Two columns per tier rather than "point [bound]". Brackets are a 95%
+        # interval everywhere else in the paper, and this bound is an
+        # identification bound, not sampling uncertainty; the paper keeps those
+        # apart in the argument and the notation has to keep them apart too.
         cells <- unlist(lapply(names(TIERS), function(t) {
             hi <- mean(d[[sprintf("bl_%s_resid_%s_rate", m, t)]], na.rm = TRUE)
             lo <- mean(d[[sprintf("bl_%s_resid_%s_lo_rate", m, t)]], na.rm = TRUE)
-            sprintf("%.3f [%.3f]", hi, lo)
+            c(sprintf("%.3f", hi), sprintf("%.3f", lo))
         }))
         surv <- 100 * mean(d[[sprintf("bl_%s_resid_%s_rate", m, HEADLINE_TIER)]],
                            na.rm = TRUE) / pub
@@ -522,12 +526,16 @@ build_allzero_sensitivity <- function(resid, bl, visits, user, path) {
 
     rows <- lapply(GAP_MEASURES, function(m) {
         lab <- if (m %in% names(BASE_COLUMN)) "Third-Party Cookie Domains" else VAR_LABELS[m]
-        cells <- vapply(ALLZERO_SPECS, function(s) {
+        # The 65+ coefficient gets its own column. In parentheses beside a
+        # level it read as that level's standard error, which is what
+        # parentheses mean in every other table here.
+        cells <- unlist(lapply(ALLZERO_SPECS, function(s) {
             d <- as.data.frame(fits[[s]])
             co <- fit_demo(paste0("bl_", m), d)
             a <- co[co$term == AGE_TERM_LABEL, ]
-            sprintf("%.3f (%+.3f%s)", mean(d[[paste0("bl_", m)]]), a$b, stars(a$p))
-        }, character(1))
+            c(sprintf("%.3f", mean(d[[paste0("bl_", m)]])),
+              sprintf("%+.3f%s (%.3f)", a$b, stars(a$p), a$se))
+        }))
         c(lab, cells)
     })
     out <- as.data.frame(do.call(rbind, rows), stringsAsFactors = FALSE)
