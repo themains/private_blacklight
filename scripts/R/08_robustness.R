@@ -189,8 +189,10 @@ emit_all <- function(data) {
     # Organization tracking (Figure 5): four panels sharing one grammar.
     build_distribution(data$n_orgs, "Number of organizations",
                        file.path(FIGURES_DIR, "dist_org_per_user_summtable"))
+    # A quantity on [0, 1]: at one decimal the mean, both inner quartiles and
+    # the median all print as 0.7 and the panel says nothing about spread.
     build_distribution(data$gini_exposure[!is.na(data$gini_exposure)],
-                       "Gini across organizations",
+                       "Gini across organizations", digits = 2,
                        file.path(FIGURES_DIR, "dist_tracking_concentration_per_user_summtable"))
     build_distribution(100 * data$top_org_share,
                        "Share of visits seen by the top organization (%)",

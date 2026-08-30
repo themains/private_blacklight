@@ -186,7 +186,7 @@ build_top_contributors <- function(bl, path, n_show = TOP_N_DOMAINS) {
 SUMM_STATS <- c(n = "n", Mean = "mean", SD = "sd", `Min.` = "min",
                 `25p` = "q25", `50p` = "q50", `75p` = "q75", `Max.` = "max")
 
-summary_inset <- function(x) {
+summary_inset <- function(x, digits = 1) {
     q <- stats::quantile(x, c(.25, .5, .75))
     v <- c(n = length(x), mean = mean(x), sd = sd(x), min = min(x),
            q25 = q[[1]], q50 = q[[2]], q75 = q[[3]], max = max(x))
@@ -194,17 +194,17 @@ summary_inset <- function(x) {
         stat = names(SUMM_STATS),
         value = ifelse(names(SUMM_STATS) == "n",
                        formatC(v[SUMM_STATS], format = "d", big.mark = ","),
-                       formatC(round(v[SUMM_STATS], 1), format = "f", digits = 1,
-                               big.mark = ",")),
+                       formatC(round(v[SUMM_STATS], digits), format = "f",
+                               digits = digits, big.mark = ",")),
         stringsAsFactors = FALSE)
 }
 
-build_distribution <- function(x, xlab, path, bins = 50, wrap = 38) {
+build_distribution <- function(x, xlab, path, bins = 50, wrap = 38, digits = 1) {
     # These panels are 3.15in wide. An axis title longer than the panel is not
     # shrunk by ggplot, it is drawn and then cut off at the device edge, which
     # is how "top organization (%)" lost its closing bracket. Wrap instead.
     xlab <- paste(strwrap(xlab, width = wrap), collapse = "\n")
-    tbl <- summary_inset(x)
+    tbl <- summary_inset(x, digits)
     lab <- paste(sprintf("%-7s %s", tbl$stat, tbl$value), collapse = "\n")
     p <- ggplot(data.frame(x = x), aes(x)) +
         geom_histogram(aes(y = after_stat(density)), bins = bins,
@@ -217,21 +217,39 @@ build_distribution <- function(x, xlab, path, bins = 50, wrap = 38) {
     save_fig(p, path, width = FIG_HALF_W, height = FIG_HALF_W)
 }
 
-# Reach against dominance. Most organizations touch many panelists; almost none
-# are the largest observer for anyone. Log-x because reach spans three orders of
-# magnitude; the named points are the organizations that dominate at all.
-build_reach_dominance <- function(reach, path, label_min = 10) {
-    d <- as.data.frame(reach)
-    d$lab <- ifelse(d$dominance >= label_min, sub(",? (Inc|LLC|Corporation)\\.?$", "", d$org), NA)
-    p <- ggplot(d, aes(reach, dominance)) +
-        geom_point(colour = "#8a8a8a", size = 0.8, alpha = 0.7) +
-        ggrepel::geom_text_repel(aes(label = lab), size = 2.2, na.rm = TRUE,
-                                 min.segment.length = 0, segment.size = 0.2,
-                                 max.overlaps = Inf) +
-        scale_x_log10() +
-        labs(x = "Reach (panelists tracked at least once)",
-             y = "Dominance (panelists whose top observer it is)") +
-        theme_blacklight(grid = "both")
+# Reach against dominance, as a dumbbell rather than a scatter.
+#
+# The scatter put reach on a log axis and spent three orders of magnitude
+# separating organizations nobody is dominated by. That is not the finding. The
+# finding is that the leading organizations all reach essentially everyone, so
+# reach does not tell them apart, and only dominance does: Google is the top
+# observer for most of the panel and the next firm is an order of magnitude
+# behind. Two values per organization whose difference is the point is what a
+# dumbbell is for, and it puts both on one percentage axis.
+build_reach_dominance <- function(reach, path, top_n = 8) {
+    n <- uniqueN(visit_panel()$caseid)
+    d <- as.data.table(reach)[order(-dominance)][seq_len(min(top_n, .N))]
+    d[, org := sub(",? (Inc|LLC|Corporation|Technologies|s\\.r\\.o)\\.?$", "", org)]
+    d[, org := factor(org, levels = rev(org))]
+    long <- rbind(
+        data.frame(org = d$org, pct = 100 * d$reach / n, what = "Tracks at least once"),
+        data.frame(org = d$org, pct = 100 * d$dominance / n,
+                   what = "Is the top observer"))
+    long$what <- factor(long$what,
+                        levels = c("Tracks at least once", "Is the top observer"))
+
+    p <- ggplot(long, aes(pct, org)) +
+        geom_line(aes(group = org), colour = "grey70", linewidth = 0.5) +
+        geom_point(aes(shape = what, fill = what), size = 1.9, colour = "grey15") +
+        # Stacked, not side by side: at 3.15in the two labels overrun the panel.
+        scale_shape_manual(values = c(21, 21), name = NULL,
+                           guide = guide_legend(nrow = 2)) +
+        scale_fill_manual(values = c("white", "grey15"), name = NULL,
+                          guide = guide_legend(nrow = 2)) +
+        scale_x_continuous(limits = c(0, 100), breaks = seq(0, 100, 25)) +
+        labs(x = "Panelists (%)", y = NULL) +
+        theme_blacklight(grid = "both") +
+        theme(legend.position = "bottom", legend.margin = margin(t = -4))
     save_fig(p, path, width = FIG_HALF_W, height = FIG_HALF_W)
 }
 

@@ -162,7 +162,13 @@ build_org_gini <- function(pairs) {
     cap <- merge(visits, pairs, by = "private_domain", allow.cartesian = TRUE)[
         , .(captured = sum(visits)), by = .(caseid, org)]
     out <- cap[, .(gini_exposure = gini(captured)), by = caseid]
-    # Panelists seen by fewer than two organizations have no Gini.
+    # Panelists seen by fewer than two organizations have no Gini, so this
+    # panel's n differs from its siblings' and the caption has to say so.
     num("GiniMedian", median(out$gini_exposure, na.rm = TRUE), "%.2f")
+    # Against the whole panel, not against `out`: a panelist tracked by no
+    # organization never enters `cap` and would otherwise go uncounted.
+    num("GiniDropped", tex_num(uniqueN(visits$caseid) -
+                               sum(!is.na(out$gini_exposure))))
+    num("GiniN", tex_num(sum(!is.na(out$gini_exposure))))
     out
 }
