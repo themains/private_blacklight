@@ -157,13 +157,15 @@ FLOATS <- list(
         align = "lrrrrrrrrr",
         header = c("Measure", "Mean", "SD", "Min", "P25", "Median", "P75", "Max", "$\\geq 1$", "$\\geq 10$"),
         caption = paste(
-            "Cumulative tracking exposure per panelist over the month. The",
-            "final two columns give the share of panelists who encountered the",
-            "technique at least once and at least ten times. Ad trackers and",
-            "third-party cookies are counts of distinct third-party domains;",
-            "the remaining measures are binary indicators of whether the",
-            "technique was present on the domain. Visits to domains Blacklight",
-            "did not scan contribute zero, so every figure is a lower bound."
+            "Cumulative tracking exposure per panelist over the month. Each",
+            "measure is summed across a panelist's visits, so these are",
+            "encounters rather than distinct trackers: for ad trackers and",
+            "third-party cookies, the distinct third-party domains present on",
+            "each site visited; for the rest, whether the technique was present",
+            "there. The final two columns give the share of panelists who",
+            "encountered the technique at least once and at least ten times.",
+            "Visits to domains Blacklight did not scan contribute zero, so every",
+            "figure is a lower bound."
         )
     ),
     tab3 = list(
@@ -174,10 +176,7 @@ FLOATS <- list(
             "Tracking exposure per visit. For ad trackers and third-party",
             "cookies this is the number of distinct third parties encountered",
             "per visit and can exceed one; for the binary measures it is the",
-            "share of visits on which the technique was present. Ad trackers",
-            "and third-party cookies are counts of distinct third-party",
-            "domains; the remaining measures are binary indicators of whether",
-            "the technique was present on the domain. Visits to domains",
+            "share of visits on which the technique was present. Visits to domains",
             "Blacklight did not scan contribute zero, so every figure is a",
             "lower bound."
         )
