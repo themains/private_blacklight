@@ -112,6 +112,10 @@ build_demo_summary_note <- function(d, path) {
         }, character(1))
 
     dev <- abs(d$diff)
+    # The manuscript quotes these in two places and had drifted to two values.
+    num("CPSMeanAbsDev", mean(dev))
+    num("CPSMaxDev", max(dev))
+    num("CPSMargins", tex_num(nrow(d)))
     worst <- DEMO_CAT_LABELS[as.character(d$cat[which.max(dev)])]
     if (is.na(worst)) worst <- as.character(d$cat[which.max(dev)])
     note <- sprintf(
