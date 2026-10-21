@@ -31,12 +31,11 @@ import socket
 import time
 from concurrent.futures import ThreadPoolExecutor
 
+import config
 import pandas as pd
 import requests
 import tldextract
 from bs4 import BeautifulSoup
-
-import config
 
 _extract = tldextract.TLDExtract(suffix_list_urls=())  # offline PSL snapshot
 

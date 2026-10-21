@@ -21,12 +21,9 @@ Writes: data/selection_audit/failure_reasons.csv
 
 import os
 import re
-import sys
-
-import pandas as pd
 
 import config
-
+import pandas as pd
 
 PATTERNS = [
     # order = precedence, least domain-side first (later wins in the dict)

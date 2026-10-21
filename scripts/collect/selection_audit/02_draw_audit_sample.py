@@ -14,10 +14,9 @@ Writes: data/selection_audit/audit_sample.csv
 
 import os
 
+import config
 import numpy as np
 import pandas as pd
-
-import config
 
 
 def main():
