@@ -22,11 +22,10 @@ present but are not needed for coding.
 import gzip
 import os
 
+import config
 import numpy as np
 import pandas as pd
 from bs4 import BeautifulSoup
-
-import config
 
 
 def wb_title(domain):
