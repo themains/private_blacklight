@@ -154,7 +154,7 @@ emit_all <- function(data) {
     emit_float(tab5, "tab5")
 
     # Cells the results section quotes. Ad trackers, cookies and top-org visits
-    # are modelled in hundreds here, so `scale` puts them back on the raw count
+    # are modeled in hundreds here, so `scale` puts them back on the raw count
     # the prose uses. Getting that wrong is invisible when reading the table
     # beside the sentence, which is how these drifted in the first place.
     m5 <- attr(tab5, "models")

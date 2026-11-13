@@ -53,7 +53,7 @@ trackers, p < .001 for cookies). Blocklists really do target what older panelist
 disproportionately meet.
 
 **Canvas fingerprinting is the exception it was designed to be.** 93% survives
-the strongest defense modelled, and the 65+ coefficient does not move
+the strongest defense modeled, and the 65+ coefficient does not move
 (0.0327 → 0.0335; the change in log-ratio is +0.067, interval [-0.006, +0.177],
 covering zero). Blacklight's own card describes these scripts as built to evade
 blockers, and the data agrees. This is the most robust finding here: it is a

@@ -37,7 +37,7 @@ Panel: 1,134 panelists, 4,398,822 visits to 64,074 domains, 34,512 of them scann
 
 - **Means**: a logged-out landing page showed nothing; the site may still track behind a login
 - **Code does**: treated as a genuine zero, indistinguishable from a measured absence  
-  `03_import: measures initialised to 0 per card`
+  `03_import: measures initialized to 0 per card`
 - **Scale**: 20.2% of visits, 8,186 domains
 - **Direction**: understates
 - **Verdict**: **tested** - facebook.com alone is 7.2% of panel visits and scores zero on all seven. build_allzero_sensitivity re-runs the headline excluding these visits and imputing them at the mean of domains that did show tracking: the age gap holds in sign and significance under all three. No conclusion depends on the zero. The level does: exposure is understated.
@@ -100,7 +100,7 @@ Panel: 1,134 panelists, 4,398,822 visits to 64,074 domains, 34,512 of them scann
 
 - **Means**: the test did not run, or ran and found nothing, and the two are indistinguishable
 - **Code does**: recorded as zero either way  
-  `03_import: measures initialised to 0`
+  `03_import: measures initialized to 0`
 - **Scale**: unquantified
 - **Direction**: understates
 - **Verdict**: **unknown** - Settling it needs a per-card presence census across the scan payloads.
@@ -112,7 +112,7 @@ Panel: 1,134 panelists, 4,398,822 visits to 64,074 domains, 34,512 of them scann
   `05_person: inner join on visits`
 - **Scale**: 66 of 1,200 recruited
 - **Direction**: unknown
-- **Verdict**: **unknown** - The paper states this moves no demographic margin by more than a point. Whether they differ on browsing behaviour is not observable, since they have none.
+- **Verdict**: **unknown** - The paper states this moves no demographic margin by more than a point. Whether they differ on browsing behavior is not observable, since they have none.
 
 ## Panel-vendor domains in the denominator
 

@@ -13,7 +13,7 @@ write_tex <- function(df, path, group_breaks = NULL) {
     cells <- lapply(df, function(col) if (is.character(col)) col else as.character(col))
     rows <- paste0(do.call(paste, c(cells, sep = " & ")), " \\\\")
     # group_breaks: row indices to follow with an \addlinespace, so a table with
-    # labelled blocks keeps its spacing without the caller assembling the text.
+    # labeled blocks keeps its spacing without the caller assembling the text.
     for (i in sort(unique(group_breaks), decreasing = TRUE))
         if (i >= 1 && i < length(rows)) rows <- append(rows, "\\addlinespace", after = i)
     cat(paste(rows, collapse = "\n"), file = path)

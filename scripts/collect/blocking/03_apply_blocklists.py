@@ -1,7 +1,7 @@
 """Decide which responsible third-party domains each blocklist tier would stop.
 
 Matching runs through adblock-rust, the engine Brave ships, so filter syntax --
-domain anchors, third-party options, exception rules -- is honoured rather than
+domain anchors, third-party options, exception rules -- is honored rather than
 approximated by a substring test.
 
 One caveat governs every number downstream. Blacklight records third-party

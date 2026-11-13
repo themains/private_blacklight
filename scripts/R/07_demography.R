@@ -178,7 +178,7 @@ build_lowess_age <- function(data, path, width = FIG_FULL_W, height = 5.6) {
 # collapsing to the domain hands a portal every label any of its pages ever
 # carried, so all 986,722 google.com visits come back "Job Related". The earlier
 # version of this analysis was confined to the visits the two device files
-# labelled and carried a gate checking that subsample's age gap resembled the
+# labeled and carried a gate checking that subsample's age gap resembled the
 # full-sample one. Reading the source file directly covers the whole panel, so
 # there is no subsample left to vouch for and the gate has no job to do.
 DECOMP_MEASURES <- c("ddg_join_ads", "third_party_cookies",
@@ -206,15 +206,15 @@ decompose <- function(w_old, wt_old, w_young, wt_young) {
     setNames(out, c("young", "old"))
 }
 
-# A visit labelled "Business, Social Networking" is split in half rather than
+# A visit labeled "Business, Social Networking" is split in half rather than
 # counted twice, so category shares still sum to one. Unlabelled visits get
 # their own bucket instead of being dropped, which would silently reweight the
-# panel toward whatever the meter happened to recognise.
-# The per-visit category labels, exploded once. A visit labelled
+# panel toward whatever the meter happened to recognize.
+# The per-visit category labels, exploded once. A visit labeled
 # "Business, Social Networking" is split in half rather than counted twice, so
 # category shares still sum to one. Unlabelled visits get their own bucket
 # instead of being dropped, which would silently reweight the panel toward
-# whatever the meter happened to recognise.
+# whatever the meter happened to recognize.
 #
 # The source file is 2 GB, so it is read once and the exploded table reused for
 # every measure.
@@ -315,7 +315,7 @@ build_age_gap_decomposition <- function(bl, person, path, reps = DECOMP_REPS,
 # [1, birthyr] and an orthonormal spanning set taken, leaving columns exactly
 # orthogonal to the linear term; a gate refuses to continue if that orthogonality
 # fails, since the nonlinearity test would then absorb part of the linear
-# gradient. The penalised smooth is fit alongside with mgcv, which is what the
+# gradient. The penalized smooth is fit alongside with mgcv, which is what the
 # original 2025 script used -- its effective degrees of freedom and smooth
 # p-value were previously hardcoded into the Python port because mgcv has no
 # equivalent there. In R they are computed.
