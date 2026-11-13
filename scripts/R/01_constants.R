@@ -6,7 +6,7 @@
 # Blacklight measures
 # ---------------------------------------------------------------------------
 # Card type in the scan JSON -> column name. The two count cards carry
-# bigNumber; the five behavioural cards are flags on testEventsFound.
+# bigNumber; the five behavioral cards are flags on testEventsFound.
 BL_COUNT_CARDS <- c(ddg_join_ads = "ddg_join_ads", cookies = "third_party_cookies")
 BL_FLAG_CARDS  <- c(
     canvas_fingerprinters = "canvas_fingerprinting",

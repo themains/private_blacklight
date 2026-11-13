@@ -52,7 +52,7 @@ FAILURE_LABELS <- c(
 
 parse_scan_errors <- function() {
     lines <- readLines(FP_ERROR_LOG, warn = FALSE)
-    # Internationalised domains put undecodable bytes in the log. Python read it
+    # Internationalized domains put undecodable bytes in the log. Python read it
     # with errors="replace"; do the same rather than dropping the lines, so the
     # counts below cover every failure the scraper recorded.
     lines <- iconv(lines, "UTF-8", "UTF-8", sub = "\uFFFD")
@@ -364,7 +364,7 @@ AUDIT_MEASURES <- c(ddg_join_ads = "Ad trackers",
 # 100 any fixed-size design must satisfy. Estimate them instead by simulating
 # the design. Rather than redrawing 200,000 samples, use the exponential race:
 # giving unit i an arrival time Exp(p_i) and taking the k earliest is exactly
-# successive sampling, and it vectorises. (Checked numerically against numpy's
+# successive sampling, and it vectorizes. (Checked numerically against numpy's
 # sequential draw before being relied on here.)
 simulate_inclusion <- function(pool, n_draw = 100, reps = PI_REPS, seed = AUDIT_SEED) {
     p <- pool$visits / sum(pool$visits)
@@ -387,7 +387,7 @@ simulate_inclusion <- function(pool, n_draw = 100, reps = PI_REPS, seed = AUDIT_
     setNames(pi, pool$private_domain)
 }
 
-# Hajek (ratio) form, the standard choice when the realised weights cannot sum
+# Hajek (ratio) form, the standard choice when the realized weights cannot sum
 # to the known total -- here they cannot, because only 63 of the 100 drawn
 # domains rescanned successfully. The estimate is therefore conditional on
 # being scannable in 2026, which is this paper's own selection problem again and
@@ -465,7 +465,7 @@ build_selection_audit_tracking <- function(coded, visits, bl, path,
 
     # The comparison the strand exists to make: tracking measured directly on
     # the domains the paper had to zero-fill, against the population it did
-    # measure. Bars above their neighbour mean the zero-fill understates.
+    # measure. Bars above their neighbor mean the zero-fill understates.
     if (!is.null(figure_path)) {
         pl <- rbindlist(lapply(seq_along(keys), function(i) data.table(
             measure = AUDIT_MEASURES[[i]],

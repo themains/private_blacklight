@@ -1,7 +1,7 @@
 """Fetch the blocklists, pinned to the Blacklight scan window.
 
 Each list is pulled at the commit nearest config.PIN_DATE so the defense being
-modelled is the one a user could actually have installed when the sites were
+modeled is the one a user could actually have installed when the sites were
 measured, not today's version of it. The manifest records repo, commit, date and
 sha256 so a rerun either reproduces the same bytes or fails loudly.
 

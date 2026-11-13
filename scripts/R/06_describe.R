@@ -383,7 +383,7 @@ build_cum_exposure <- function(bl, table_path, figure_path) {
     # Label each curve where it ends rather than in a legend, which cost a third
     # of the width and made the reader match a line to a key encoding the same
     # series twice. Ad trackers and third-party cookies finish 0.6 points apart
-    # and shadow each other throughout, so repel separates that pair; the grey
+    # and shadow each other throughout, so repel separates that pair; the gray
     # and dash encodings still carry the distinction the labels cannot.
     ends <- curve[hour == max(hour)]
     ends[, lab := sub(" \\(Remarketing\\)$", "", as.character(measure))]
@@ -392,7 +392,7 @@ build_cum_exposure <- function(bl, table_path, figure_path) {
         geom_line(linewidth = .5) +
         ggrepel::geom_text_repel(
             data = ends, aes(label = lab), hjust = 0, size = 2.2,
-            # Fixed dark grey: inheriting the line colour made the four palest
+            # Fixed dark gray: inheriting the line color made the four palest
             # labels harder to read than the legend they replaced.
             colour = "grey15",
             direction = "y", nudge_x = 1.2, min.segment.length = 0,

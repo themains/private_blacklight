@@ -27,8 +27,8 @@ MEASURES_BLOCK <- c("ddg_join_ads", "third_party_cookies", "canvas_fingerprintin
 UNATTRIBUTED <- c("fb_pixel", "google_analytics")
 
 # Each card carries a measure name and whether it counts responsible domains or
-# just flags the behaviour. A count measure's residual is how many responsible
-# domains a tier fails to stop; a behavioural measure survives if *any* does --
+# just flags the behavior. A count measure's residual is how many responsible
+# domains a tier fails to stop; a behavioral measure survives if *any* does --
 # blocking two of three session recorders still leaves the site recording.
 CARD_MEASURES <- list(
     ddg_join_ads          = list("ddg_join_ads",          "count"),
@@ -152,7 +152,7 @@ build_residual_levels <- function(user, path) {
     d$agegroup_lab <- factor(as.character(d$agegroup_lab), levels = AGE_ORDER)
     # A third measure order. Tables 2-3 and the prose lead with the attributed
     # measures; Tables 5-6 swap keylogging and session recording; the blocking
-    # tables put the behavioural three first, because those are the ones a
+    # tables put the behavioral three first, because those are the ones a
     # blocker struggles with. Reproduced rather than unified -- changing any of
     # them alters a published table.
     rows <- lapply(MEASURES_BLOCK, function(m) {
@@ -250,7 +250,7 @@ placebo_inputs <- function(visits, user) {
 
 # One card's exposure as a function of which third parties survive. A count
 # measure is linear in that set, so each third party's cost is fixed and the
-# whole step curve is one cumulative sum. A behavioural measure is not: a
+# whole step curve is one cumulative sum. A behavioral measure is not: a
 # domain keeps flagging until its *last* responsible script goes, so it leaves
 # at the largest permutation position among its scripts, which has to be found
 # per draw. Both return the three group sums standing after every cut k.
